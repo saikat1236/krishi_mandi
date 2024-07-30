@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/product_controller.dart';
@@ -8,6 +9,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/checkoutscreen1.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/item.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MainScreen(),
+      home: const HomePage(),
     );
   }
 }
@@ -430,7 +432,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 235, 232, 232),
+        // backgroundColor: Color.fromARGB(255, 235, 232, 232),
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -493,10 +495,7 @@ class _HomePageState extends State<HomePage> {
                     children: const[
                       CircleAvatar(
                         radius: 52,
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHNtaWx5JTIwZmFjZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'
-                          // 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c21pbHklMjBmYWNlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'
-                        ),
+                        backgroundImage: AssetImage('assets/avatar.png'),
                       ),
                       SizedBox(height: 12,),
                       Text('Sophia',
@@ -1355,15 +1354,41 @@ class ProductListViewdemo extends StatelessWidget {
           crossAxisCount: 2,
           shrinkWrap: true, // Important for nested scrollable widgets
           physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+          // children: List.generate(products.length, (index) {
+          //   final product = products[index];
+          //   // OnTap(
+          //   //   NavigationBar(destinations: ProductDetailsPage())
+          //   // ),
+          //   return _offerItemdemo(
+          //     product['name'] ?? "product",
+          //     product['newPrice'] ?? "\$0.00",
+          //     product['oldPrice'] ?? "\$0.00",
+          //     product['image'] ?? 'assets/photo.png',
+          //   );
+          // }
+          // ),
           children: List.generate(products.length, (index) {
-            final product = products[index];
-            return _offerItemdemo(
-              product['name'] ?? "product",
-              product['newPrice'] ?? "\$0.00",
-              product['oldPrice'] ?? "\$0.00",
-              product['image'] ?? 'assets/photo.png',
-            );
-          }),
+  final product = products[index];
+
+  return InkWell(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductDetailsPage(
+            // product: product,
+          ),
+        ),
+      );
+    },
+    child: _offerItemdemo(
+      product['name'] ?? "Product",
+      product['newPrice'] ?? "\$0.00",
+      product['oldPrice'] ?? "\$0.00",
+      product['image'] ?? 'assets/photo.png',
+    ),
+  );
+}),
         ),
       );
     });

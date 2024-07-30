@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/constants/AppConstants.dart';
 import 'package:krishi_customer_app/saikat-home.dart';
 import 'package:krishi_customer_app/splashscreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/farmerui/entrypage.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
@@ -59,9 +60,10 @@ class MyApp extends StatelessWidget {
         );
       },
       // home: SaikatHome()
-      // home: HomePage()
+      home: HomePage()
       // home: MainScreen()
-      home: ProfileScreenmain()
+      // home: ProfileScreenmain()
+      // home: ProductDetailsPage(),
       // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }

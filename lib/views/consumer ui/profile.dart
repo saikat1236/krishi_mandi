@@ -34,30 +34,51 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
         _hideKeyboard(context); // Hide keyboard when tapped outside
       },
       child: Scaffold(
+        appBar: AppBar(
+        // backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+
+        title: const Text('Profile',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+         leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); // Navigate back
+              },
+
+            );
+          },
+        ),
+
+      ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              // height: MediaQuery.of(context).size.height,
+              // width: MediaQuery.of(context).size.width,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.arrow_back),
-                      Spacer(), // This pushes the next widgets to the end
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 30),
-                      ),
-                      Spacer(), // This pushes the "Profile" text towards the center
-                    ],
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Icon(Icons.arrow_back),
+                  //     Spacer(), // This pushes the next widgets to the end
+                  //     Text(
+                  //       "Profile",
+                  //       style: TextStyle(
+                  //           fontWeight: FontWeight.bold, fontSize: 30),
+                  //     ),
+                  //     Spacer(), // This pushes the "Profile" text towards the center
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 40,
+                  // ),
                   Row(
                     children: [
                       // Image.asset(
@@ -94,27 +115,33 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
                   ),
                   Column(
                     children: [
-                      Container(
-                        height: 50,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200]
+                          ),
+                        ),
                       ),
-                      Container(
-                        height: 50,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200]
+                          ),
+                        ),
                       ),
-                      Container(
-                        height: 50,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200]
+                          ),
+                        ),
                       ),
-                      Container(
-                        height: 50,
-                      ),
-                      Container(
-                        height: 50,
-                      ),
-                      Container(
-                        height: 50,
-                      ),
-                      Container(
-                        height: 50,
-                      )
                     ],
                   )
 
