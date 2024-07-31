@@ -98,7 +98,6 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class FavoritesScreen extends StatefulWidget {
-
   FavoritesScreen({super.key});
 
   @override
@@ -109,7 +108,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final UserProfileController userProfileController =
       Get.put(UserProfileController());
 
- @override
+  @override
   void initState() {
     super.initState();
     userProfileController.getUserProfile();
@@ -121,8 +120,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         elevation: 0,
-       automaticallyImplyLeading: false,
-       centerTitle: true,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: const Text('Favorites',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
@@ -147,21 +146,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               itemBuilder: (context, index) {
                 var favorite = favorites[index];
                 return InkWell(
-                  onTap: (){
-                    
-                  },
+                  onTap: () {},
                   child: Card(
-                    margin: const EdgeInsets.symmetric(vertical: 10), // Space between cards
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10), // Space between cards
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15), // Rounded corners
+                      borderRadius:
+                          BorderRadius.circular(15), // Rounded corners
                     ),
                     elevation: 3, // Elevation for card shadow
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0), // Padding inside the card
+                      padding:
+                          const EdgeInsets.all(8.0), // Padding inside the card
                       child: ListTile(
                         leading: CircleAvatar(
                           radius: 30, // Increase the size of the avatar
-                          backgroundImage: NetworkImage(favorite['productImage']),
+                          backgroundImage:
+                              NetworkImage(favorite['productImage']),
                         ),
                         title: Text(
                           favorite['productName'],
@@ -184,7 +185,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             color: Colors.green,
                           ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
                       ),
                     ),
                   ),
@@ -197,7 +199,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 }
-
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -257,8 +258,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         elevation: 0,
-       automaticallyImplyLeading: false,
-       centerTitle: true,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: const Text(
           'Categories',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -282,7 +283,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           itemCount: filteredCategories.length,
           itemBuilder: (context, index) {
             return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+              margin:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -381,7 +383,6 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 }
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -398,7 +399,7 @@ class _HomePageState extends State<HomePage> {
     'assets/Small banner.png',
   ];
   final ProductController controller = Get.put(ProductController());
-       final List<Map<String, String>> products = [
+  final List<Map<String, String>> products = [
     {
       'name': 'Product 1',
       'category': 'Category 1',
@@ -420,7 +421,7 @@ class _HomePageState extends State<HomePage> {
       'newPrice': '\$10.00',
       'oldPrice': '\$15.00',
     },
-        {
+    {
       'name': 'Product 4',
       'category': 'Category 3',
       'image': 'assets/fruits.jpg',
@@ -438,7 +439,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         // title: const Text('Home Page',
         // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-         leading: Builder(
+        leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -449,66 +450,80 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
-          actions: [
+        actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CartListScreen(),
-              ),
-            );
-          },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartListScreen(),
+                ),
+              );
+            },
           ),
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-                    Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfileScreenmain(),
-              ),
-            );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreenmain(),
+                ),
+              );
             },
           ),
         ],
       ),
-        drawer: Drawer(
+      drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-           Material(
+            Material(
               color: Colors.blueAccent,
               child: InkWell(
-                onTap: (){
+                onTap: () {
                   /// Close Navigation drawer before
                   Navigator.pop(context);
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
                 },
                 child: Container(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top,
-                      bottom: 24
-                  ),
+                      top: MediaQuery.of(context).padding.top, bottom: 24),
                   child: Column(
-                    children: const[
+                    children: [
                       CircleAvatar(
                         radius: 52,
                         backgroundImage: AssetImage('assets/avatar.png'),
                       ),
-                      SizedBox(height: 12,),
-                      Text('Sophia',
-                        style: TextStyle(
-                            fontSize: 28,
-                            color: Colors.white
-                        ),),
-                      const Text('@sophia.com',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white
-                        ),),
-
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        'Saikat Biswas',
+                        style: TextStyle(fontSize: 28, color: Colors.white),
+                      ),
+                      Text(
+                        'saikat1236@gmailcom',
+                        style: TextStyle(fontSize: 14, color: Colors.white),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreenmain(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Edit profile",
+                          style: TextStyle(color: Colors.black), // Text color
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.white), // Border color
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -521,7 +536,7 @@ class _HomePageState extends State<HomePage> {
                 ListTile(
                   leading: Icon(Icons.home_outlined),
                   title: Text('Home'),
-                  onTap: (){
+                  onTap: () {
                     /// Close Navigation drawer before
                     Navigator.pop(context);
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()),);
@@ -530,7 +545,7 @@ class _HomePageState extends State<HomePage> {
                 ListTile(
                   leading: Icon(Icons.favorite_border),
                   title: Text('Favourites'),
-                  onTap: (){
+                  onTap: () {
                     /// Close Navigation drawer before
                     Navigator.pop(context);
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen()),);
@@ -539,23 +554,25 @@ class _HomePageState extends State<HomePage> {
                 ListTile(
                   leading: Icon(Icons.workspaces),
                   title: Text('Workflow'),
-                  onTap: (){},
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: Icon(Icons.update),
                   title: Text('Updates'),
-                  onTap: (){},
+                  onTap: () {},
                 ),
-                const Divider(color: Colors.black45,),
+                const Divider(
+                  color: Colors.black45,
+                ),
                 ListTile(
                   leading: Icon(Icons.account_tree_outlined),
                   title: Text('Plugins'),
-                  onTap: (){},
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: Icon(Icons.notifications_outlined),
                   title: Text('Notifications'),
-                  onTap: (){},
+                  onTap: () {},
                 ),
               ],
             )
@@ -575,9 +592,8 @@ class _HomePageState extends State<HomePage> {
                   decoration: InputDecoration(
                     hintText: 'Search...',
                     border: OutlineInputBorder(
-                       borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
-                  
                     suffixIcon: Icon(Icons.search),
                   ),
                 ),
@@ -594,8 +610,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Category',
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
                       onPressed: () {},
                       child: const Text('View All',
@@ -631,15 +647,15 @@ class _HomePageState extends State<HomePage> {
               //           ))
               //       .toList(),
               // ),
-          
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Products',
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
                       onPressed: () {},
                       child: const Text('View All',
@@ -710,8 +726,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
-
 class MyBagScreen extends StatefulWidget {
   const MyBagScreen({super.key});
 
@@ -757,7 +771,8 @@ class _MyBagScreenState extends State<MyBagScreen> {
                     item: cartItems[index],
                     onQuantityChanged: (newQuantity) {
                       setState(() {
-                        cartItems[index]["ProductQuantityAddedToCart"] = newQuantity;
+                        cartItems[index]["ProductQuantityAddedToCart"] =
+                            newQuantity;
                       });
                     },
                   ),
@@ -835,7 +850,8 @@ class CartItemWidget extends StatelessWidget {
                       icon: const Icon(Icons.remove),
                       onPressed: () {
                         if (item["ProductQuantityAddedToCart"] > 1) {
-                          onQuantityChanged(item["ProductQuantityAddedToCart"] - 1);
+                          onQuantityChanged(
+                              item["ProductQuantityAddedToCart"] - 1);
                         }
                       },
                     ),
@@ -843,7 +859,8 @@ class CartItemWidget extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        onQuantityChanged(item["ProductQuantityAddedToCart"] + 1);
+                        onQuantityChanged(
+                            item["ProductQuantityAddedToCart"] + 1);
                       },
                     ),
                   ],
@@ -874,9 +891,11 @@ class TotalAmountSection extends StatelessWidget {
   Widget build(BuildContext context) {
     double total = items.fold(
       0,
-      (sum, item) => sum +
+      (sum, item) =>
+          sum +
           item["ProductQuantityAddedToCart"] *
-              double.parse(item['pricePerUnit'].toString().replaceAll('\$', "")),
+              double.parse(
+                  item['pricePerUnit'].toString().replaceAll('\$', "")),
     );
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -890,7 +909,8 @@ class TotalAmountSection extends StatelessWidget {
           ),
           Text(
             '$total\$',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
           ),
         ],
       ),
@@ -955,8 +975,6 @@ class _GradientButtonState extends State<GradientButton> {
 }
 
 class ProfileScreen extends StatefulWidget {
-  
-
   ProfileScreen({super.key});
 
   @override
@@ -967,19 +985,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final UserProfileController userProfileController =
       Get.put(UserProfileController());
 
- @override
+  @override
   void initState() {
     super.initState();
     userProfileController.getUserProfile();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
         elevation: 0,
-       automaticallyImplyLeading: false,
-       centerTitle: true,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: const Text('Profile',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
@@ -1111,7 +1130,7 @@ class ProductListView extends StatelessWidget {
       }
 
       return Padding(
-        padding: const EdgeInsets.only(left:10),
+        padding: const EdgeInsets.only(left: 10),
         child: SizedBox(
           height: 150,
           child: ListView.builder(
@@ -1144,7 +1163,13 @@ class ProductListView extends StatelessWidget {
         children: <Widget>[
           Stack(
             children: <Widget>[
-              SizedBox(height: 80,width:140, child: Image.asset(imageUrl,fit: BoxFit.cover,)),
+              SizedBox(
+                  height: 80,
+                  width: 140,
+                  child: Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  )),
               Positioned(
                 left: 0,
                 child: Container(
@@ -1201,7 +1226,7 @@ class ProductListView2 extends StatelessWidget {
       }
 
       return Padding(
-        padding: const EdgeInsets.only(left:8.0),
+        padding: const EdgeInsets.only(left: 8.0),
         child: SizedBox(
           height: 220,
           child: ListView.builder(
@@ -1293,7 +1318,7 @@ class ProductListView2 extends StatelessWidget {
 
 class ProductListViewdemo extends StatelessWidget {
   final ProductController controller = Get.put(ProductController());
-       final List<Map<String, String>> products = [
+  final List<Map<String, String>> products = [
     {
       'name': 'Product 1',
       'category': 'Category 1',
@@ -1315,21 +1340,21 @@ class ProductListViewdemo extends StatelessWidget {
       'newPrice': '\$10.00',
       'oldPrice': '\$15.00',
     },
-        {
+    {
       'name': 'Product 4',
       'category': 'Category 3',
       'image': 'assets/fruits.jpg',
       'newPrice': '\$10.00',
       'oldPrice': '\$15.00',
     },
-     {
+    {
       'name': 'Product 5',
       'category': 'Category 3',
       'image': 'assets/fruits.jpg',
       'newPrice': '\$10.00',
       'oldPrice': '\$15.00',
     },
-        {
+    {
       'name': 'Product 6',
       'category': 'Category 3',
       'image': 'assets/fruits.jpg',
@@ -1348,12 +1373,13 @@ class ProductListViewdemo extends StatelessWidget {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
-     return SingleChildScrollView(
-      // scrollDirection: Axis.horizontal,
+      return SingleChildScrollView(
+        // scrollDirection: Axis.horizontal,
         child: GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true, // Important for nested scrollable widgets
-          physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+          physics:
+              NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
           // children: List.generate(products.length, (index) {
           //   final product = products[index];
           //   // OnTap(
@@ -1368,33 +1394,34 @@ class ProductListViewdemo extends StatelessWidget {
           // }
           // ),
           children: List.generate(products.length, (index) {
-  final product = products[index];
+            final product = products[index];
 
-  return InkWell(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductDetailsPage(
-            // product: product,
-          ),
-        ),
-      );
-    },
-    child: _offerItemdemo(
-      product['name'] ?? "Product",
-      product['newPrice'] ?? "\$0.00",
-      product['oldPrice'] ?? "\$0.00",
-      product['image'] ?? 'assets/photo.png',
-    ),
-  );
-}),
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetailsPage(
+                        // product: product,
+                        ),
+                  ),
+                );
+              },
+              child: _offerItemdemo(
+                product['name'] ?? "Product",
+                product['newPrice'] ?? "\$0.00",
+                product['oldPrice'] ?? "\$0.00",
+                product['image'] ?? 'assets/photo.png',
+              ),
+            );
+          }),
         ),
       );
     });
   }
 
-  Widget _offerItemdemo(String name, String newPrice, String oldPrice, String imageUrl) {
+  Widget _offerItemdemo(
+      String name, String newPrice, String oldPrice, String imageUrl) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1415,8 +1442,7 @@ class ProductListViewdemo extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child:
-                Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           Row(
             children: [
@@ -1442,10 +1468,9 @@ class ProductListViewdemo extends StatelessWidget {
   }
 }
 
-
 class demo extends StatelessWidget {
   // final ProductController controller = Get.put(ProductController());
-       final List<Map<String, String>> products = [
+  final List<Map<String, String>> products = [
     {
       'name': 'Product 1',
       'category': 'Category 1',
@@ -1467,7 +1492,7 @@ class demo extends StatelessWidget {
       'newPrice': '\$10.00',
       'oldPrice': '\$15.00',
     },
-        {
+    {
       'name': 'Product 4',
       'category': 'Category 3',
       'image': 'assets/fruits.jpg',
@@ -1480,13 +1505,11 @@ class demo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-        height: 100,
-        decoration: BoxDecoration(
-          color: Colors.black,
-        ),
-      );
+    return Container(
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.black,
+      ),
+    );
   }
-
 }
-

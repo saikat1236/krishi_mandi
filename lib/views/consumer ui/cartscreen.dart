@@ -31,6 +31,39 @@ class _CartListScreenState extends State<CartListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+        // backgroundColor: Colors.transparent,
+        // elevation: 0,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+    
+        title: const Text('My Cart',
+            style:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); // Navigate back
+              },
+            );
+          },
+        ),
+        //   actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.person),
+        //     onPressed: () {
+        //             Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => HomePage(),
+        //       ),
+        //     );
+        //     },
+        //   ),
+        // ],
+      ),
       body: SingleChildScrollView(
         // width: 428,
         // height: 926,
@@ -40,7 +73,7 @@ class _CartListScreenState extends State<CartListScreen> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
-              SizedBox(height: 50),
+              // SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -50,33 +83,33 @@ class _CartListScreenState extends State<CartListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        child: FlutterLogo(),
-                      ),
-                      const SizedBox(width: 125),
-                      Text(
-                        'My Carts',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
-                        ),
-                      ),
-                      const SizedBox(width: 125),
-                      Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: Color(0xFFD72E2E),
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
+                      // Container(
+                      //   width: 35,
+                      //   height: 35,
+                      //   child: FlutterLogo(),
+                      // ),
+                      // const SizedBox(width: 125),
+                      // Text(
+                      //   'My Carts',
+                      //   style: TextStyle(
+                      //     color: Colors.black,
+                      //     fontSize: 14,
+                      //     fontFamily: 'Inter',
+                      //     fontWeight: FontWeight.w700,
+                      //     height: 0,
+                      //   ),
+                      // ),
+                      // const SizedBox(width: 125),
+                      // Text(
+                      //   'Delete',
+                      //   style: TextStyle(
+                      //     color: Color(0xFFD72E2E),
+                      //     fontSize: 12,
+                      //     fontFamily: 'Inter',
+                      //     fontWeight: FontWeight.w400,
+                      //     height: 0,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
