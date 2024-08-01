@@ -7,6 +7,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dar
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/farmerui/entrypage.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
+import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Uncomment this if HomeScreen is available
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
@@ -31,9 +32,9 @@ void main() async {
   }
   Widget farmerinitialScreen;
   if (farmertoken != null && farmertoken.isNotEmpty) {
-    farmerinitialScreen = MenuScreen(); // Uncomment this if HomeScreen is available
+    farmerinitialScreen = Uploadpage(); // Uncomment this if HomeScreen is available
   } else {
-    farmerinitialScreen = LoginScreen();
+    farmerinitialScreen = Uploadpage();
   }
 
   runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerinitialScreen,));
@@ -60,11 +61,11 @@ class MyApp extends StatelessWidget {
         );
       },
       // home: SaikatHome()
-      home: HomePage()
+      // home: HomePage()
       // home: MainScreen()
       // home: ProfileScreenmain()
       // home: ProductDetailsPage(),
-      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
 }

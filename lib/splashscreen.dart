@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/constants/AppConstants.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
+import 'package:krishi_customer_app/views/farmerui/upload.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen(
@@ -86,7 +87,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 onPressed: () {
                   AppContants.isfarmer = true;
-                  Get.to(widget.farmerscreen);
+                  // Get.to(widget.farmerscreen);
+                                              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Uploadpage(),
+                              ),
+                            );
                   // Add navigation or functionality here for farmer
                 },
                 child: Text(
