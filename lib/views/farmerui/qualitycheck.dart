@@ -26,11 +26,10 @@ class _UploadpageState extends State<Uploadpage2> {
     super.initState();
     _loadImageFromAssets();
   }
-    final ImagePicker _picker = ImagePicker();
 
+  final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
@@ -39,7 +38,6 @@ class _UploadpageState extends State<Uploadpage2> {
       });
     }
   }
-
 
   Future<void> _loadImageFromAssets() async {
     try {
@@ -60,9 +58,11 @@ class _UploadpageState extends State<Uploadpage2> {
     if (_image == null) return;
 
     try {
-      final uri = Uri.parse('http://43.204.188.100:3000/common/predict-product');
+      final uri =
+          Uri.parse('http://43.204.188.100:3000/common/predict-product');
       final request = http.MultipartRequest('POST', uri);
-      request.files.add(await http.MultipartFile.fromPath('files', _image!.path));
+      request.files
+          .add(await http.MultipartFile.fromPath('files', _image!.path));
 
       final response = await request.send();
 
@@ -78,7 +78,8 @@ class _UploadpageState extends State<Uploadpage2> {
       } else {
         final responseData = await response.stream.bytesToString();
         setState(() {
-          _grade = 'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
+          _grade =
+              'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
         });
       }
     } catch (e) {
@@ -88,8 +89,7 @@ class _UploadpageState extends State<Uploadpage2> {
     }
   }
 
-
-    DropListModel dropListModel1 = DropListModel([
+  DropListModel dropListModel1 = DropListModel([
     OptionItem(id: "1", title: "abc", data: 'CSE Student'),
     OptionItem(id: "2", title: "abc2", data: 'CSE Student'),
     OptionItem(id: "3", title: "abc3", data: 'CSE Student'),
@@ -110,7 +110,8 @@ class _UploadpageState extends State<Uploadpage2> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: const Text('AI Quality Grading', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text('AI Quality Grading',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -135,17 +136,22 @@ class _UploadpageState extends State<Uploadpage2> {
                       child: Container(
                           width: double.infinity,
                           height: 300,
-                          child: Image.file(_image!, height: 200, width: 200, fit: BoxFit.cover)),
+                          child: Image.file(_image!,
+                              height: 200, width: 200, fit: BoxFit.cover)),
                     )
                   : Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                          width: double.infinity,
-                          height: 300,
-                          decoration: BoxDecoration(),
-                          child: Center(
-                            child: Image.asset("assets/fileupload.png", height: 300, width: 600,),
+                        width: double.infinity,
+                        height: 300,
+                        decoration: BoxDecoration(),
+                        child: Center(
+                          child: Image.asset(
+                            "assets/fileupload.png",
+                            height: 300,
+                            width: 600,
                           ),
+                        ),
                       ),
                     ),
               SizedBox(height: 20),
@@ -161,12 +167,16 @@ class _UploadpageState extends State<Uploadpage2> {
                         backgroundColor: Color.fromRGBO(74, 230, 50, 0.961),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          side: BorderSide(color: Color.fromRGBO(74, 230, 50, 0.961), width: 2.0),
+                          side: BorderSide(
+                              color: Color.fromRGBO(74, 230, 50, 0.961),
+                              width: 2.0),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
                       onPressed: _pickImage,
-                      child: Text("Pick Image", style: TextStyle(color: Colors.black)),
+                      child: Text("Pick Image",
+                          style: TextStyle(color: Colors.black)),
                     ),
                     Spacer(),
                     ElevatedButton(
@@ -174,12 +184,16 @@ class _UploadpageState extends State<Uploadpage2> {
                         backgroundColor: Color.fromRGBO(74, 230, 50, 0.961),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          side: BorderSide(color: Color.fromRGBO(74, 230, 50, 0.961), width: 2.0),
+                          side: BorderSide(
+                              color: Color.fromRGBO(74, 230, 50, 0.961),
+                              width: 2.0),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
                       onPressed: _uploadImage,
-                      child: Text("Upload Image", style: TextStyle(color: Colors.black)),
+                      child: Text("Upload Image",
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -197,99 +211,149 @@ class _UploadpageState extends State<Uploadpage2> {
               //       ),
               // ),
               SizedBox(
-                height: 30,
+                height: 20,
               ),
 
               // in column
-              
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Select A crop:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                ),
-              ),
+
               // Padding(
               //   padding: const EdgeInsets.all(8.0),
-              //   child: Container(
-              //          width: double.infinity, // Set width here
-              //         height: 60, // Set height here
-              //         decoration: BoxDecoration(
-
-              //         ),
-              //     child: DropdownButton<String>(
-              //           value: _selectedValue,
-              //           isExpanded: true,
-              //           hint: Text('Select an option'),
-              //           onChanged: (String? newValue) {
-              //             setState(() {
-              //               _selectedValue = newValue;
-              //             });
-              //           },
-              //           items: <String>['Option 1', 'Option 2', 'Option 3']
-              //               .map<DropdownMenuItem<String>>((String value) {
-              //             return DropdownMenuItem<String>(
-              //               value: value,
-              //               child: Text(value),
-              //             );
-              //           }).toList(),
-              //         ),
+              //   child: Text(
+              //     "Select A crop:",
+              //     style: TextStyle(
+              //       fontSize: 20,
+              //       color: Colors.black,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //     maxLines: 2,
+              //     textAlign: TextAlign.left,
               //   ),
               // ),
-              SelectDropRadio(
-                defaultText: optionItemSelected,
-                dropListModel: dropListModel1,
-                showIcon: false,
-                showBorder: true,
-                paddingTop: 0,
-                enable: true,
-                submitText: "OK",
-                colorSubmitButton: Colors.amber,
-                selectedRadioColor: Colors.amber,
-                suffixIcon: Icons.arrow_drop_down,
-                containerPadding: const EdgeInsets.all(10),
-                icon: const Icon(Icons.person, color: Colors.black),
-                onOptionListSelected: (data) {
-                  print(data.title);
-                  setState(() {});
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Select A Fertilizer:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              SelectDropRadio(
-                defaultText: optionItemSelected2,
-                dropListModel: dropListModel2,
-                showIcon: false,
-                showBorder: true,
-                paddingTop: 0,
-                enable: true,
-                submitText: "OK",
-                colorSubmitButton: Colors.amber,
-                selectedRadioColor: Colors.amber,
-                suffixIcon: Icons.arrow_drop_down,
-                containerPadding: const EdgeInsets.all(10),
-                icon: const Icon(Icons.person, color: Colors.black),
-                onOptionListSelected: (data) {
-                  print(data.title);
-                  setState(() {});
-                },
+              // SelectDropRadio(
+              //   defaultText: optionItemSelected,
+              //   dropListModel: dropListModel1,
+              //   showIcon: false,
+              //   showBorder: true,
+              //   paddingTop: 0,
+              //   enable: true,
+              //   submitText: "OK",
+              //   colorSubmitButton: Colors.amber,
+              //   selectedRadioColor: Colors.amber,
+              //   suffixIcon: Icons.arrow_drop_down,
+              //   containerPadding: const EdgeInsets.all(10),
+              //   icon: const Icon(Icons.person, color: Colors.black),
+              //   onOptionListSelected: (data) {
+              //     print(data.title);
+              //     setState(() {});
+              //   },
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Text(
+              //     "Select A Fertilizer:",
+              //     style: TextStyle(
+              //       fontSize: 20,
+              //       color: Colors.black,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //     maxLines: 2,
+              //     textAlign: TextAlign.left,
+              //   ),
+              // ),
+              // SelectDropRadio(
+              //   defaultText: optionItemSelected2,
+              //   dropListModel: dropListModel2,
+              //   showIcon: false,
+              //   showBorder: true,
+              //   paddingTop: 0,
+              //   enable: true,
+              //   submitText: "OK",
+              //   colorSubmitButton: Colors.amber,
+              //   selectedRadioColor: Colors.amber,
+              //   suffixIcon: Icons.arrow_drop_down,
+              //   containerPadding: const EdgeInsets.all(10),
+              //   icon: const Icon(Icons.person, color: Colors.black),
+              //   onOptionListSelected: (data) {
+              //     print(data.title);
+              //     setState(() {});
+              //   },
+              // ),
+
+              Row(
+                children: [
+                  Container(
+                    width: 200,
+                    child:Column(
+                      children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Select A crop:",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    SelectDropRadio(
+                      defaultText: optionItemSelected,
+                      dropListModel: dropListModel1,
+                      showIcon: false,
+                      showBorder: true,
+                      paddingTop: 0,
+                      enable: true,
+                      submitText: "OK",
+                      colorSubmitButton: Colors.amber,
+                      selectedRadioColor: Colors.amber,
+                      suffixIcon: Icons.arrow_drop_down,
+                      containerPadding: const EdgeInsets.all(10),
+                      icon: const Icon(Icons.person, color: Colors.black),
+                      onOptionListSelected: (data) {
+                        print(data.title);
+                        setState(() {});
+                      },
+                    ),
+                ])),
+                                    Container(
+                    width: 200,
+                    child:Column(
+                      children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Select A Fertilizer:",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    SelectDropRadio(
+                      defaultText: optionItemSelected2,
+                      dropListModel: dropListModel2,
+                      showIcon: false,
+                      showBorder: true,
+                      paddingTop: 0,
+                      enable: true,
+                      submitText: "OK",
+                      colorSubmitButton: Colors.amber,
+                      selectedRadioColor: Colors.amber,
+                      suffixIcon: Icons.arrow_drop_down,
+                      containerPadding: const EdgeInsets.all(10),
+                      icon: const Icon(Icons.person, color: Colors.black),
+                      onOptionListSelected: (data) {
+                        print(data.title);
+                        setState(() {});
+                      },
+                    ),
+                ])),
+                ],
               ),
               Center(
                 child: Padding(
@@ -307,38 +371,38 @@ class _UploadpageState extends State<Uploadpage2> {
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: 20,
               ),
 
               if (_grade != null && _type != null && _freshness != null)
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Quality Grade:",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Quality Grade:",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        textAlign: TextAlign.left,
                       ),
-                      maxLines: 2,
-                      textAlign: TextAlign.left,
                     ),
-                  ),
-                  Container(
-                    height: 60,
-                    width: 80,
-                    decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                ),
-                    child:Center(child: Text('$_grade',
-                    style: TextStyle(
-                      fontSize: 40
-                    ),))
-                  )
-                ],
-              ),
+                    Container(
+                        height: 60,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Center(
+                            child: Text(
+                          '$_grade',
+                          style: TextStyle(fontSize: 40),
+                        )))
+                  ],
+                ),
               SizedBox(
                 height: 30,
               ),
@@ -360,16 +424,16 @@ class _UploadpageState extends State<Uploadpage2> {
                   Positioned(
                     right: 10,
                     child: Container(
-                      height: 50,
-                      width: 250,
-                      decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                ),
-                    child:Center(child: Text("$_type",
-                    style: TextStyle(
-                      fontSize: 16
-                    ),))
-                    ),
+                        height: 50,
+                        width: 250,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Center(
+                            child: Text(
+                          "$_type",
+                          style: TextStyle(fontSize: 16),
+                        ))),
                   ),
                 ],
               ),
@@ -391,7 +455,8 @@ class _UploadpageState extends State<Uploadpage2> {
                 // decoration: BoxDecoration(color: Colors.orange[50]),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('$_freshness',
+                  child: Text(
+                    '$_freshness',
                     // "The Chandramukhi potato is a prominent variety of potato known for its excellent quality and adaptability. It is widely cultivated in India, particularly in the northern regions, due to its high yield and resistance to various diseases. The tubers of the Chandramukhi potato are medium to large in size, with a smooth, light brown skin and a creamy white flesh that is perfect for a variety of culinary uses. This variety is particularly favored for its good storage properties, making it a reliable choice for both farmers and consumers. Its versatility in cooking, from boiling and frying to baking, makes the Chandramukhi potato a staple in many households and an essential ingredient in numerous traditional Indian dishes.",
                     style: TextStyle(
                       fontSize: 15,
@@ -403,28 +468,28 @@ class _UploadpageState extends State<Uploadpage2> {
                   ),
                 ),
               )
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Text(
-                //         "Grade: $_grade",
-                //         style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                //       ),
-                //       SizedBox(height: 10),
-                //       Text(
-                //         "Type: $_type",
-                //         style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                //       ),
-                //       SizedBox(height: 10),
-                //       Text(
-                //         "Freshness: $_freshness",
-                //         style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         "Grade: $_grade",
+              //         style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+              //       ),
+              //       SizedBox(height: 10),
+              //       Text(
+              //         "Type: $_type",
+              //         style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+              //       ),
+              //       SizedBox(height: 10),
+              //       Text(
+              //         "Freshness: $_freshness",
+              //         style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               // Rest of your UI components...
             ],
           ),
