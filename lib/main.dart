@@ -7,6 +7,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dar
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/farmerui/entrypage.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
+import 'package:krishi_customer_app/views/farmerui/qualitycheck.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Uncomment this if HomeScreen is available
@@ -65,7 +66,9 @@ class MyApp extends StatelessWidget {
       // home: MainScreen()
       // home: ProfileScreenmain()
       // home: ProductDetailsPage(),
-      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      // home: Uploadpage()
+      home: Uploadpage2()
+      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
 }
