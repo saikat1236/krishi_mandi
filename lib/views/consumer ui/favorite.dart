@@ -24,6 +24,14 @@ class FavPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<FavPage> {
+    bool isFavorite = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
   final int _currentIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   final List<String> imgList = [
@@ -70,8 +78,8 @@ class _HomePageState extends State<FavPage> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        // title: const Text('Home Page',
-        // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text('Favorite',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -119,9 +127,9 @@ class _HomePageState extends State<FavPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Favorite Products',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold))
+                    // const Text('Favorite Products',
+                    //     style: TextStyle(
+                    //         fontSize: 20, fontWeight: FontWeight.bold))
                   ],
                 ),
               ),
@@ -181,8 +189,19 @@ class _HomePageState extends State<FavPage> {
 }
 
 
+class ProductListViewdemo extends StatefulWidget {
+  @override
+  _ProductListViewdemoState createState() => _ProductListViewdemoState();
+}
 
-class ProductListViewdemo extends StatelessWidget {
+class _ProductListViewdemoState extends State<ProductListViewdemo> {
+    bool isFavorite = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
   final ProductController controller = Get.put(ProductController());
   final List<Map<String, String>> products = [
     {
@@ -295,13 +314,29 @@ class ProductListViewdemo extends StatelessWidget {
           Stack(
             children: <Widget>[
               SizedBox(height: 100, child: Image.asset(imageUrl)),
+              // Positioned(
+              //   left: 0,
+              //   child: Container(
+              //     padding: EdgeInsets.all(5),
+              //     color: Colors.red,
+              //     child: Text('-15%',
+              //         style: TextStyle(color: Colors.white, fontSize: 12)),
+              //   ),
+              // ),
               Positioned(
-                left: 0,
+                right: 0,
                 child: Container(
-                  padding: EdgeInsets.all(5),
-                  color: Colors.red,
-                  child: Text('-15%',
-                      style: TextStyle(color: Colors.white, fontSize: 12)),
+                  // padding: EdgeInsets.all(5),
+                  height: 40,
+                  width: 40,
+                  color: Colors.white,
+                  child: IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                  ),
+                  onPressed: toggleFavorite,
+                ),
                 ),
               ),
             ],

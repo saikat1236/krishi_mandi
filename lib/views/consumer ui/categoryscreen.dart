@@ -70,8 +70,8 @@ class _HomePageState extends State<CategoryScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        // title: const Text('Home Page',
-        // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text('Category',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -121,22 +121,22 @@ class _HomePageState extends State<CategoryScreen> {
               //     // child: Text('Content goes here'),
               //   ),
               // ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Category',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    // TextButton(
-                    //   onPressed: () {},
-                    //   child: const Text('View All',
-                    //       style: TextStyle(color: Colors.green)),
-                    // ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       const Text('Category',
+              //           style: TextStyle(
+              //               fontSize: 20, fontWeight: FontWeight.bold)),
+              //       // TextButton(
+              //       //   onPressed: () {},
+              //       //   child: const Text('View All',
+              //       //       style: TextStyle(color: Colors.green)),
+              //       // ),
+              //     ],
+              //   ),
+              // ),
               Container(
                 height: 120,
                 child: ListView(
@@ -170,9 +170,9 @@ class _HomePageState extends State<CategoryScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Products',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    // const Text('Products',
+                    //     style: TextStyle(
+                    //         fontSize: 20, fontWeight: FontWeight.bold)),
                     // TextButton(
                     //   onPressed: () {},
                     //   child: const Text('View All',
@@ -238,7 +238,19 @@ class _HomePageState extends State<CategoryScreen> {
 
 
 
-class ProductListViewdemo extends StatelessWidget {
+class ProductListViewdemo extends StatefulWidget {
+  @override
+  _ProductListViewdemoState createState() => _ProductListViewdemoState();
+}
+
+class _ProductListViewdemoState extends State<ProductListViewdemo> {
+    bool isFavorite = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
   final ProductController controller = Get.put(ProductController());
   final List<Map<String, String>> products = [
     {
@@ -351,13 +363,20 @@ class ProductListViewdemo extends StatelessWidget {
           Stack(
             children: <Widget>[
               SizedBox(height: 100, child: Image.asset(imageUrl)),
-              Positioned(
-                left: 0,
+             Positioned(
+                right: 0,
                 child: Container(
-                  padding: EdgeInsets.all(5),
-                  color: Colors.red,
-                  child: Text('-15%',
-                      style: TextStyle(color: Colors.white, fontSize: 12)),
+                  // padding: EdgeInsets.all(5),
+                  height: 40,
+                  width: 40,
+                  color: Colors.white,
+                  child: IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                  ),
+                  onPressed: toggleFavorite,
+                ),
                 ),
               ),
             ],
@@ -385,52 +404,6 @@ class ProductListViewdemo extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class demo extends StatelessWidget {
-  // final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
-
-  // ProductListViewdemo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.black,
       ),
     );
   }
