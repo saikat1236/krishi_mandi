@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/product_controller.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/categoryscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/checkoutscreen1.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/favorite.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/item.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
@@ -518,7 +520,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Text(
                           "Edit profile",
-                          style: TextStyle(color: Colors.black), // Text color
+                          style: TextStyle(color: Colors.white), // Text color
                         ),
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: Colors.white), // Border color
@@ -547,8 +549,8 @@ class _HomePageState extends State<HomePage> {
                   title: Text('Favourites'),
                   onTap: () {
                     /// Close Navigation drawer before
-                    Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen()),);
+                    // Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FavPage()),);
                   },
                 ),
                 ListTile(
@@ -613,7 +615,12 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoryScreen(),
+                        ));
+                      },
                       child: const Text('View All',
                           style: TextStyle(color: Colors.green)),
                     ),
@@ -695,9 +702,9 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.only(top: 8),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Color(0xFF7ED856),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black),
+              border: Border.all(color: Colors.white),
             ),
             child: Center(child: Text(title)),
           ),

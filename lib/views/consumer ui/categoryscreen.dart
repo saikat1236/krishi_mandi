@@ -205,9 +205,9 @@ class _HomePageState extends State<CategoryScreen> {
             margin: const EdgeInsets.only(top: 8),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Color(0xFF7ED856),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black),
+              border: Border.all(color: Colors.white),
             ),
             child: Center(child: Text(title)),
           ),
@@ -228,7 +228,7 @@ class _HomePageState extends State<CategoryScreen> {
           TextButton(
             onPressed: () {},
             child:
-                Text(viewAllText, style: const TextStyle(color: Colors.green)),
+                Text(viewAllText, style: const TextStyle(color: Color(0xFF7ED856))),
           ),
         ],
       ),

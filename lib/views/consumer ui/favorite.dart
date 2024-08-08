@@ -84,10 +84,10 @@ class _HomePageState extends State<FavPage> {
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+               onPressed: () {
+                    /// Close Navigation drawer before
+                    Navigator.pop(context);
+                  }
             );
           },
         ),

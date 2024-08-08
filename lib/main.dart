@@ -64,14 +64,14 @@ class MyApp extends StatelessWidget {
         );
       },
       // home: SaikatHome()
-      // home: HomePage()
+      home: HomePage()
       // home: MainScreen()
       // home: ProfileScreenmain()
       // home: ProductDetailsPage(),
       // home: Uploadpage()
       // home: Uploadpage2()
       // home: FavPage()
-      home: CategoryScreen()
+      // home: CategoryScreen()
       // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
