@@ -5,6 +5,8 @@ import 'package:krishi_customer_app/saikat-home.dart';
 import 'package:krishi_customer_app/splashscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/categoryscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/favorite.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/orderdetailspage%201.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/farmerui/entrypage.dart';
@@ -63,6 +65,8 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
+      // home: MyOrdersScreen()
+      // home: OrderDetailsScreen()
       // home: SaikatHome()
       home: HomePage()
       // home: MainScreen()

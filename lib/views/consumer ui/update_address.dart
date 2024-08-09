@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/customer_apis/addresscontroller.dart';
+import 'package:krishi_customer_app/models/address.dart';
 
-class AddShippingAddressScreen extends StatelessWidget {
+class UpdShippingAddressScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final ShippingAddressController _controller = Get.put(ShippingAddressController());
+final Address address;
+ final TextEditingController _nameController;
+  final TextEditingController _mobileController;
+  final TextEditingController _emailController;
+  final TextEditingController _addressLine1Controller;
+  // final TextEditingController _addressLine2Controller;
+  final TextEditingController _cityController;
+  final TextEditingController _pinController;
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _mobileController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _addressLine1Controller = TextEditingController();
-  // final TextEditingController _addressLine2Controller = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _pinController = TextEditingController();
-
-  AddShippingAddressScreen({super.key});
+  UpdShippingAddressScreen({super.key, required this.address})
+      : _nameController = TextEditingController(text: address.name),
+        _mobileController = TextEditingController(text: address.mobile),
+        _emailController = TextEditingController(text: address.email),
+        _addressLine1Controller = TextEditingController(text: address.addressLine1),
+        // _addressLine2Controller = TextEditingController(text: address.addressLine2),
+        _cityController = TextEditingController(text: address.city),
+        _pinController = TextEditingController(text: address.pin.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +37,7 @@ class AddShippingAddressScreen extends StatelessWidget {
             Get.back();
           },
         ),
-        title: const Text('Adding Shipping Address',
+        title: const Text('Updating Shipping Address',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(

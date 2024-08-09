@@ -1,10 +1,18 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/add_address.dart';
+
+// import 'package:krishi_customer_app/views/consumer%20ui/address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpscreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/sec.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/update_address.dart';
+import 'package:krishi_customer_app/models/address.dart';
 
 class ProfileScreenmain extends StatefulWidget {
   const ProfileScreenmain({Key? key}) : super(key: key);
@@ -19,6 +27,15 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
   TextEditingController _phoneController = TextEditingController();
   final AuthController controller = Get.put(AuthController());
   bool _isChecked = false;
+
+  // final Address address2 = Address(
+  //   name: 'John Doe',
+  //   mobile: '1234567890',
+  //   email: 'john@example.com',
+  //   addressLine1: '123 Main St',
+  //   city: 'Springfield',
+  //   pin: 12345,
+  // );
 
   void _hideKeyboard(BuildContext context) {
     final currentFocus = FocusScope.of(context);
@@ -35,50 +52,32 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
       },
       child: Scaffold(
         appBar: AppBar(
-        // backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
+          // backgroundColor: Colors.white,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
 
-        title: const Text('Profile',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-         leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context); // Navigate back
-              },
-
-            );
-          },
+          title: const Text('Profile',
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context); // Navigate back
+                },
+              );
+            },
+          ),
         ),
-
-      ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Container(
-              // height: MediaQuery.of(context).size.height,
-              // width: MediaQuery.of(context).size.width,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Row(
-                  //   children: [
-                  //     Icon(Icons.arrow_back),
-                  //     Spacer(), // This pushes the next widgets to the end
-                  //     Text(
-                  //       "Profile",
-                  //       style: TextStyle(
-                  //           fontWeight: FontWeight.bold, fontSize: 30),
-                  //     ),
-                  //     Spacer(), // This pushes the "Profile" text towards the center
-                  //   ],
-                  // ),
-                  // SizedBox(
-                  //   height: 40,
-                  // ),
                   Row(
                     children: [
                       // Image.asset(
@@ -118,29 +117,329 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200]
-                          ),
-                        ),
+                            height: 200,
+                            width: 550,
+                            decoration: BoxDecoration(
+                              // color: Colors.grey[200],
+                              border: Border.all(
+                                color: Colors.grey, // Border color
+                                width: 2.0, // Border width
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0), // Radius for all corners
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text('Default'),
+                                        // Spacer(),
+                                        // Text('Delete'),
+                                      ],
+                                    )),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 30, top: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text("Saikat Biswas",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700)),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text(
+                                            "Boroj colony, Belonia, Tripura 799155"),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text("+91 7085959167"),
+                                      ),
+                                      Row(
+                                        children: [
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors
+                                                  .green, // Background color
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        18.0), // Rounded edges
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 30,
+                                                  vertical: 10), // Button size
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UpdShippingAddressScreen(
+                                                          address: Address(
+                                                    name: 'John Doe',
+                                                    mobile: '1234567890',
+                                                    email: 'john@example.com',
+                                                    addressLine1: '123 Main St',
+                                                    addressLine2: 'Apt 4B',
+                                                    city: 'Springfield',
+                                                    pin: 12345,
+                                                  )),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              "Edit",
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .white), // Text color
+                                            ),
+                                          ),
+                                          SizedBox(width: 30),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color.fromRGBO(
+                                                      244,
+                                                      67,
+                                                      54,
+                                                      1), // Background color
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        18.0), // Rounded edges
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 30,
+                                                  vertical: 10), // Button size
+                                            ),
+                                            onPressed: () {
+                                              // Get.to(widget.initialScreen);
+                                              // Add navigation or functionality here for consumer
+                                            },
+                                            child: Text(
+                                              "Delete",
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .white), // Text color
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200]
-                          ),
-                        ),
+                            height: 200,
+                            width: 550,
+                            decoration: BoxDecoration(
+                              // color: Colors.grey[200],
+                              border: Border.all(
+                                color: Colors.grey, // Border color
+                                width: 2.0, // Border width
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0), // Radius for all corners
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Default'),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 30, top: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text("Saikat Biswas",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700)),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text(
+                                            "Boroj colony, Belonia, Tripura 799155"),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text("+91 7085959167"),
+                                      ),
+                                      Row(children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors
+                                                .green, // Background color
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      18.0), // Rounded edges
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 30,
+                                                vertical: 10), // Button size
+                                          ),
+                                          onPressed: () {
+                                            // Get.to(widget.initialScreen);
+                                            // Add navigation or functionality here for consumer
+                                          },
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                                color:
+                                                    Colors.white), // Text color
+                                          ),
+                                        ),
+                                        SizedBox(width: 30),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color.fromRGBO(244, 67,
+                                                    54, 1), // Background color
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      18.0), // Rounded edges
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 30,
+                                                vertical: 10), // Button size
+                                          ),
+                                          onPressed: () {
+                                            // Get.to(widget.initialScreen);
+                                            // Add navigation or functionality here for consumer
+                                          },
+                                          child: Text(
+                                            "Delete",
+                                            style: TextStyle(
+                                                color:
+                                                    Colors.white), // Text color
+                                          ),
+                                        ),
+                                      ]),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200]
-                          ),
-                        ),
+                            height: 200,
+                            width: 550,
+                            decoration: BoxDecoration(
+                              // color: Colors.grey[200],
+                              border: Border.all(
+                                color: Colors.grey, // Border color
+                                width: 2.0, // Border width
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0), // Radius for all corners
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Default'),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 30, top: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text("Saikat Biswas",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700)),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text(
+                                            "Boroj colony, Belonia, Tripura 799155"),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(3.0),
+                                        child: Text("+91 7085959167"),
+                                      ),
+                                      Row(children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors
+                                                .green, // Background color
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      18.0), // Rounded edges
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 30,
+                                                vertical: 10), // Button size
+                                          ),
+                                          onPressed: () {
+                                            // Get.to(widget.initialScreen);
+                                            // Add navigation or functionality here for consumer
+                                          },
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                                color:
+                                                    Colors.white), // Text color
+                                          ),
+                                        ),
+                                        SizedBox(width: 30),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color.fromRGBO(244, 67,
+                                                    54, 1), // Background color
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      18.0), // Rounded edges
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 30,
+                                                vertical: 10), // Button size
+                                          ),
+                                          onPressed: () {
+                                            // Get.to(widget.initialScreen);
+                                            // Add navigation or functionality here for consumer
+                                          },
+                                          child: Text(
+                                            "Delete",
+                                            style: TextStyle(
+                                                color:
+                                                    Colors.white), // Text color
+                                          ),
+                                        ),
+                                      ]),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )),
                       ),
                     ],
                   )
@@ -278,6 +577,22 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
             ),
           ),
         ),
+
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          onPressed: () {
+            // print('FAB pressed!'); AddShippingAddressScreen ShippingAddressesScreen
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddShippingAddressScreen(),
+                ));
+          },
+          child: Icon(Icons.add, size: 30),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+        // Other properties such as body go here
       ),
     );
   }

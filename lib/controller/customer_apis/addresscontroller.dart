@@ -11,7 +11,7 @@ class ShippingAddressController extends GetxController {
     required String mobile,
     required String email,
     required String addressLine1,
-    required String addressLine2,
+    // required String addressLine2,
     required String city,
     required int pin,
   }) async {
@@ -27,7 +27,7 @@ class ShippingAddressController extends GetxController {
           "mobile": mobile.toString(),
           "email": email,
           "addressLine1": addressLine1,
-          "addressLine2": addressLine2,
+          // "addressLine2": addressLine2,
           "city": city,
           "pin": pin.toString(),
         }),

@@ -59,7 +59,7 @@ appBar:AppBar(
                         mobile: _mobileController.text,
                         email: _emailController.text,
                         addressLine1: _addressLine1Controller.text,
-                        addressLine2: _addressLine2Controller.text,
+                        // addressLine2: _addressLine2Controller.text,
                         city: _cityController.text,
                         pin: int.tryParse(_pinController.text) ?? 0,
                       );

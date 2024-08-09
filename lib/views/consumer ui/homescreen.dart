@@ -554,9 +554,13 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.workspaces),
-                  title: Text('Workflow'),
-                  onTap: () {},
+                  leading: Icon(Icons.card_giftcard_outlined),
+                  title: Text('Orders'),
+                  onTap: () {
+                    /// Close Navigation drawer before
+                    // Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrdersScreen()),);
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.update),
