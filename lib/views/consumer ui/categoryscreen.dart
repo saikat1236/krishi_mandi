@@ -307,6 +307,9 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
+       if (controller.categories.isEmpty) {
+        return Center(child: Text('No Products available.'));
+      }
       return SingleChildScrollView(
         // scrollDirection: Axis.horizontal,
         child: GridView.count(
@@ -327,8 +330,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
           //   );
           // }
           // ),
-          children: List.generate(products.length, (index) {
-            final product = products[index];
+          children: List.generate(controller.products.length, (index) {
+            final product = controller.products[index];
 
             return InkWell(
               onTap: () {
@@ -336,7 +339,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductDetailsPage(
-                        // product: product,
+                        product: product['name'],
                         ),
                   ),
                 );
@@ -344,7 +347,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
               child: _offerItemdemo(
                 product['name'] ?? "Product",
                 product['newPrice'] ?? "\$0.00",
-                product['oldPrice'] ?? "\$0.00",
+                product['pricePerUnit'] ?? "\$0.00",
                 product['image'] ?? 'assets/photo.png',
               ),
             );

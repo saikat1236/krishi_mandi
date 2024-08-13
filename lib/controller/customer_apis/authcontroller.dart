@@ -98,7 +98,7 @@ class AuthController extends GetxController {
 
         // Update state
         isOtpVerified(true);
-        Get.to(MainScreen());
+        Get.to(HomePage());
       } else {
         isOtpVerified(false);
       }

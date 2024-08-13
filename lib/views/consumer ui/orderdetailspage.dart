@@ -7,17 +7,17 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-   appBar:AppBar(
-        backgroundColor: Colors.green,
+      appBar: AppBar(
+        // backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Get.back();
           },
         ),
-        title: const Text('Adding Shipping Address',
-            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+        title: const Text('Order Details',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -27,10 +27,10 @@ class OrderDetailsScreen extends StatelessWidget {
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Order №1947034',
+                Text('Order No: 1947034',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Text('05-12-2019', style: TextStyle(color: Colors.grey)),
+                Text('05-12-2019', style: TextStyle(color: Colors.white)),
               ],
             ),
             const SizedBox(height: 8.0),
@@ -46,15 +46,35 @@ class OrderDetailsScreen extends StatelessWidget {
             const Text('Order information',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8.0),
-            _buildOrderInfoRow('Shipping Address:',
-                '3 Newbridge Court, Chino Hills, CA 91709, United States'),
-            _buildOrderInfoRow('Payment method:', '**** **** **** 3947',
-                icon: Icons.credit_card, iconColor: Colors.orange),
-            _buildOrderInfoRow('Delivery method:', 'FedEx, 3 days, 15\$'),
+            _buildOrderInfoRow(
+                'Shipping Address:', 'Belonia Boroj Colony, South Tripura'),
+            _buildOrderInfoRow('Payment method:', 'Cash On Delivery'),
+            // _buildOrderInfoRow('Delivery method:', 'FedEx, 3 days, 15\$'),
             _buildOrderInfoRow('Discount:', '10%, Personal promo code'),
-            _buildOrderInfoRow('Total Amount:', '133\$', isBold: true),
+            _buildOrderInfoRow('Total Amount:', '150\$', isBold: true),
             const SizedBox(height: 16.0),
-            const Center(child: GradientButton(label: "Shop Now"))
+            // const Center(child: GradientButton(label: "Shop Now"))
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green, // Background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0), // Rounded edges
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50, vertical: 15), // Button size
+                ),
+                onPressed: () {
+                  // Get.to(widget.initialScreen);
+                  // Add navigation or functionality here for consumer
+                },
+                child: const Text(
+                  "Shop Now",
+                  style: TextStyle(color: Colors.white,
+                  fontSize: 20), // Text color
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -106,60 +126,6 @@ class OrderDetailsScreen extends StatelessWidget {
                     fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class GradientButton extends StatefulWidget {
-  final String label;
-
-  const GradientButton({super.key, required this.label});
-
-  @override
-  State<GradientButton> createState() => _GradientButtonState();
-}
-
-class _GradientButtonState extends State<GradientButton> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      height: 50,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xff52DB22), Color(0xff2C7512)], // White to dark green
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.transparent),
-          elevation: MaterialStateProperty.all(0),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
-            ),
-          ),
-        ),
-        child: Text(
-          widget.label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
       ),
     );
   }

@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/constants/AppConstants.dart';
-import 'package:krishi_customer_app/saikat-home.dart';
+import 'package:krishi_customer_app/global_auth.dart';
+// import 'package:krishi_customer_app/saikat-home.dart';
 import 'package:krishi_customer_app/splashscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/categoryscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/favorite.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderdetailspage%201.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
+// import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
 import 'package:krishi_customer_app/views/farmerui/entrypage.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
 import 'package:krishi_customer_app/views/farmerui/qualitycheck.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
+// import 'package:krishi_customer_app/views/signupscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Uncomment this if HomeScreen is available
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
+
+// import 'views/consumer ui/signupscreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +38,7 @@ void main() async {
   // Determine the initial route based on the token
   Widget initialScreen;
   if (token != null && token.isNotEmpty) {
-    initialScreen = MainScreen(); // Uncomment this if HomeScreen is available
+    initialScreen = HomePage(); // Uncomment this if HomeScreen is available
   } else {
     initialScreen = LoginScreen();
   }
@@ -41,6 +48,7 @@ void main() async {
   } else {
     farmerinitialScreen = Uploadpage();
   }
+  // Get.put(GlobalController());
 
   runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerinitialScreen,));
 }
@@ -69,6 +77,7 @@ class MyApp extends StatelessWidget {
       // home: OrderDetailsScreen()
       // home: SaikatHome()
       home: HomePage()
+      // home: FinalOrderScreen()
       // home: MainScreen()
       // home: ProfileScreenmain()
       // home: ProductDetailsPage(),
@@ -76,6 +85,7 @@ class MyApp extends StatelessWidget {
       // home: Uploadpage2()
       // home: FavPage()
       // home: CategoryScreen()
+      // home: SignUpScreen()
       // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }

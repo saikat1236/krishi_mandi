@@ -22,13 +22,13 @@ void main() async {
   // Determine the initial route based on the token
   Widget initialScreen;
   if (token != null && token.isNotEmpty) {
-    initialScreen = MainScreen(); // Uncomment this if HomeScreen is available
+    initialScreen = HomePage(); // Uncomment this if HomeScreen is available
   } else {
     initialScreen = LoginScreen();
   }
   Widget farmerinitialScreen;
   if (farmertoken != null && farmertoken.isNotEmpty) {
-    farmerinitialScreen = MenuScreen(); // Uncomment this if HomeScreen is available
+    farmerinitialScreen = HomePage(); // Uncomment this if HomeScreen is available
   } else {
     farmerinitialScreen = MneuBar();
   }

@@ -7,6 +7,9 @@ import 'package:krishi_customer_app/constants/AppConstants.dart';
 class ProductController extends GetxController {
   var isLoading = false.obs;
   var products = [].obs;
+  var categories= [].obs;
+
+  String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTdjM2QyNi01MTE5LTQzOGMtOTQ3Zi03ODkzZWUxZmNhMjIiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzE2NDgwMTg0fQ.gCPwklJG6a-maKkZ2wNSss3XbLMF2hPXPE9660GdYbw";
 
   final String baseUrl = 'http://43.204.188.100:3000/users'; // Replace with your base URL
 
@@ -14,11 +17,47 @@ class ProductController extends GetxController {
   void onInit() {
     super.onInit();
     getAllProducts(1); // Fetch products when controller initializes
+    getAllcategories();
+  }
+  // Get all categories
+    Future<void> getAllcategories() async {
+    // isLoading(true);
+    final url = Uri.parse('http://43.204.188.100:3000/users/get-available-categories');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Authorization': '${AppContants.apptoken}'
+          'Authorization' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTdjM2QyNi01MTE5LTQzOGMtOTQ3Zi03ODkzZWUxZmNhMjIiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzE2NDgwMTg0fQ.gCPwklJG6a-maKkZ2wNSss3XbLMF2hPXPE9660GdYbw'
+          
+        },
+        body: jsonEncode({}),
+      );
+
+      if (response.statusCode == 200) {
+        var decodedResponse = jsonDecode(response.body)["payload"];
+        if (decodedResponse is List) {
+          categories.value = decodedResponse;
+        } else {
+          categories.value = [];
+        }
+      } else {
+        categories.value = [];
+        print('Failed to load categories: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      categories.value = [];
+    } finally {
+      isLoading(false);
+    }
   }
 
   // Get all products
   Future<void> getAllProducts(int page) async {
-    isLoading(true);
+    // isLoading(true);
     final url = Uri.parse('$baseUrl/filtered');
 
     try {
@@ -26,7 +65,9 @@ class ProductController extends GetxController {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': '${AppContants.apptoken}'
+          // 'Authorization': '${AppContants.apptoken}'
+           'Authorization' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTdjM2QyNi01MTE5LTQzOGMtOTQ3Zi03ODkzZWUxZmNhMjIiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzE2NDgwMTg0fQ.gCPwklJG6a-maKkZ2wNSss3XbLMF2hPXPE9660GdYbw'
+          
         },
         body: jsonEncode({
           'categories': [],
@@ -63,7 +104,9 @@ class ProductController extends GetxController {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': '${AppContants.apptoken}'
+          // 'Authorization': '${AppContants.apptoken}'
+           'Authorization' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTdjM2QyNi01MTE5LTQzOGMtOTQ3Zi03ODkzZWUxZmNhMjIiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzE2NDgwMTg0fQ.gCPwklJG6a-maKkZ2wNSss3XbLMF2hPXPE9660GdYbw'
+          
         },
         body: jsonEncode({'favItem': favItem}),
       );
@@ -88,7 +131,9 @@ class ProductController extends GetxController {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': '${AppContants.apptoken}'
+          // 'Authorization': '${AppContants.apptoken}'
+           'Authorization' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTdjM2QyNi01MTE5LTQzOGMtOTQ3Zi03ODkzZWUxZmNhMjIiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzE2NDgwMTg0fQ.gCPwklJG6a-maKkZ2wNSss3XbLMF2hPXPE9660GdYbw'
+          
         },
         body: jsonEncode({'cartItem': cartItem}),
       );

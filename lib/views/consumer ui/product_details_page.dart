@@ -9,7 +9,10 @@ import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  const ProductDetailsPage();
+  final String product;
+
+  const ProductDetailsPage({Key? key, required this.product}) : super(key: key); // Added key for widget tree
+
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();

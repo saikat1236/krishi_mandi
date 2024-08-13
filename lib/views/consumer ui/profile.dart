@@ -9,7 +9,6 @@ import 'package:krishi_customer_app/views/consumer%20ui/add_address.dart';
 // import 'package:krishi_customer_app/views/consumer%20ui/address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpscreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/sec.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/update_address.dart';
 import 'package:krishi_customer_app/models/address.dart';

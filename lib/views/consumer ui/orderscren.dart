@@ -29,16 +29,16 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   Widget build(BuildContext context) {
     return Scaffold(
     appBar:AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Get.back();
           },
         ),
-        title: const Text('Adding Shipping Address',
-            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+        title: const Text('Orders',
+            style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500)),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -77,7 +77,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Order №1947034',
+                Text('Order No: 1947034',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Text('05-12-2019', style: TextStyle(color: Colors.grey)),

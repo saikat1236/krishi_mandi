@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OtpScreen2(),
+                builder: (context) => OtpScreen2(mobileNumber: _phoneController.text,),
               ),
             );
           },

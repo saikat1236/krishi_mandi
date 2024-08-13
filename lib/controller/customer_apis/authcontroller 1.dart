@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:krishi_customer_app/constants/AppConstants.dart';
+import 'package:krishi_customer_app/global_auth.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -95,10 +96,13 @@ class AuthController extends GetxController {
 
         // Set the token in AppContants
         AppContants.apptoken = token;
+        String auth_token = token;
+
+        Get.find<GlobalController>().setAuthToken(auth_token);
 
         // Update state
         isOtpVerified(true);
-        Get.to(MainScreen());
+        Get.to(HomePage());
       } else {
         isOtpVerified(false);
       }

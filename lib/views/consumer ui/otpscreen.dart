@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
+import 'package:krishi_customer_app/global_auth.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; 
+import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
 
 class OtpScreen2 extends StatefulWidget {
-  const OtpScreen2({Key? key}) : super(key: key);
+    final String mobileNumber;
+  const OtpScreen2({Key? key,required this.mobileNumber}) : super(key: key);
 
   @override
   State<OtpScreen2> createState() => _OtpScreen2State();
 }
 
 class _OtpScreen2State extends State<OtpScreen2> {
-  final TextEditingController _usernameController = TextEditingController();
+  // final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   final AuthController controller = Get.put(AuthController());
@@ -147,24 +150,22 @@ class _OtpScreen2State extends State<OtpScreen2> {
                       padding: EdgeInsets.symmetric(
                           horizontal: 100, vertical: 15), // Button size
                     ),
-                    onPressed: () {
-                      controller.signIn(_phoneController.text,context);
-                       Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ),
-            );
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) => OTPDialog(
-                      //     onClose: () {
-                      //       Navigator.pop(context); // Close the OTP dialog
-                      //     },
-                      //     mobileNumber: _phoneController.text,
-                      //   ),
-                      // );
-                    },
+onPressed: () async {
+  // verify OTP
+  String otp = _otpControllers.map((controller) => controller.text).join('');
+ await controller.verifyOtp(_phoneController.text,otp);
+
+    // Store the auth token globally
+  // Get.find<GlobalController>().setAuthToken(auth_token);
+
+  // Navigate to the OtpScreen2 and pass the mobile number
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => HomePage(),
+    ),
+  );
+},
     
                     child: Container(
                       width: 350,
@@ -176,62 +177,6 @@ class _OtpScreen2State extends State<OtpScreen2> {
                       ),
                     ),
                   ),
-                  //       GradientButton(
-                  //         label: "Create Account",
-                  //         onPressed: (){
-                  //           controller.registerUser(_nameController.text,_emailController.text,_phoneController.text);
-
-                  //             showDialog(
-                  //   context: context,
-                  //   builder: (context) => OTPDialog(
-
-                  //     onClose: () {
-                  //     Navigator.pop(context); // Close the OTP dialog
-                  //   }, mobileNumber: _phoneController.text,),
-                  // );
-
-                  //         },
-                  //         widget:  !controller.isLoading.value?
-                  //          Text(
-                  // "Login",
-                  // style: TextStyle(
-                  //   color: Colors.white,
-                  //   fontSize: 16,
-                  // ),
-                  //         ):CircularProgressIndicator(color: Colors.white),
-                  //       ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 10),
-                  //   child: Container(
-                  //     width: 140,
-                  //     child: Row(
-                  //       children: [
-                  //         Text(
-                  //           'New to here ?  ',
-                  //           style: TextStyle(
-                  //             color: Colors.black,
-                  //             fontSize: 12.0,
-                  //           ),
-                  //         ),
-                  //         InkWell(
-                  //           onTap: () {
-                  //             // Get.to(log.LoginScreen());
-                  //           },
-                  //           child: Text(
-                  //             'Sign Up',
-                  //             style: TextStyle(
-                  //               fontWeight: FontWeight.bold,
-                  //               color: Colors.green,
-                  //               fontSize: 14.0,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 80,),
-                  // Image.asset("assets/pana.png"),
                 ],
               ),
             ),
@@ -240,167 +185,6 @@ class _OtpScreen2State extends State<OtpScreen2> {
       ),
     );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       _hideKeyboard(context); // Hide keyboard when tapped outside
-  //     },
-  //     child: Scaffold(
-  //       body: SingleChildScrollView(
-  //         child: Container(
-  //           height: MediaQuery.of(context).size.height,
-  //           width: MediaQuery.of(context).size.width,
-
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //                CircleAvatar(
-  //                           radius: 50,
-  //                           backgroundColor: Colors.transparent,
-  //                           child: Container(
-  //                             width: 150,
-  //                             height: 150,
-  //                             decoration: BoxDecoration(
-  //                               shape: BoxShape.circle,
-  //                               image: DecorationImage(
-  //                                 fit: BoxFit.cover,
-  //                                 image: AssetImage('assets/krishi_farm_logo.png'),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                SizedBox(height: 20),
-
-  //               Text(
-  //                 "Login",
-  //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-  //               ),
-  //               SizedBox(height: 50),
-  //               // MyTextFieldWithLabel(
-  //               //   label: "Name",
-  //               //   controller: _usernameController,
-  //               // ),
-  //               MyTextFieldWithLabel(
-  //                 label: "Mobile Number",
-  //                 controller: _passwordController,
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(top: 50),
-  //                 child: Container(
-  //                   width: 330,
-  //                   child: Row(
-  //                     children: [
-  //                       Checkbox(
-  //                         value: _isChecked,
-  //                         onChanged: (bool? value) {
-  //                           setState(() {
-  //                             _isChecked = value ?? false;
-  //                           });
-  //                         },
-  //                         checkColor: Colors.white,
-  //                         fillColor: MaterialStateProperty.resolveWith<Color?>(
-  //                           (Set<MaterialState> states) {
-  //                             if (states.contains(MaterialState.selected)) {
-  //                               return Colors.green; // Checked color
-  //                             }
-  //                             return null; // Unchecked color
-  //                           },
-  //                         ),
-  //                         shape: RoundedRectangleBorder(
-  //                           side: BorderSide(color: Colors.green),
-  //                           borderRadius: BorderRadius.circular(4.0),
-  //                         ),
-  //                       ),
-  //                       SizedBox(width: 8.0),
-  //                       Text(
-  //                         'I understood the ',
-  //                         style: TextStyle(
-  //                           color: Colors.black,
-  //                           fontSize: 12.0,
-  //                         ),
-  //                       ),
-  //                       Text(
-  //                         'terms and conditions',
-  //                         style: TextStyle(
-  //                           color: Colors.green,
-  //                           fontSize: 14.0,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //               GradientButton(
-  //                 label: "Login",
-  //                 onPressed: () async {
-  //                   if (_passwordController.text.isEmpty) {
-  //                     Get.snackbar("Error", "Please fill in all fields.");
-  //                     return;
-  //                   } else if (!_isChecked) {
-  //                     Get.snackbar(
-  //                         "Error", "Please select terms and conditions");
-  //                     return;
-  //                   }
-  //                   await _authController.signIn(_passwordController.text,context);
-  //                  if( _authController.isSignedIn.value){
-  //                     showDialog(
-  //           context: context,
-  //           builder: (context) => OTPDialog(
-
-  //             onClose: () {
-  //             Navigator.pop(context); // Close the OTP dialog
-  //           }, mobileNumber: _passwordController.text,),
-  //         );
-  //                  }
-  //                 },
-  //                 widget:
-  //                 !_authController.isLoading.value?
-  //                  Text(
-  //         "Login",
-  //         style: TextStyle(
-  //           color: Colors.white,
-  //           fontSize: 16,
-  //         ),
-  //       ):CircularProgressIndicator(color: Colors.white),
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(top: 20),
-  //                 child: Container(
-  //                   width: 180,
-  //                   child: Row(
-  //                     children: [
-  //                       Text(
-  //                         'New User ?  ',
-  //                         style: TextStyle(
-  //                           color: Colors.black,
-  //                           fontSize: 12.0,
-  //                         ),
-  //                       ),
-  //                       InkWell(
-  //                         onTap: () {
-  //                           Get.to(SignUpScreen());
-  //                         },
-  //                         child: Text(
-  //                           'SIGN UP',
-  //                           style: TextStyle(
-  //                             fontWeight: FontWeight.bold,
-  //                             color: Colors.green,
-  //                             fontSize: 14.0,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 }
 
 class MyTextFieldWithLabel extends StatelessWidget {

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 
 class CartListScreen extends StatefulWidget {
@@ -735,34 +736,40 @@ class _CartListScreenState extends State<CartListScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 58, vertical: 14),
-                  decoration: ShapeDecoration(
-                    color: Color(0xFF2D2E2D),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  // ignore: prefer_const_constructors
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      Text(
-                        'Checkout',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          // Background color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            // side: BorderSide(color: Colors.black, width: 2.0),
+                            // Rounded edges
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 10), // Button size
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FinalOrderScreen(),
+                            ),
+                          );
+                        },
+                        child: Center(
+                          child: Text(
+                            "Checkout",
+                            style: TextStyle(color: Colors.white,fontSize: 16), // Text color
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ],
@@ -772,3 +779,4 @@ class _CartListScreenState extends State<CartListScreen> {
     );
   }
 }
+

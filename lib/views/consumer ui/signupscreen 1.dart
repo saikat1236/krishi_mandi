@@ -6,6 +6,7 @@ import 'package:krishi_customer_app/constants/AppConstants%201.dart';
 import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart'as log;
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/otpscreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -171,19 +172,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: 100, vertical: 15), // Button size
                 ),
-                    onPressed: (){
-                      controller.registerUser(_nameController.text,_emailController.text,_phoneController.text);
-                    
-                        showDialog(
-              context: context,
-              builder: (context) => OTPDialog(
-               
-                onClose: () {
-                Navigator.pop(context); // Close the OTP dialog
-              }, mobileNumber: _phoneController.text,),
-            );
-                     
-                    },
+onPressed: () async {
+  // Register the user
+  await controller.registerUser(_nameController.text, _emailController.text, _phoneController.text);
+
+  // Navigate to the OtpScreen2 and pass the mobile number
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => OtpScreen2(
+        mobileNumber: _phoneController.text, // Pass the mobile number here
+      ),
+    ),
+  );
+},
+
                 child: Text(
                   "Create Account",
                   style: TextStyle(color: Colors.black), // Text color
