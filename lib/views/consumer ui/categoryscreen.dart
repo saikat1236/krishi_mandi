@@ -76,9 +76,9 @@ class _HomePageState extends State<CategoryScreen> {
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
+                onPressed: () {
+    Navigator.pop(context);
+  },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
           },
@@ -137,18 +137,7 @@ class _HomePageState extends State<CategoryScreen> {
               //     ],
               //   ),
               // ),
-              Container(
-                height: 120,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    _categoryItem('Fruits', 'assets/fruits.jpg'),
-                    _categoryItem('Vegetables', 'assets/vegetables.jpg'),
-                    _categoryItem('Dairy', 'assets/dairy.jpg'),
-                    _categoryItem('Dairy', 'assets/dairy.jpg'),
-                  ],
-                ),
-              ),
+              CategoriesList(),
               // CarouselSlider(
               //   options: CarouselOptions(
               //     autoPlay: true,
@@ -405,6 +394,84 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                     )),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CategoriesList extends StatelessWidget {
+  final ProductController controller = Get.put(ProductController());
+
+  @override
+  Widget build(BuildContext context) {
+    controller.getAllcategories();
+
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
+         // Check if the products list is empty
+      if (controller.categories.isEmpty) {
+        return Center(child: Text('No categories available.'));
+      }
+      return Container(
+        height: 120,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.categories.length,
+          itemBuilder: (context, index) {
+            final product = controller.categories[index];
+            return 
+            // SizedBox(
+            //   width: 150,
+            //   child: _categoryItem(
+            //     product['value'] ?? "Fruits", // Assuming 'value' key is correct
+            //     product['image'] ?? 'assets/fruits.jpg' // Assuming API has an 'image' field
+            //   ),
+            // );
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoryScreen(
+                        // product: product,
+                        ),
+                  ),
+                );
+              },
+           child: _categoryItem(
+                product['value'] ?? "Fruits", // Assuming 'value' key is correct
+                product['image'] ?? 'assets/fruits.jpg' // Assuming API has an 'image' field
+              ),
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  Widget _categoryItem(String title, String imageUrl) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: AssetImage(imageUrl),
+          ),
+          Container(
+            width: 100,
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: Color(0xFF7ED856),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white),
+            ),
+            child: Center(child: Text(title)),
           ),
         ],
       ),

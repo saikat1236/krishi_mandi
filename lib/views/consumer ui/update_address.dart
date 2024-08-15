@@ -33,9 +33,9 @@ final Address address;
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Get.back();
-          },
+         onPressed: () {
+    Navigator.pop(context);
+  },
         ),
         title: const Text('Updating Shipping Address',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),

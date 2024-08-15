@@ -17,6 +17,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 
 import '../../controller/customer_apis/profile_controller.dart';
+import '../../controller/customer_apis/user_controller.dart';
 
 void main() => runApp(const MyApp());
 
@@ -36,360 +37,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// class MainScreen extends StatefulWidget {
-//   const MainScreen({super.key});
-
-//   @override
-//   _MainScreenState createState() => _MainScreenState();
-// }
-
-// class _MainScreenState extends State<MainScreen> {
-//   int _currentIndex = 0;
-//   final List<Widget> _children = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _children.add(const HomePage());
-//     _children.add(const CategoriesScreen());
-//     _children.add(const MyBagScreen());
-//     _children.add(FavoritesScreen());
-//     _children.add(ProfileScreen());
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: _children[_currentIndex],
-//       bottomNavigationBar: BottomNavigationBar(
-//         currentIndex: _currentIndex,
-//         onTap: onTabTapped,
-//         items: const [
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.home),
-//             label: 'Home',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.shopping_bag),
-//             label: 'Shop',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.shopping_cart),
-//             label: 'Bag',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.favorite),
-//             label: 'Favorites',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.account_circle),
-//             label: 'Profile',
-//           ),
-//         ],
-//         selectedItemColor: Colors.green,
-//         unselectedItemColor: Colors.grey,
-//         type: BottomNavigationBarType.fixed,
-//       ),
-//     );
-//   }
-
-//   void onTabTapped(int index) {
-//     setState(() {
-//       _currentIndex = index;
-//     });
-//   }
-// }
-
-// class FavoritesScreen extends StatefulWidget {
-//   FavoritesScreen({super.key});
-
-//   @override
-//   State<FavoritesScreen> createState() => _FavoritesScreenState();
-// }
-
-// class _FavoritesScreenState extends State<FavoritesScreen> {
-//   final UserProfileController userProfileController =
-//       Get.put(UserProfileController());
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     userProfileController.getUserProfile();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.green,
-//         elevation: 0,
-//         automaticallyImplyLeading: false,
-//         centerTitle: true,
-//         title: const Text('Favorites',
-//             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0), // Add padding to the entire screen
-//         child: Obx(() {
-//           if (userProfileController.isLoading.value) {
-//             return const Center(child: CircularProgressIndicator());
-//           } else {
-//             var favorites = userProfileController.userProfile.value['payload']
-//                 ['userProfile']['favorites'];
-//             if (favorites == null || favorites.isEmpty) {
-//               return const Center(
-//                 child: Text(
-//                   'No favorites added yet!',
-//                   style: TextStyle(fontSize: 18, color: Colors.grey),
-//                 ),
-//               );
-//             }
-//             return ListView.builder(
-//               itemCount: favorites.length,
-//               itemBuilder: (context, index) {
-//                 var favorite = favorites[index];
-//                 return InkWell(
-//                   onTap: () {},
-//                   child: Card(
-//                     margin: const EdgeInsets.symmetric(
-//                         vertical: 10), // Space between cards
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius:
-//                           BorderRadius.circular(15), // Rounded corners
-//                     ),
-//                     elevation: 3, // Elevation for card shadow
-//                     child: Padding(
-//                       padding:
-//                           const EdgeInsets.all(8.0), // Padding inside the card
-//                       child: ListTile(
-//                         leading: CircleAvatar(
-//                           radius: 30, // Increase the size of the avatar
-//                           backgroundImage:
-//                               NetworkImage(favorite['productImage']),
-//                         ),
-//                         title: Text(
-//                           favorite['productName'],
-//                           style: const TextStyle(
-//                             fontWeight: FontWeight.bold,
-//                             fontSize: 18,
-//                           ),
-//                         ),
-//                         subtitle: Text(
-//                           favorite['productInfo'],
-//                           maxLines: 2,
-//                           overflow: TextOverflow.ellipsis, // Truncate long text
-//                           style: const TextStyle(color: Colors.grey),
-//                         ),
-//                         trailing: Text(
-//                           '${favorite['pricePerUnit']} per ${favorite['productUnitType']}',
-//                           style: const TextStyle(
-//                             fontSize: 16,
-//                             fontWeight: FontWeight.w600,
-//                             color: Colors.green,
-//                           ),
-//                         ),
-//                         contentPadding: const EdgeInsets.symmetric(
-//                             vertical: 5, horizontal: 10),
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             );
-//           }
-//         }),
-//       ),
-//     );
-//   }
-// }
-
-// class CategoriesScreen extends StatefulWidget {
-//   const CategoriesScreen({super.key});
-
-//   @override
-//   _CategoriesScreenState createState() => _CategoriesScreenState();
-// }
-
-// class _CategoriesScreenState extends State<CategoriesScreen> {
-//   final List<String> categories = [
-//     'Fruits',
-//     'Vegetables',
-//     'Dairy Products',
-//     'Bakery',
-//     'Meat & Seafood',
-//     'Snacks',
-//     'Beverages',
-//   ];
-
-//   TextEditingController searchController = TextEditingController();
-//   List<String> filteredCategories = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     filteredCategories = categories; // Initially display all categories
-//     searchController.addListener(() {
-//       filterCategories();
-//     });
-//   }
-
-//   void filterCategories() {
-//     List<String> results = [];
-//     if (searchController.text.isEmpty) {
-//       results = categories;
-//     } else {
-//       results = categories
-//           .where((item) =>
-//               item.toLowerCase().contains(searchController.text.toLowerCase()))
-//           .toList();
-//     }
-
-//     setState(() {
-//       filteredCategories = results;
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     searchController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.green,
-//         elevation: 0,
-//         automaticallyImplyLeading: false,
-//         centerTitle: true,
-//         title: const Text(
-//           'Categories',
-//           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-//         ),
-//         actions: [
-//           IconButton(
-//             icon: const Icon(Icons.search, color: Colors.white),
-//             onPressed: () {
-//               showSearch(
-//                 context: context,
-//                 delegate: CustomSearchDelegate(
-//                     categories, filterCategories, searchController),
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: ListView.builder(
-//           itemCount: filteredCategories.length,
-//           itemBuilder: (context, index) {
-//             return Card(
-//               margin:
-//                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-//               shape: RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(10),
-//               ),
-//               elevation: 4,
-//               child: ListTile(
-//                 contentPadding: const EdgeInsets.all(16.0),
-//                 title: Text(
-//                   filteredCategories[index],
-//                   style: const TextStyle(
-//                     fontSize: 18,
-//                     fontWeight: FontWeight.w600,
-//                   ),
-//                 ),
-//                 trailing: const Icon(Icons.arrow_forward_ios),
-//                 onTap: () {
-//                   // Add navigation or functionality on tap if necessary
-//                 },
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class CustomSearchDelegate extends SearchDelegate {
-//   final List<String> categories;
-//   final Function filterCategories;
-//   final TextEditingController searchController;
-
-//   CustomSearchDelegate(
-//       this.categories, this.filterCategories, this.searchController);
-
-//   @override
-//   List<Widget>? buildActions(BuildContext context) {
-//     return [
-//       IconButton(
-//         icon: const Icon(Icons.clear),
-//         onPressed: () {
-//           query = '';
-//           filterCategories();
-//         },
-//       ),
-//     ];
-//   }
-
-//   @override
-//   Widget? buildLeading(BuildContext context) {
-//     return IconButton(
-//       icon: const Icon(Icons.arrow_back),
-//       onPressed: () {
-//         close(context, null);
-//       },
-//     );
-//   }
-
-//   @override
-//   Widget buildResults(BuildContext context) {
-//     final suggestions = categories
-//         .where((c) => c.toLowerCase().contains(query.toLowerCase()))
-//         .toList();
-
-//     return ListView.builder(
-//       itemCount: suggestions.length,
-//       itemBuilder: (context, index) {
-//         return ListTile(
-//           title: Text(suggestions[index]),
-//           onTap: () {
-//             query = suggestions[index];
-//             showResults(context);
-//           },
-//         );
-//       },
-//     );
-//   }
-
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     final suggestions = categories
-//         .where((c) => c.toLowerCase().contains(query.toLowerCase()))
-//         .toList();
-
-//     return ListView.builder(
-//       itemCount: suggestions.length,
-//       itemBuilder: (context, index) {
-//         return ListTile(
-//           title: Text(suggestions[index]),
-//           onTap: () {
-//             query = suggestions[index];
-//             showResults(context);
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
   // String token = Get.find<GlobalController>().getAuthToken();
   final ProductController controller = Get.put(ProductController());
+    final UserController userController = Get.put(UserController());
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -436,7 +89,17 @@ class _HomePageState extends State<HomePage> {
   ];
   @override
   Widget build(BuildContext context) {
-    // controller.getAllcategories();
+    final UserController userController = Get.put(UserController());
+    // // controller.getAllcategories();
+    return Obx((){
+      
+      //  final user = userController.user; // Assuming `user` is an RxMap
+    // final categories = controller.categories; // Assuming `categories` is an RxList
+    
+    String userName = userController.user['userName'] ?? '';
+    String mobileNumber = userController.user['mobileNumber'] ?? '';
+    String email = userController.user['email'] ?? '';
+
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Color.fromARGB(255, 235, 232, 232),
@@ -505,17 +168,20 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       CircleAvatar(
                         radius: 52,
-                        backgroundImage: AssetImage('assets/avatar.png'),
+                        backgroundImage: NetworkImage(userController.user['imageProfile']),
                       ),
                       SizedBox(
                         height: 12,
                       ),
                       Text(
-                        'Saikat Biswas',
+                        '$userName',
                         style: TextStyle(fontSize: 28, color: Colors.white),
                       ),
+                       Text(
+                        '$mobileNumber',
+                        style: TextStyle(fontSize: 14, color: Colors.white),),
                       Text(
-                        'saikat1236@gmailcom',
+                        '$email',
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       OutlinedButton(
@@ -577,24 +243,24 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-                ListTile(
-                  leading: Icon(Icons.update),
-                  title: Text('Updates'),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.black45,
-                ),
-                ListTile(
-                  leading: Icon(Icons.account_tree_outlined),
-                  title: Text('Plugins'),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: Icon(Icons.notifications_outlined),
-                  title: Text('Notifications'),
-                  onTap: () {},
-                ),
+                // ListTile(
+                //   leading: Icon(Icons.update),
+                //   title: Text('Updates'),
+                //   onTap: () {},
+                // ),
+                // const Divider(
+                //   color: Colors.black45,
+                // ),
+                // ListTile(
+                //   leading: Icon(Icons.account_tree_outlined),
+                //   title: Text('Plugins'),
+                //   onTap: () {},
+                // ),
+                // ListTile(
+                //   leading: Icon(Icons.notifications_outlined),
+                //   title: Text('Notifications'),
+                //   onTap: () {},
+                // ),
               ],
             )
           ],
@@ -707,6 +373,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+     });
   }
 
   // Widget _categoryItem(String title, String imageUrl) {
@@ -1044,7 +711,7 @@ class ProductListViewdemo extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductDetailsPage(
-                        product: product['name'],
+                        product: product['_id'],
                         ),
                   ),
                 );
