@@ -8,8 +8,10 @@ import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
 
+import '../../controller/customer_apis/product_controller.dart';
+
 class ProductDetailsPage extends StatefulWidget {
-  final String product;
+ final Map<String, dynamic> product;
 
   const ProductDetailsPage({Key? key, required this.product}) : super(key: key); // Added key for widget tree
 
@@ -19,9 +21,18 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
+late int qty;
+  @override
+  void initState() {
+    super.initState();
+    // Initialize qty with product['minQuantity']
+    qty = widget.product['minQuantity'] ?? 1; 
+  }
+
   @override
   Widget build(BuildContext context) {
-    var qty = 1;
+    final product = widget.product;
+
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
@@ -82,7 +93,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Kurfi Chandramukhi Potatoes",
+                  product['name'],
                   style: TextStyle(
                     fontSize: 23,
                     color: Colors.black,
@@ -95,7 +106,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Rs 240",
+                  "Rs "+product['pricePerUnit'],
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.green,
@@ -122,9 +133,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       children: [
                        InkWell(
         onTap: () {
-          setState(() {
-            if (qty > 0) qty--; // Ensure qty does not go below 0
-          });
+           setState(() {
+                              int minQuantity = widget.product['minQuantity'] ?? 1;
+                              if (qty > minQuantity) {
+                                qty--; // Decrease qty
+                              }
+                            });
         },
         child: Container(
           padding: EdgeInsets.all(8.0), // Add padding around the icon
@@ -201,13 +215,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
               ),
               Container(
+                width: double.maxFinite,
                 decoration: BoxDecoration(
                   color: Colors.orange[50]
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Elevate your culinary creations with our premium Kufri Chandramukhi potatoes, organically grown to deliver superior taste and quality.\n\n🌱 Organic Quality: Our Kufri Chandramukhi potatoes are grown using organic farming practices, ensuring they are free from harmful chemicals. Each potato is selected for its quality and freshness.\n\n🍲 Versatile Use: Kufri Chandramukhi potatoes are ideal for boiling, baking, and adding to salads. Their mild, nutty flavor and creamy texture make them the perfect choice for a variety of dishes.\n\n😋 Mild and Creamy: Enjoy the mild, nutty flavor and creamy texture of Kufri Chandramukhi potatoes. They enhance the taste and consistency of your recipes, making them a favorite among potato varieties.\n\n💪 Nutritional Benefits: These potatoes are high in essential nutrients and dietary fiber, making them a healthy addition to your diet. Enjoy the benefits of nutritious, delicious potatoes.\n\n🌾 Sustainably Farmed: We use sustainable farming practices to grow our Kufri Chandramukhi potatoes, ensuring they are environmentally friendly. Enjoy the fresh taste of responsibly farmed produce.",
+                    product['about'],
+                    // "Elevate your culinary creations with our premium Kufri Chandramukhi potatoes, organically grown to deliver superior taste and quality.\n\n🌱 Organic Quality: Our Kufri Chandramukhi potatoes are grown using organic farming practices, ensuring they are free from harmful chemicals. Each potato is selected for its quality and freshness.\n\n🍲 Versatile Use: Kufri Chandramukhi potatoes are ideal for boiling, baking, and adding to salads. Their mild, nutty flavor and creamy texture make them the perfect choice for a variety of dishes.\n\n😋 Mild and Creamy: Enjoy the mild, nutty flavor and creamy texture of Kufri Chandramukhi potatoes. They enhance the taste and consistency of your recipes, making them a favorite among potato varieties.\n\n💪 Nutritional Benefits: These potatoes are high in essential nutrients and dietary fiber, making them a healthy addition to your diet. Enjoy the benefits of nutritious, delicious potatoes.\n\n🌾 Sustainably Farmed: We use sustainable farming practices to grow our Kufri Chandramukhi potatoes, ensuring they are environmentally friendly. Enjoy the fresh taste of responsibly farmed produce.",
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.black,
@@ -219,7 +235,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
               )
             ],
-          ),
+          )
         ),
       ),
     );

@@ -703,7 +703,7 @@ class ProductListViewdemo extends StatelessWidget {
           // }
           // ),
           children: List.generate(controller.products.length, (index) {
-            final product = controller.products[index];
+            final product = controller.products[index] as Map<String, dynamic>;
 
             return InkWell(
               onTap: () {
@@ -711,7 +711,7 @@ class ProductListViewdemo extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductDetailsPage(
-                        product: product['_id'],
+                        product: product,
                         ),
                   ),
                 );
