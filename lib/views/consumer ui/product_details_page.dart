@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +9,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/customer_apis/product_controller.dart';
 
@@ -27,6 +30,50 @@ late int qty;
     super.initState();
     // Initialize qty with product['minQuantity']
     qty = widget.product['minQuantity'] ?? 1; 
+  }
+
+  Future<void> addToCart() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    final url = Uri.parse('http://54.159.124.169:3000/users/add-item-in-cart'); // Replace with your API endpoint
+
+    final cartItem = {
+      "orderType": 1,
+      "productId": widget.product['id'], // Assuming 'id' is the key for productId
+      "productName": widget.product['name'],
+      "ProductQuantityAddedToCart": qty,
+      "productInfo": widget.product['about'], // Assuming 'about' holds product info
+      "productImages": widget.product['images'], // Assuming 'images' is a list of image URLs
+      "pricePerUnit": widget.product['pricePerUnit'],
+      "productUnitType": widget.product['unitType'], // Assuming 'unitType' is the key for product unit type
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': token ?? '', // Use the token from SharedPreferences
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({"cartItem": cartItem}),
+      );
+
+      if (response.statusCode == 200) {
+        // If the server returns an OK response, parse the JSON
+        final responseData = jsonDecode(response.body);
+        Get.snackbar("Product added to cart successfully: ","$responseData",snackPosition: SnackPosition.TOP);
+        // Show a success message or update the UI
+      } else {
+        print('Failed to add product to cart: ${response.body}');
+        // Show an error message
+      }
+    } catch (e) {
+      print('Error adding product to cart: $e');
+      // Show an error message
+    }
   }
 
   @override
@@ -189,10 +236,8 @@ late int qty;
                       padding: EdgeInsets.symmetric(
                           horizontal: 70, vertical: 15), // Button size
                     ),
-                    onPressed: () {
-                      AppContants.isfarmer = false;
-                      // Get.to(widget.initialScreen);
-                      // Add navigation or functionality here for consumer
+                     onPressed: () async {
+                      await addToCart(); // Call the addToCart function
                     },
                     child: Text(
                       "Add to cart",

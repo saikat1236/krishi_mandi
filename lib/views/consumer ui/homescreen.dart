@@ -627,8 +627,22 @@ class ProductListView2 extends StatelessWidget {
   }
 }
 
-class ProductListViewdemo extends StatelessWidget {
+class ProductListViewdemo extends StatefulWidget {
+  @override
+  _ProductListViewdemoState createState() => _ProductListViewdemoState();
+}
+
+class _ProductListViewdemoState extends State<ProductListViewdemo> {
+
+      bool isFavorite = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
   final ProductController controller = Get.put(ProductController());
+  final UserController userController = Get.put(UserController());
   final List<Map<String, String>> products = [
     {
       'name': 'Product 1',
@@ -726,6 +740,7 @@ class ProductListViewdemo extends StatelessWidget {
                 product['newPrice'] ?? "\$0.00",
                 product['pricePerUnit'] ?? "\$0.00",
                 product['image'] ?? 'assets/photo.png',
+                product['productId']
               ),
             );
           }),
@@ -735,7 +750,7 @@ class ProductListViewdemo extends StatelessWidget {
   }
 
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl) {
+      String name, String newPrice, String oldPrice, String imageUrl,String Pid) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -743,13 +758,22 @@ class ProductListViewdemo extends StatelessWidget {
           Stack(
             children: <Widget>[
               SizedBox(height: 100, child: Image.asset(imageUrl)),
-              Positioned(
-                left: 0,
+             Positioned(
+                right: 0,
                 child: Container(
-                  padding: EdgeInsets.all(5),
-                  color: Colors.red,
-                  child: Text('-15%',
-                      style: TextStyle(color: Colors.white, fontSize: 12)),
+                  // padding: EdgeInsets.all(5),
+                  height: 40,
+                  width: 40,
+                  color: Colors.white,
+                  child: IconButton(
+                     icon: Icon(
+          userController.isFavorite.value ? Icons.favorite : Icons.favorite_border,
+          color: userController.isFavorite.value ? Colors.red : Colors.grey,
+        ),
+                    onPressed: () {
+          userController.toggleFavorite(Pid); // Pass the product ID
+        },
+                ),
                 ),
               ),
             ],

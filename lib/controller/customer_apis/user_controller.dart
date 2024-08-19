@@ -83,4 +83,56 @@ class UserController extends GetxController {
       isLoading(false);
     }
   }
+
+  var isFavorite = false.obs;
+
+  Future<void> addFavorite(String productId,) async {
+    final url = Uri.parse('http://54.159.124.169:3000/users/add-item-in-favs');
+      final token = await _getToken();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': token,
+    };
+    final body = jsonEncode({'productId': productId});
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        isFavorite(true); // Update the state to reflect the product is favorited
+      } else {
+        print('Failed to add favorite: ${response.body}');
+      }
+    } catch (e) {
+      print('Exception while adding favorite: $e');
+    }
+  }
+
+  Future<void> removeFavorite(String productId) async {
+    final url = Uri.parse('http://54.159.124.169:3000/users/remove-item-from-favs');
+      final token = await _getToken();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': token,
+    };
+    final body = jsonEncode({'productId': productId});
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        isFavorite(false); // Update the state to reflect the product is not favorited
+      } else {
+        print('Failed to remove favorite: ${response.body}');
+      }
+    } catch (e) {
+      print('Exception while removing favorite: $e');
+    }
+  }
+
+  void toggleFavorite(String productId) {
+    if (isFavorite.value) {
+      removeFavorite(productId);
+    } else {
+      addFavorite(productId);
+    }
+  }
 }

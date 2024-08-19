@@ -133,7 +133,7 @@ class ProductController extends GetxController {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token' // Use token from SharedPreferences
+          'Authorization': token // Use token from SharedPreferences
         },
         body: jsonEncode({'cartItem': cartItem}),
       );
