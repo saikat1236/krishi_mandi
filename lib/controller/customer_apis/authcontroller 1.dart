@@ -16,7 +16,7 @@ class AuthController extends GetxController {
   RxString token = "".obs;
 
   final String baseUrl =
-      'http://43.204.188.100:3000/auth'; // Replace with your base URL
+      'http://54.159.124.169:3000/auth'; // Replace with your base URL
 
   // Register a new user
   Future<void> registerUser(

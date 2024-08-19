@@ -5,7 +5,7 @@ import 'dart:convert';
 class RemoveItemFromFavsController extends GetxController {
   Future<void> removeItemFromFavs(String productId) async {
     final url =
-        Uri.parse('http://43.204.188.100:3000/farmers/remove-item-from-favs');
+        Uri.parse('http://54.159.124.169:3000/farmers/remove-item-from-favs');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

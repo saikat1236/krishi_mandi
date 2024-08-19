@@ -17,9 +17,9 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final AuthController controller = Get.put(AuthController());
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   bool _isChecked = false;
 
@@ -173,19 +173,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       horizontal: 100, vertical: 15), // Button size
                 ),
 onPressed: () async {
-  // Register the user
-  await controller.registerUser(_nameController.text, _emailController.text, _phoneController.text);
-
-  // Navigate to the OtpScreen2 and pass the mobile number
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => OtpScreen2(
-        mobileNumber: _phoneController.text, // Pass the mobile number here
-      ),
-    ),
+  // Register the user and get the success status
+  print(_nameController.text+_emailController.text+
+    _phoneController.text);
+   await controller.registerUser(
+    _nameController.text, 
+    _emailController.text, 
+    _phoneController.text
   );
+
+  // Check if registration was successful
+  if (true) {
+    // Navigate to the OtpScreen2 and pass the mobile number
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OtpScreen2(
+          mobileNumber: _phoneController.text, // Pass the mobile number here
+        ),
+      ),
+    );
+  } else {
+    // Handle registration failure (e.g., show an error message)
+    // You can use a SnackBar or any other method to inform the user
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Registration failed. Please try again.'),
+      ),
+    );
+  }
 },
+
 
                 child: Text(
                   "Create Account",

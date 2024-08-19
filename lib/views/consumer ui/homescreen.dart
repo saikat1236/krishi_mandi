@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   HomePage({super.key});
   // String token = Get.find<GlobalController>().getAuthToken();
-  final ProductController controller = Get.put(ProductController());
-    final UserController userController = Get.put(UserController());
+  // final ProductController controller = Get.put(ProductController());
+    // final UserController userController = Get.put(UserController());
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
   ];
   @override
   Widget build(BuildContext context) {
+    final ProductController controller = Get.put(ProductController());
     final UserController userController = Get.put(UserController());
     // // controller.getAllcategories();
     return Obx((){
@@ -99,6 +100,7 @@ class _HomePageState extends State<HomePage> {
     String userName = userController.user['userName'] ?? '';
     String mobileNumber = userController.user['mobileNumber'] ?? '';
     String email = userController.user['email'] ?? '';
+
 
     return Scaffold(
       appBar: AppBar(
@@ -168,7 +170,10 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       CircleAvatar(
                         radius: 52,
-                        backgroundImage: NetworkImage(userController.user['imageProfile']),
+                        // backgroundImage: NetworkImage(userController.user['imageProfile']),
+                          backgroundImage: userController.user['imageProfile'] != null && userController.user['imageProfile'] != ''
+      ? NetworkImage(userController.user['imageProfile'])
+      : AssetImage('assets/avatar.png') as ImageProvider<Object>,
                       ),
                       SizedBox(
                         height: 12,
@@ -828,7 +833,7 @@ class CategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.getAllcategories();
+    controller.getAllCategories();
 
     return Obx(() {
       if (controller.isLoading.value) {

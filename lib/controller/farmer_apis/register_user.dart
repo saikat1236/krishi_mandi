@@ -5,7 +5,7 @@ import 'dart:convert';
 class RegisterUserController extends GetxController {
   Future<void> registerUser(String email, String mobileNumber) async {
     final url =
-        Uri.parse('http://43.204.188.100:3000/auth-farmer/register-user');
+        Uri.parse('http://54.159.124.169:3000/auth-farmer/register-user');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({'email': email, 'mobileNumber': mobileNumber});
 

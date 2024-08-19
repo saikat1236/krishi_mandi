@@ -59,7 +59,7 @@ class _UploadpageState extends State<Uploadpage2> {
 
     try {
       final uri =
-          Uri.parse('http://43.204.188.100:3000/common/predict-product');
+          Uri.parse('http://54.159.124.169:3000/common/predict-product');
       final request = http.MultipartRequest('POST', uri);
       request.files
           .add(await http.MultipartFile.fromPath('files', _image!.path));

@@ -153,7 +153,9 @@ class _OtpScreen2State extends State<OtpScreen2> {
 onPressed: () async {
   // verify OTP
   String otp = _otpControllers.map((controller) => controller.text).join('');
- await controller.verifyOtp(_phoneController.text,otp);
+  print("number "+widget.mobileNumber+", otp: "+otp);
+  // await controller.verifyOtp("12213123222432", otp);
+ await controller.verifyOtp(widget.mobileNumber,otp);
 
     // Store the auth token globally
   // Get.find<GlobalController>().setAuthToken(auth_token);

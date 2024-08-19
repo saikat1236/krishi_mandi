@@ -5,7 +5,7 @@ import 'dart:convert';
 class UpdateUserController extends GetxController {
   Future<void> updateUser(
       String userId, Map<String, dynamic> userDetails) async {
-    final url = Uri.parse('http://43.204.188.100:3000/users/$userId');
+    final url = Uri.parse('http://54.159.124.169:3000/users/$userId');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

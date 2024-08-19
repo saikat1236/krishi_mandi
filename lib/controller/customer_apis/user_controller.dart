@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
   var isLoading = false.obs;
@@ -12,7 +13,13 @@ class UserController extends GetxController {
     getUserById();
   }
 
-  final String baseUrl = 'http://43.204.188.100:3000/user';
+  final String baseUrl = 'http://54.159.124.169:3000/user';
+
+  // Retrieve token from SharedPreferences
+  Future<String> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token') ?? ''; // Default to empty string if token is not found
+  }
 
   // Add a new user
   Future<void> addUser(String name, String email, String phone) async {
@@ -42,38 +49,38 @@ class UserController extends GetxController {
   }
 
   // Get user by ID
-Future<void> getUserById() async {
-  // isLoading(true);
-  final url = Uri.parse('http://43.204.188.100:3000/users/get-user-profile');
-  final headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTdjM2QyNi01MTE5LTQzOGMtOTQ3Zi03ODkzZWUxZmNhMjIiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzE2NDgwMTg0fQ.gCPwklJG6a-maKkZ2wNSss3XbLMF2hPXPE9660GdYbw',
-  };
-// Include any necessary data if needed
+  Future<void> getUserById() async {
+    // isLoading(true);
+    final url = Uri.parse('http://54.159.124.169:3000/users/get-user-profile');
+      // Fetch the token from SharedPreferences
+  final token = await _getToken();
+  print('Token fetched from SharedPreferences: $token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': token, // Use token from SharedPreferences
+            // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiMzg0MzcwNC1mMTczLTRkYWUtODM2YS0wODQ3NTI1YjZlNjkiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzIzODMwNDA4fQ.AMHrZdJf8GGWnzwteVXJqH5Yx4-iahH9alaBS6FFPyc'
+    };
 
-  try {
-    final response = await http.post(url, headers: headers);
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      // print('$jsonData');
-user.value = jsonData['payload']['userProfile'];
-      // Check if 'payload' and 'userProfile' exist
-      if (jsonData.containsKey('payload') && jsonData['payload'].containsKey('userProfile')) {
-        user.value = jsonData['payload']['userProfile'];
+    try {
+      final response = await http.post(url, headers: headers);
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        if (jsonData.containsKey('payload') && jsonData['payload'].containsKey('userProfile')) {
+          user.value = jsonData['payload']['userProfile'];
+          // update(); // Force update
+        } else {
+          print('Error: Invalid JSON structure');
+          user.value = {};
+        }
       } else {
-        print('Error: Invalid JSON structure');
+        print('Error: Failed to fetch data, status code: ${response.statusCode}');
         user.value = {};
       }
-    } else {
-      print('Error: Failed to fetch data, status code: ${response.statusCode}');
+    } catch (e) {
+      print('Error: $e');
       user.value = {};
+    } finally {
+      isLoading(false);
     }
-  } catch (e) {
-    print('Error: $e');
-    user.value = {};
-  } finally {
-    isLoading(false);
   }
-}
-
 }

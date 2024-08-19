@@ -6,6 +6,8 @@ import 'package:krishi_customer_app/models/address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/add_address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/update_address.dart';
 
+import '../../controller/customer_apis/addresscontroller.dart';
+
 class ProfileScreenmain extends StatefulWidget {
   const ProfileScreenmain({Key? key}) : super(key: key);
 
@@ -138,6 +140,8 @@ class AddressCard extends StatelessWidget {
     String userName = userController.user['userName'] ?? '';
     String mobileNumber = userController.user['mobileNumber'] ?? '';
     String email = userController.user['email'] ?? '';
+    final ShippingAddressController shippingAddressController =
+        Get.put(ShippingAddressController());
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -185,24 +189,28 @@ class AddressCard extends StatelessWidget {
                         ),
                         Text('$mobileNumber'),
                         Text(
-                          address['addressLine1'] ?? 'Address Line 1',
-                          // style: TextStyle(fontWeight: FontWeight.bold),
+                          '${address['addressLine1'] ?? 'Address Line 1'}, '
+                          '${address['addressLine2'] ?? 'Address Line 2'}, '
+                          '${address['city'] ?? 'City'}, '
+                          '${address['pin']?.toString() ?? 'PIN Code'}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
-                        Text(address['addressLine2'] ?? 'Address Line 2'),
-                        Text(address['city'] ?? 'City'),
-                        Text(address['pin']?.toString() ?? 'PIN Code'),
                         SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green, // Background color
+                                backgroundColor:
+                                    Colors.green, // Background color
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18.0),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10), // Button size
+                                    horizontal: 20,
+                                    vertical: 10), // Button size
                               ),
                               onPressed: () {
                                 Navigator.push(
@@ -238,12 +246,15 @@ class AddressCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(18.0),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10), // Button size
+                                    horizontal: 20,
+                                    vertical: 10), // Button size
                               ),
                               onPressed: () {
                                 // Add delete functionality here
                                 print(
                                     'Delete address with ID: ${address['addressId']}');
+                                shippingAddressController.deleteAddress(
+                                    addressId: address['addressId']);
                               },
                               child: Text(
                                 "Delete",

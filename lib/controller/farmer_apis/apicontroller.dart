@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ApiEndpoints {
-  static const String baseUrl = 'http://43.204.188.100:3000';
+  static const String baseUrl = 'http://54.159.124.169:3000';
 
   static const String signIn = '$baseUrl/auth-farmer/sign-in';
   static const String verifyOtp = '$baseUrl/auth-farmer/verify-otp';

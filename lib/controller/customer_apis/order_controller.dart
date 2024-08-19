@@ -6,7 +6,7 @@ class OrderController extends GetxController {
   var isLoading = false.obs;
   var orders = [].obs;
 
-  final String baseUrl = 'http://43.204.188.100:3000/order'; // Replace with your base URL
+  final String baseUrl = 'http://54.159.124.169:3000/order'; // Replace with your base URL
 
   // Get all orders
   Future<void> getAllOrders() async {

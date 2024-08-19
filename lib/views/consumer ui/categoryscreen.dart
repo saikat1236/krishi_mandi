@@ -406,7 +406,7 @@ class CategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.getAllcategories();
+    controller.getAllCategories();
 
     return Obx(() {
       if (controller.isLoading.value) {

@@ -11,7 +11,7 @@ class AddShippingAddressScreen extends StatelessWidget {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressLine1Controller = TextEditingController();
-  // final TextEditingController _addressLine2Controller = TextEditingController();
+  final TextEditingController _addressLine2Controller = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _pinController = TextEditingController();
 
@@ -44,6 +44,7 @@ class AddShippingAddressScreen extends StatelessWidget {
                 _buildTextField(label: 'Mobile', controller: _mobileController),
                 _buildTextField(label: 'Email', controller: _emailController),
                 _buildTextField(label: 'Address Line 1', controller: _addressLine1Controller),
+                 _buildTextField(label: 'Address Line 2', controller: _addressLine2Controller),
                 _buildTextField(label: 'City', controller: _cityController),
                 _buildTextField(label: 'Pin', controller: _pinController),
                 const SizedBox(height: 16),
@@ -59,7 +60,7 @@ class AddShippingAddressScreen extends StatelessWidget {
                           mobile: _mobileController.text,
                           email: _emailController.text,
                           addressLine1: _addressLine1Controller.text,
-                          // addressLine2: _addressLine2Controller.text,
+                          addressLine2: _addressLine2Controller.text,
                           city: _cityController.text,
                           pin: int.tryParse(_pinController.text) ?? 0,
                         );

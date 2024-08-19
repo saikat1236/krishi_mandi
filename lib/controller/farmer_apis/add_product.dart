@@ -9,7 +9,7 @@ class AddProductController extends GetxController {
       List<String> productImages,
       double pricePerUnit,
       String productUnitType) async {
-    final url = Uri.parse('http://43.204.188.100:3000/farmers/add-product');
+    final url = Uri.parse('http://54.159.124.169:3000/farmers/add-product');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

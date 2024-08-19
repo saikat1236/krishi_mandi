@@ -12,7 +12,7 @@ final Address address;
   final TextEditingController _mobileController;
   final TextEditingController _emailController;
   final TextEditingController _addressLine1Controller;
-  // final TextEditingController _addressLine2Controller;
+  final TextEditingController _addressLine2Controller;
   final TextEditingController _cityController;
   final TextEditingController _pinController;
 
@@ -21,7 +21,7 @@ final Address address;
         _mobileController = TextEditingController(text: address.mobile),
         _emailController = TextEditingController(text: address.email),
         _addressLine1Controller = TextEditingController(text: address.addressLine1),
-        // _addressLine2Controller = TextEditingController(text: address.addressLine2),
+        _addressLine2Controller = TextEditingController(text: address.addressLine2),
         _cityController = TextEditingController(text: address.city),
         _pinController = TextEditingController(text: address.pin.toString());
 
@@ -67,7 +67,7 @@ final Address address;
                           mobile: _mobileController.text,
                           email: _emailController.text,
                           addressLine1: _addressLine1Controller.text,
-                          // addressLine2: _addressLine2Controller.text,
+                          addressLine2: _addressLine2Controller.text,
                           city: _cityController.text,
                           pin: int.tryParse(_pinController.text) ?? 0,
                         );

@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class AddItemInCartController extends GetxController {
   Future<void> addItemInCart(String productId) async {
-    final url = Uri.parse('http://43.204.188.100:3000/users/add-item-in-cart');
+    final url = Uri.parse('http://54.159.124.169:3000/users/add-item-in-cart');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

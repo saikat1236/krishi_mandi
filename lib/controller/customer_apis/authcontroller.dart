@@ -14,8 +14,7 @@ class AuthController extends GetxController {
   var isOtpVerified = false.obs;
   RxString token = "".obs;
 
-  final String baseUrl =
-      'http://43.204.188.100:3000/auth'; // Replace with your base URL
+  final String baseUrl = 'http://54.159.124.169:3000/auth'; // Replace with your base URL
 
   // Register a new user
   Future<void> registerUser(
@@ -24,7 +23,7 @@ class AuthController extends GetxController {
     final url = Uri.parse('$baseUrl/register-user');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
-      'userName': userName,
+      'name': userName,
       'email': email,
       'mobileNumber': mobileNumber,
     });
@@ -76,17 +75,18 @@ class AuthController extends GetxController {
 
   // Verify OTP
   Future<void> verifyOtp(String mobileNumber, String otp) async {
-    isLoading(true);
+    // isLoading(true);
+    int Intotp = int.parse(otp);
     final url = Uri.parse('$baseUrl/verify-otp');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       'mobileNumber': mobileNumber,
-      'otp': otp,
+      'otp': Intotp,
     });
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && jsonDecode(response.body)["status"].toString() == "true" ) {
         final token = jsonDecode(response.body)["payload"].toString();
 
         // Save the token in SharedPreferences
@@ -95,12 +95,20 @@ class AuthController extends GetxController {
 
         // Set the token in AppContants
         AppContants.apptoken = token;
+        print("token "+token);
 
         // Update state
         isOtpVerified(true);
-        Get.to(HomePage());
+        Get.snackbar("OTP Verification", "$mobileNumber and $otp and $response");
+
+    // Get.to(() => HomePage());
       } else {
         isOtpVerified(false);
+        Get.snackbar(
+        'Verification Failed',
+        'The OTP verification failed. Please try again.',
+        snackPosition: SnackPosition.TOP,
+      );
       }
     } catch (e) {
       print('Error: $e');

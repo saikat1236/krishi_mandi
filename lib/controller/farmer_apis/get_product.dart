@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class GetProductController extends GetxController {
   Future<void> getProduct(String productId) async {
-    final url = Uri.parse('http://43.204.188.100:3000/products/$productId');
+    final url = Uri.parse('http://54.159.124.169:3000/products/$productId');
     final headers = {'Authorization': 'your_auth_token'};
 
     final response = await http.get(url, headers: headers);
