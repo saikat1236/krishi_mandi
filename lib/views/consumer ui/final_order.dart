@@ -5,7 +5,12 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/order_success.dart';
 
+import '../../controller/customer_apis/profile_controller.dart';
+
 class FinalOrderScreen extends StatefulWidget {
+    final List<dynamic> cartItems;
+    //  final UserProfileController userProfileController;
+  FinalOrderScreen({required this.cartItems});
   @override
   _CartListScreenState createState() => _CartListScreenState();
 }
@@ -31,6 +36,40 @@ class _CartListScreenState extends State<FinalOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProfileController userProfileController = Get.find<UserProfileController>();
+    final address = userProfileController.userProfile['Address'][0];
+    // Create the order object
+    final order = {
+      "orderType": 1,
+      "userName": userProfileController.userProfile['userName'],
+      "email": userProfileController.userProfile['email'],
+      "mobileNumber": userProfileController.userProfile['mobileNumber'],
+      "address": {
+        "addressId": address['addressId'],
+        "name": address['name'],
+        "mobile": address['mobile'],
+        "email": address['email'],
+        "addressLine1": address['addressLine1'],
+        "addressLine2": address['addressLine2'],
+        "city": address['city'],
+        "pin": address['pin'],
+      },
+      "image": "",
+      "productsOrdered": widget.cartItems.map((item) {
+        return {
+          "productName": item['productName'],
+          "productId": item['productId'],
+          "quantity": item['ProductQuantityAddedToCart'],
+          "pricePerUnit": item['pricePerUnit'],
+          "totalAmount": item['pricePerUnit'] * item['ProductQuantityAddedToCart'],
+        };
+      }).toList(),
+      "totalAmount": userProfileController.getTotalAmount(),
+      "paymentType": "Credit Card", // Assuming this is the payment type
+    };
+    var subtot = order['totalAmount'];
+    var tot = subtot + 245;
+    order['totalAmount'] = tot;
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.transparent,
@@ -88,7 +127,8 @@ class _CartListScreenState extends State<FinalOrderScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    height: 200,
+                    // height: 220,
+                    height: 180,
                     width: 550,
                     decoration: BoxDecoration(
                       // color: Colors.grey[200],
@@ -120,37 +160,40 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                               ),
                               Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text(
-                                    "Boroj colony, Belonia, Tripura 799155"),
+                                child: Text("${order['address']['addressLine1']}, ${order['address']['addressLine2']}, ${order['address']['city']}, ${order['address']['pin']} "),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text("+91 7085959167"),
+                                child: Text("${order['address']['email']}"),
+                              ),
+                               Padding(
+                                padding: EdgeInsets.all(3.0),
+                                child: Text("${order['address']['mobile']}"),
                               ),
                               Row(children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Colors.green, // Background color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          18.0), // Rounded edges
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 30,
-                                        vertical: 10), // Button size
-                                  ),
-                                  onPressed: () {
-                                    // Get.to(widget.initialScreen);
-                                    // Add navigation or functionality here for consumer
-                                  },
-                                  child: Text(
-                                    "Change/Edit",
-                                    style: TextStyle(
-                                        color: Colors.white), // Text color
-                                  ),
-                                ),
-                                SizedBox(width: 30),
+                                // ElevatedButton(
+                                //   style: ElevatedButton.styleFrom(
+                                //     backgroundColor:
+                                //         Colors.green, // Background color
+                                //     shape: RoundedRectangleBorder(
+                                //       borderRadius: BorderRadius.circular(
+                                //           18.0), // Rounded edges
+                                //     ),
+                                //     padding: EdgeInsets.symmetric(
+                                //         horizontal: 30,
+                                //         vertical: 10), // Button size
+                                //   ),
+                                //   onPressed: () {
+                                //     // Get.to(widget.initialScreen);
+                                //     // Add navigation or functionality here for consumer
+                                //   },
+                                //   child: Text(
+                                //     "Change/Edit",
+                                //     style: TextStyle(
+                                //         color: Colors.white), // Text color
+                                //   ),
+                                // ),
+                                // SizedBox(width: 30),
                                 // ElevatedButton(
                                 //   style: ElevatedButton.styleFrom(
                                 //     backgroundColor: const Color.fromRGBO(
@@ -263,7 +306,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w500),
                             ),
-                            Text("Rs 245")
+                            Text('Rs $subtot')
                           ],
                         ),
                       ),
@@ -310,7 +353,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                               ),
                             ),
                             Text(
-                              "Rs 245",
+                              "Rs $tot",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
@@ -375,7 +418,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => OrderSuccessScreen(),
+                              builder: (context) => OrderSuccessScreen(order: order),
                             ),
                           );
                         },

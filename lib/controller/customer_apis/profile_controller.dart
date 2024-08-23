@@ -11,6 +11,7 @@ class UserProfileController extends GetxController {
   var favorites = [].obs;
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
+  final double vouch = 200.0; // Your voucher value
 
   @override
   void onInit() {
@@ -22,6 +23,27 @@ class UserProfileController extends GetxController {
   Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
+  }
+
+  // Get subtotal of cart items
+  double getCartSubtotal() {
+    double subtotal = 0;
+    for (var item in cartItems) {
+      // Ensure pricePerUnit is parsed as a double
+      double pricePerUnit = double.tryParse(item['pricePerUnit'].toString()) ?? 0.0;
+
+      // Ensure quantity is parsed as an int
+      int quantity = int.tryParse(item['ProductQuantityAddedToCart'].toString()) ?? 0;
+
+      subtotal += pricePerUnit * quantity;
+    }
+    return subtotal;
+  }
+
+  // Get total amount including voucher
+  double getTotalAmount() {
+    double subtotal = getCartSubtotal();
+    return subtotal + vouch;
   }
 
   // Get user profile
@@ -47,9 +69,9 @@ class UserProfileController extends GetxController {
           orders.value = userProfile['orders'] ?? [];
           favorites.value = userProfile['favorites'] ?? [];
 
-  print("cart: " + jsonEncode(cartItems));
-  print("orders: " + jsonEncode(orders));
-  print("favorites: " + jsonEncode(favorites));
+          print("cart: " + jsonEncode(cartItems));
+          print("orders: " + jsonEncode(orders));
+          print("favorites: " + jsonEncode(favorites));
 
         } else {
           userProfile.value = {};

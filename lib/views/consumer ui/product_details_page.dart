@@ -12,6 +12,7 @@ import 'package:krishi_customer_app/views/farmerui/menubar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/customer_apis/product_controller.dart';
+import 'package:krishi_customer_app/controller/customer_apis/profile_controller.dart';
 
 class ProductDetailsPage extends StatefulWidget {
  final Map<String, dynamic> product;
@@ -31,6 +32,7 @@ late int qty;
     // Initialize qty with product['minQuantity']
     qty = widget.product['minQuantity'] ?? 1; 
   }
+  final cartController = Get.find<UserProfileController>(); 
 
   Future<void> addToCart() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -40,13 +42,13 @@ late int qty;
 
     final cartItem = {
       "orderType": 1,
-      "productId": widget.product['id'], // Assuming 'id' is the key for productId
+      "productId": widget.product['productId'], // Assuming 'id' is the key for productId
       "productName": widget.product['name'],
       "ProductQuantityAddedToCart": qty,
       "productInfo": widget.product['about'], // Assuming 'about' holds product info
       "productImages": widget.product['images'], // Assuming 'images' is a list of image URLs
       "pricePerUnit": widget.product['pricePerUnit'],
-      "productUnitType": widget.product['unitType'], // Assuming 'unitType' is the key for product unit type
+      "productUnitType": widget.product['unit'], // Assuming 'unitType' is the key for product unit type
     };
 
     final headers = {
@@ -66,6 +68,7 @@ late int qty;
         final responseData = jsonDecode(response.body);
         Get.snackbar("Product added to cart successfully: ","$responseData",snackPosition: SnackPosition.TOP);
         // Show a success message or update the UI
+        await cartController.getUserProfile(); 
       } else {
         print('Failed to add product to cart: ${response.body}');
         // Show an error message
