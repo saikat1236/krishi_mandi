@@ -8,6 +8,7 @@ class OrderController extends GetxController {
     final UserProfileController userProfileController = Get.put(UserProfileController());
   var isLoading = false.obs;
   var orders = [].obs;
+   var errorMessage = ''.obs;
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
     Future<String> _getToken() async {
@@ -35,27 +36,59 @@ class OrderController extends GetxController {
   // }
 
   // Add a new order
- Future<void> addOrder(Map<String, dynamic> orderData) async {
-    isLoading(true);
-    final url = Uri.parse('$baseUrl/create-order');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode(orderData);
+
+  Future<void> createOrder(Map<String, dynamic> order) async {
+    final url = 'http://54.159.124.169:3000/users/create-order';
+    isLoading.value = true;
+      final token = await _getToken();
 
     try {
-      final response = await http.post(url, headers: headers, body: body);
+      final response = await http.post(
+        Uri.parse(url),
+     headers :{
+      'Content-Type': 'application/json',
+      'Authorization': token, // Use token from SharedPreferences
+    },
+        body: jsonEncode(order),
+      );
+
       if (response.statusCode == 200) {
-        print('Order added successfully');
-        await userProfileController.getOrders(); // Refresh the list if needed
+        // Handle success
+        Get.snackbar('Success', 'Order created successfully');
+        // You can navigate to the success screen or perform other actions here
       } else {
-        print('Failed to add order. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        // Handle error
+        errorMessage.value = 'Failed to create order: ${response.reasonPhrase}';
+        Get.snackbar('Error', errorMessage.value);
       }
     } catch (e) {
-      print('Error: $e');
+      errorMessage.value = 'An error occurred: $e';
+      Get.snackbar('Error', errorMessage.value);
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
   }
+//  Future<void> addOrder(Map<String, dynamic> orderData) async {
+//     isLoading(true);
+//     final url = Uri.parse('$baseUrl/create-order');
+//     final headers = {'Content-Type': 'application/json'};
+//     final body = jsonEncode(orderData);
+
+//     try {
+//       final response = await http.post(url, headers: headers, body: body);
+//       if (response.statusCode == 200) {
+//         print('Order added successfully');
+//         await userProfileController.getOrders(); // Refresh the list if needed
+//       } else {
+//         print('Failed to add order. Status code: ${response.statusCode}');
+//         print('Response body: ${response.body}');
+//       }
+//     } catch (e) {
+//       print('Error: $e');
+//     } finally {
+//       isLoading(false);
+//     }
+//   }
 
   // // Update an order
   // Future<void> updateOrder(String id, Map<String, dynamic> orderData) async {
@@ -93,3 +126,5 @@ class OrderController extends GetxController {
   //   }
   // }
 }
+
+

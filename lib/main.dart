@@ -22,6 +22,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Uncomment this if HomeScreen is available
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
 
+import 'controller/customer_apis/profile_controller.dart';
+
 // import 'views/consumer ui/signupscreen.dart';
 
 
@@ -49,6 +51,7 @@ void main() async {
     farmerinitialScreen = Uploadpage();
   }
   // Get.put(GlobalController());
+    Get.put(UserProfileController()); 
 
   runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerinitialScreen,));
 }

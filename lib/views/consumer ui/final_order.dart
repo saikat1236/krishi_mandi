@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/order_success.dart';
 
+import '../../controller/customer_apis/order_controller.dart';
 import '../../controller/customer_apis/profile_controller.dart';
 
 class FinalOrderScreen extends StatefulWidget {
@@ -33,6 +34,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
       });
     }
   }
+    final OrderController orderController = Get.put(OrderController());
 
   @override
   Widget build(BuildContext context) {
@@ -40,33 +42,34 @@ class _CartListScreenState extends State<FinalOrderScreen> {
     final address = userProfileController.userProfile['Address'][0];
     // Create the order object
     final order = {
-      "orderType": 1,
-      "userName": userProfileController.userProfile['userName'],
-      "email": userProfileController.userProfile['email'],
-      "mobileNumber": userProfileController.userProfile['mobileNumber'],
-      "address": {
-        "addressId": address['addressId'],
-        "name": address['name'],
-        "mobile": address['mobile'],
-        "email": address['email'],
-        "addressLine1": address['addressLine1'],
-        "addressLine2": address['addressLine2'],
-        "city": address['city'],
-        "pin": address['pin'],
-      },
-      "image": "",
-      "productsOrdered": widget.cartItems.map((item) {
-        return {
-          "productName": item['productName'],
-          "productId": item['productId'],
-          "quantity": item['ProductQuantityAddedToCart'],
-          "pricePerUnit": item['pricePerUnit'],
-          "totalAmount": item['pricePerUnit'] * item['ProductQuantityAddedToCart'],
-        };
-      }).toList(),
-      "totalAmount": userProfileController.getTotalAmount(),
-      "paymentType": "Credit Card", // Assuming this is the payment type
+  "orderType": 1,
+  "userName": userProfileController.userProfile['userName'] ?? "Unknown User",
+  "email": userProfileController.userProfile['email'] ?? "example@example.com",
+  "mobileNumber": userProfileController.userProfile['mobileNumber'] ?? "0000000000",
+  "address": {
+    "addressId": address['addressId'] ?? "No Address ID",
+    "name": address['name'] ?? "No Name",
+    "mobile": address['mobile'] ?? "0000000000",
+    "email": address['email'] ?? "example@example.com",
+    "addressLine1": address['addressLine1'] ?? "No Address Line 1",
+    "addressLine2": address['addressLine2'] ?? "No Address Line 2",
+    "city": address['city'] ?? "No City",
+    "pin": address['pin'] ?? "000000",
+  },
+  "image": "",
+  "productsOrdered": widget.cartItems.map((item) {
+    return {
+      "productName": item['productName'] ?? "No Product Name",
+      "productId": item['productId'] ?? "No Product ID",
+      "quantity": item['ProductQuantityAddedToCart'] ?? 0,
+      "pricePerUnit": item['pricePerUnit'] ?? 0.0,
+      "totalAmount": (item['pricePerUnit'] ?? 0.0) * (item['ProductQuantityAddedToCart'] ?? 0),
     };
+  }).toList(),
+  "totalAmount": userProfileController.getTotalAmount() ?? 0.0,
+  "paymentType": "Credit Card",
+};
+
     var subtot = order['totalAmount'];
     var tot = subtot + 245;
     order['totalAmount'] = tot;
@@ -414,14 +417,16 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 40, vertical: 10), // Button size
                         ),
-                        onPressed: () {
+                         onPressed: () {
+                        orderController.createOrder(order).then((_) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => OrderSuccessScreen(order: order),
                             ),
                           );
-                        },
+                        });
+                      },
                         child: Center(
                           child: Text(
                             "Continue",
