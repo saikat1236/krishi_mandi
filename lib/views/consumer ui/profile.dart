@@ -66,11 +66,14 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 40.0,
-                              backgroundImage: NetworkImage(
-                                  userController.user['imageProfile']),
-                            ),
+CircleAvatar(
+  radius: 40.0,
+  backgroundImage: (userController.user['imageProfile'] != null &&
+          userController.user['imageProfile'].isNotEmpty)
+      ? NetworkImage(userController.user['imageProfile']) as ImageProvider<Object>
+      : const AssetImage('assets/potato.png') as ImageProvider<Object>,
+),
+
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Column(
@@ -227,8 +230,10 @@ class AddressCard extends StatelessWidget {
                                         addressLine2:
                                             address['addressLine2'] ?? '',
                                         city: address['city'] ?? '',
-                                        pin: address['pin'] ?? 0,
+                                        // pin: address['pin'] ?? '',
+                                        // addressId: address['addressId']
                                       ),
+                                      addressId: address['addressId'] ?? ''
                                     ),
                                   ),
                                 );

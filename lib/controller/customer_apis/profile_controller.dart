@@ -11,12 +11,13 @@ class UserProfileController extends GetxController {
   var favorites = [].obs;
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
-  final double vouch = 200.0; // Your voucher value
+  final double vouch = 0.0; // Your voucher value
 
   @override
   void onInit() {
     super.onInit();
     getUserProfile(); // Fetch user profile when controller initializes
+    getOrders();
   }
 
   // Retrieve token from SharedPreferences

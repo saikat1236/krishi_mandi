@@ -13,6 +13,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/favorite.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/item.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/products.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 
@@ -51,42 +52,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final int _currentIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-  final List<String> imgList = [
-    'assets/Small banner.png',
-    'assets/Small banner.png',
-    'assets/Small banner.png',
-  ];
   // final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
+
+  ImageProvider _getNetworkImage(String url) {
+  try {
+    return NetworkImage(url);
+  } catch (e) {
+    // Return a fallback image if an error occurs
+    return const AssetImage('assets/avatar.png');
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     final ProductController controller = Get.put(ProductController());
@@ -168,13 +145,18 @@ class _HomePageState extends State<HomePage> {
                       top: MediaQuery.of(context).padding.top, bottom: 24),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 52,
-                        // backgroundImage: NetworkImage(userController.user['imageProfile']),
-                          backgroundImage: userController.user['imageProfile'] != null && userController.user['imageProfile'] != ''
-      ? NetworkImage(userController.user['imageProfile'])
-      : AssetImage('assets/avatar.png') as ImageProvider<Object>,
-                      ),
+CircleAvatar(
+  radius: 52,
+  backgroundImage: userController.user['imageProfile'] != null &&
+          userController.user['imageProfile'].isNotEmpty
+      ? _getNetworkImage(userController.user['imageProfile'])
+      : const AssetImage('assets/avatar.png'),
+),
+
+
+
+
+
                       SizedBox(
                         height: 12,
                       ),
@@ -356,7 +338,13 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
-                      onPressed: () {},
+                        onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductsPage(),
+                            ));
+                      },
                       child: const Text('View All',
                           style: TextStyle(color: Colors.green)),
                     ),
@@ -443,14 +431,14 @@ class ProductListView extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(left: 10),
         child: SizedBox(
-          height: 150,
+          height: 550,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 6,
             itemBuilder: (context, index) {
               final product = controller.products[index];
               return SizedBox(
-                width: 150,
+                width: 550,
                 child: _offerItem(
                   product['name'] ?? "Product",
                   '\$${product["pricePerUnit"] ?? "0"}',
@@ -737,8 +725,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
               },
               child: _offerItemdemo(
                 product['name'] ?? "Product",
-                product['newPrice'] ?? "\$0.00",
-                product['pricePerUnit'] ?? "\$0.00",
+                product['newPrice'] ?? "\0.00",
+                "₹ ${product['pricePerUnit']}" ?? "\₹0.00",
                 product['image'] ?? 'assets/photo.png',
                 product['productId']
               ),
@@ -752,12 +740,18 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
   Widget _offerItemdemo(
       String name, String newPrice, String oldPrice, String imageUrl,String Pid) {
     return Container(
+      height: 180,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Stack(
             children: <Widget>[
-              SizedBox(height: 100, child: Image.asset(imageUrl)),
+   Image.asset(
+  imageUrl,
+  width: 170,
+  height: 150,
+  fit: BoxFit.cover, // Optional: Adjusts how the image fits within the width and height
+),
              Positioned(
                 right: 0,
                 child: Container(
@@ -778,27 +772,35 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(newPrice,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough)),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(' $oldPrice',
-                    style: TextStyle(
-                      color: Colors.red,
-                    )),
-              ),
-            ],
+          Container(
+            width: 170,
+            child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                  Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(newPrice,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough)),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(' $oldPrice',
+                      style: TextStyle(
+                        color: Colors.red,
+                      )),
+                ),
+              ],
+            ),
+              ]
+            ),
           ),
         ],
       ),

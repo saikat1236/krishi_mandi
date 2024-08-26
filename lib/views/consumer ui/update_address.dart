@@ -15,15 +15,17 @@ final Address address;
   final TextEditingController _addressLine2Controller;
   final TextEditingController _cityController;
   final TextEditingController _pinController;
-
-  UpdShippingAddressScreen({super.key, required this.address})
+    // final TextEditingController _idController;
+final String addressId;
+  UpdShippingAddressScreen({super.key, required this.address, required this.addressId, })
       : _nameController = TextEditingController(text: address.name),
         _mobileController = TextEditingController(text: address.mobile),
         _emailController = TextEditingController(text: address.email),
         _addressLine1Controller = TextEditingController(text: address.addressLine1),
         _addressLine2Controller = TextEditingController(text: address.addressLine2),
         _cityController = TextEditingController(text: address.city),
-        _pinController = TextEditingController(text: address.pin.toString());
+        _pinController = TextEditingController(text: address.pin?.toString() ?? '');
+        // _idController = TextEditingController(text: address.addressId);
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +64,16 @@ final Address address;
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        _controller.addAddress(
+                        _controller.updateAddress(
                           name: _nameController.text,
                           mobile: _mobileController.text,
                           email: _emailController.text,
                           addressLine1: _addressLine1Controller.text,
                           addressLine2: _addressLine2Controller.text,
                           city: _cityController.text,
-                          pin: int.tryParse(_pinController.text) ?? 0,
+                          pin: int.parse(_pinController.text),
+                          addressId: addressId
+                          // pin: 799155
                         );
                       }
                       Get.back();
@@ -116,6 +120,7 @@ final Address address;
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
+         keyboardType: label == 'Pin' ? TextInputType.number : TextInputType.text,
       ),
     );
   }

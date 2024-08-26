@@ -41,8 +41,8 @@ class _CartListScreenState extends State<FinalOrderScreen> {
     final UserProfileController userProfileController = Get.find<UserProfileController>();
     final address = userProfileController.userProfile['Address'][0];
     // Create the order object
-    final order = {
-  "orderType": 1,
+final order = {
+  "orderType": 1, // Static value; adjust as needed
   "userName": userProfileController.userProfile['userName'] ?? "Unknown User",
   "email": userProfileController.userProfile['email'] ?? "example@example.com",
   "mobileNumber": userProfileController.userProfile['mobileNumber'] ?? "0000000000",
@@ -54,25 +54,32 @@ class _CartListScreenState extends State<FinalOrderScreen> {
     "addressLine1": address['addressLine1'] ?? "No Address Line 1",
     "addressLine2": address['addressLine2'] ?? "No Address Line 2",
     "city": address['city'] ?? "No City",
-    "pin": address['pin'] ?? "000000",
+    "pin": 799155, // Ensure pin is an integer
   },
-  "image": "",
+  "image": "", // Provide a valid image URL if available
   "productsOrdered": widget.cartItems.map((item) {
     return {
       "productName": item['productName'] ?? "No Product Name",
       "productId": item['productId'] ?? "No Product ID",
-      "quantity": item['ProductQuantityAddedToCart'] ?? 0,
-      "pricePerUnit": item['pricePerUnit'] ?? 0.0,
-      "totalAmount": (item['pricePerUnit'] ?? 0.0) * (item['ProductQuantityAddedToCart'] ?? 0),
+      // "quantity": 10,
+      // "pricePerUnit":3.5,
+      // "totalAmount": 35
+      "quantity": int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0,
+      "pricePerUnit": double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0,
+      "totalAmount": (double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0) *
+                     (int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0),
     };
   }).toList(),
-  "totalAmount": userProfileController.getTotalAmount() ?? 0.0,
-  "paymentType": "Credit Card",
+  "totalAmount": double.tryParse(userProfileController.getTotalAmount()?.toString() ?? "0.0") ?? 0.0,
+  // "totalAmount" : 105.0,
+  "paymentType": "Credit Card", // Adjust if you need to support other payment types
 };
 
+
+    var delhivery = 0;
     var subtot = order['totalAmount'];
-    var tot = subtot + 245;
-    order['totalAmount'] = tot;
+    var tot = subtot + delhivery;
+    // order['totalAmount'] = tot;
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.transparent,
@@ -330,7 +337,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w500),
                             ),
-                            Text("Rs 245")
+                            Text("Rs $delhivery")
                           ],
                         ),
                       ),

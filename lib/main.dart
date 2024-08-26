@@ -10,6 +10,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderdetailspage%201.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/products.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 // import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
       // home: OrderDetailsScreen()
       // home: SaikatHome()
       home: HomePage()
+      // home: ProductsPage()
       // home: FinalOrderScreen()
       // home: MainScreen()
       // home: ProfileScreenmain()

@@ -14,6 +14,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 
 import '../../controller/customer_apis/profile_controller.dart';
+import '../../controller/customer_apis/user_controller.dart';
 
 
 class CategoryScreen extends StatefulWidget {
@@ -241,6 +242,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
     });
   }
   final ProductController controller = Get.put(ProductController());
+  final UserController userController = Get.put(UserController());
   final List<Map<String, String>> products = [
     {
       'name': 'Product 1',
@@ -319,8 +321,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
           //   );
           // }
           // ),
-          children: List.generate(controller.products.length, (index) {
-            final product = controller.products[index];
+            children: List.generate(controller.products.length, (index) {
+            final product = controller.products[index] as Map<String, dynamic>;
 
             return InkWell(
               onTap: () {
@@ -328,7 +330,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductDetailsPage(
-                        product: product['name'],
+                        product: product,
                         ),
                   ),
                 );
@@ -338,6 +340,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                 product['newPrice'] ?? "\$0.00",
                 product['pricePerUnit'] ?? "\$0.00",
                 product['image'] ?? 'assets/photo.png',
+                product['_id']
               ),
             );
           }),
@@ -347,14 +350,20 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
   }
 
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl) {
+      String name, String newPrice, String oldPrice, String imageUrl,String Pid) {
     return Container(
+      height: 180,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Stack(
             children: <Widget>[
-              SizedBox(height: 100, child: Image.asset(imageUrl)),
+   Image.asset(
+  imageUrl,
+  width: 170,
+  height: 150,
+  fit: BoxFit.cover, // Optional: Adjusts how the image fits within the width and height
+),
              Positioned(
                 right: 0,
                 child: Container(
@@ -363,37 +372,47 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   width: 40,
                   color: Colors.white,
                   child: IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : Colors.grey,
-                  ),
-                  onPressed: toggleFavorite,
+                     icon: Icon(
+          userController.isFavorite.value ? Icons.favorite : Icons.favorite_border,
+          color: userController.isFavorite.value ? Colors.red : Colors.grey,
+        ),
+                    onPressed: () {
+          userController.toggleFavorite(Pid); // Pass the product ID
+        },
                 ),
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(newPrice,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough)),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(' $oldPrice',
-                    style: TextStyle(
-                      color: Colors.red,
-                    )),
-              ),
-            ],
+          Container(
+            width: 170,
+            child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                  Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(newPrice,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough)),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(' $oldPrice',
+                      style: TextStyle(
+                        color: Colors.red,
+                      )),
+                ),
+              ],
+            ),
+              ]
+            ),
           ),
         ],
       ),

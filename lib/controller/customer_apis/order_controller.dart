@@ -55,6 +55,9 @@ class OrderController extends GetxController {
       if (response.statusCode == 200) {
         // Handle success
         Get.snackbar('Success', 'Order created successfully');
+        print('Response body: ${response.body}');
+        userProfileController.getOrders();
+
         // You can navigate to the success screen or perform other actions here
       } else {
         // Handle error

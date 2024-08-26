@@ -19,13 +19,8 @@ class _CartListScreenState extends State<CartListScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch the user profile and update the total amount
-    userProfileController.getUserProfile().then((_) {
-      setState(() {
-        tot = userProfileController.getCartSubtotal() + vouch; 
-        
-      });
-    });
+    // Fetch the user profile on initialization
+    userProfileController.getUserProfile();
   }
 
   void _increaseQuantity(int index) {
@@ -44,7 +39,7 @@ class _CartListScreenState extends State<CartListScreen> {
     });
   }
 
-  var vouch = 200;
+  var vouch = 0;
   double tot = 0.0; // Initialize tot as double
   
 
@@ -310,7 +305,7 @@ class _CartListScreenState extends State<CartListScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Voucher"), 
-                              Text("Rs 200")],
+                              Text("Rs $vouch")],
                           ),
                         ),
                         // Padding(
