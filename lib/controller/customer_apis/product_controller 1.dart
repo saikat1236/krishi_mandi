@@ -44,7 +44,7 @@ class ProductController extends GetxController {
         }
       } else {
         products.value = [];
-        print('Failed to load products: ${response.body}');
+        // print('Failed to load products: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');
@@ -69,10 +69,10 @@ class ProductController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print('Item added to favorites: ${response.body}');
+        // print('Item added to favorites: ${response.body}');
         // Implement any state management logic if needed
       } else {
-        print('Failed to add item to favorites: ${response.body}');
+        // print('Failed to add item to favorites: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');
@@ -94,11 +94,11 @@ class ProductController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print('Item added to cart: ${response.body}');
+        // print('Item added to cart: ${response.body}');
         // Implement any state management logic if needed
         return true; // Return true if successfully added to cart
       } else {
-        print('Failed to add item to cart: ${response.body}');
+        // print('Failed to add item to cart: ${response.body}');
         return false; // Return false on failure
       }
     } catch (e) {

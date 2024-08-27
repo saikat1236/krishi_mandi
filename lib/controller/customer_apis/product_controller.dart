@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
-  var isLoading = false.obs;
+  var isLoading = true.obs;
   var products = [].obs;
   var categories = [].obs;
 
@@ -25,10 +25,11 @@ class ProductController extends GetxController {
 
   // Get all categories
   Future<void> getAllCategories() async {
-    // isLoading(true);
+    isLoading(true);
     final url = Uri.parse('http://54.159.124.169:3000/users/get-available-categories');
     final token = await _getToken();
-  print('Token fetched from SharedPreferences: $token');
+    // print('Token fetched from SharedPreferences: $token');
+    print('Token fetched from SharedPreferences');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': token, // Use token from SharedPreferences
@@ -46,7 +47,7 @@ class ProductController extends GetxController {
         }
       } else {
         categories.value = [];
-        print('Failed to load categories: ${response.body}');
+        // print('Failed to load categories: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');
@@ -86,7 +87,7 @@ class ProductController extends GetxController {
         }
       } else {
         products.value = [];
-        print('Failed to load products: ${response.body}');
+        print('Failed to load products');
       }
     } catch (e) {
       print('Error: $e');
@@ -95,7 +96,45 @@ class ProductController extends GetxController {
       isLoading(false);
     }
   }
+  // category filtered products
+    Future<void> getfilteredprod(List<String> selectedCategories) async {
+    isLoading(true);
+    final url = Uri.parse('$baseUrl/filtered');
 
+    try {
+      final token = await _getToken(); // Get token from SharedPreferences
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token // Use token from SharedPreferences
+          //  'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiMzg0MzcwNC1mMTczLTRkYWUtODM2YS0wODQ3NTI1YjZlNjkiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzIzODMwNDA4fQ.AMHrZdJf8GGWnzwteVXJqH5Yx4-iahH9alaBS6FFPyc'
+        },
+        body: jsonEncode({
+          'categories': selectedCategories,
+          'page': 1,
+          'limit': 10,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        var decodedResponse = jsonDecode(response.body)["payload"];
+        if (decodedResponse is List) {
+          products.value = decodedResponse;
+        } else {
+          products.value = [];
+        }
+      } else {
+        products.value = [];
+        print('Failed to load products');
+      }
+    } catch (e) {
+      print('Error: $e');
+      products.value = [];
+    } finally {
+      isLoading(false);
+    }
+  }
   // Add item to favorites
   Future<void> addToFavorites(Map<String, dynamic> favItem) async {
     final url = Uri.parse('$baseUrl/add-item-in-favs');
@@ -113,10 +152,10 @@ class ProductController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print('Item added to favorites: ${response.body}');
+        // print('Item added to favorites: ${response.body}');
         // Implement any state management logic if needed
       } else {
-        print('Failed to add item to favorites: ${response.body}');
+        // print('Failed to add item to favorites: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');
@@ -139,12 +178,15 @@ class ProductController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print('Item added to cart: ${response.body}');
+        // print('Item added to cart: ${response.body}');
+        print('Item added to cart');
         // Implement any state management logic if needed
         return true; // Return true if successfully added to cart
       } else {
-        print('Failed to add item to cart: ${response.body}');
+        // print('Failed to add item to cart: ${response.body}');
+         print('Failed to add item to cart');
         return false; // Return false on failure
+
       }
     } catch (e) {
       print('Error: $e');

@@ -1,420 +1,76 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/product_controller.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/checkoutscreen1.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/item.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 
-import '../../controller/customer_apis/profile_controller.dart';
 import '../../controller/customer_apis/user_controller.dart';
 
-
 class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
-
   @override
-  _HomePageState createState() => _HomePageState();
+  _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _HomePageState extends State<CategoryScreen> {
-  final int _currentIndex = 0;
-  final TextEditingController _searchController = TextEditingController();
-  final List<String> imgList = [
-    'assets/Small banner.png',
-    'assets/Small banner.png',
-    'assets/Small banner.png',
-  ];
+class _CategoryScreenState extends State<CategoryScreen> {
   final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
+  String selectedCategory = "vegetables"; // Default category
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Color.fromARGB(255, 235, 232, 232),
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text('Category',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-    Navigator.pop(context);
-  },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.shopping_cart),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => CartListScreen(),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        //   IconButton(
-        //     icon: Icon(Icons.person),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => ProfileScreenmain(),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartListScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreenmain(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
-              // Search bar
-       
-              // Other content
-              // Expanded(
-              //   child: Center(
-              //     // child: Text('Content goes here'),
-              //   ),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       const Text('Category',
-              //           style: TextStyle(
-              //               fontSize: 20, fontWeight: FontWeight.bold)),
-              //       // TextButton(
-              //       //   onPressed: () {},
-              //       //   child: const Text('View All',
-              //       //       style: TextStyle(color: Colors.green)),
-              //       // ),
-              //     ],
-              //   ),
-              // ),
-              CategoriesList(),
-              // CarouselSlider(
-              //   options: CarouselOptions(
-              //     autoPlay: true,
-              //     aspectRatio: 2.0,
-              //     enlargeCenterPage: true,
-              //   ),
-              //   items: imgList
-              //       .map((item) => Container(
-              //             child: Center(
-              //               child:
-              //                   Image.asset(item, fit: BoxFit.cover, width: 1000),
-              //             ),
-              //           ))
-              //       .toList(),
-              // ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // const Text('Products',
-                    //     style: TextStyle(
-                    //         fontSize: 20, fontWeight: FontWeight.bold)),
-                    // TextButton(
-                    //   onPressed: () {},
-                    //   child: const Text('View All',
-                    //       style: TextStyle(color: Colors.green)),
-                    // ),
-                  ],
-                ),
-              ),
-
-              ProductListViewdemo(),
-    
+              CategoriesList(onCategorySelected: (category) {
+                setState(() {
+                  selectedCategory = category;
+                });
+              }),
+              SizedBox(height: 30,),
+              ProductListView(selectedCategory: selectedCategory),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _categoryItem(String title, String imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: AssetImage(imageUrl),
-          ),
-          Container(
-            width: 100,
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Color(0xFF7ED856),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white),
-            ),
-            child: Center(child: Text(title)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _sectionTitle(String title, String viewAllText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title,
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          TextButton(
-            onPressed: () {},
-            child:
-                Text(viewAllText, style: const TextStyle(color: Color(0xFF7ED856))),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-class ProductListViewdemo extends StatefulWidget {
-  @override
-  _ProductListViewdemoState createState() => _ProductListViewdemoState();
-}
-
-class _ProductListViewdemoState extends State<ProductListViewdemo> {
-    bool isFavorite = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
-  final ProductController controller = Get.put(ProductController());
-  final UserController userController = Get.put(UserController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 5',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 6',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
-
-  // ProductListViewdemo();
-
-  @override
-  Widget build(BuildContext context) {
-    controller.getAllProducts(1); // Fetch products when the widget is built
-
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-       if (controller.categories.isEmpty) {
-        return Center(child: Text('No Products available.'));
-      }
-      return SingleChildScrollView(
-        // scrollDirection: Axis.horizontal,
-        child: GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true, // Important for nested scrollable widgets
-          physics:
-              NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
-          // children: List.generate(products.length, (index) {
-          //   final product = products[index];
-          //   // OnTap(
-          //   //   NavigationBar(destinations: ProductDetailsPage())
-          //   // ),
-          //   return _offerItemdemo(
-          //     product['name'] ?? "product",
-          //     product['newPrice'] ?? "\$0.00",
-          //     product['oldPrice'] ?? "\$0.00",
-          //     product['image'] ?? 'assets/photo.png',
-          //   );
-          // }
-          // ),
-            children: List.generate(controller.products.length, (index) {
-            final product = controller.products[index] as Map<String, dynamic>;
-
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailsPage(
-                        product: product,
-                        ),
-                  ),
-                );
-              },
-              child: _offerItemdemo(
-                product['name'] ?? "Product",
-                product['newPrice'] ?? "\$0.00",
-                product['pricePerUnit'] ?? "\$0.00",
-                product['image'] ?? 'assets/photo.png',
-                product['_id']
-              ),
-            );
-          }),
-        ),
-      );
-    });
-  }
-
-  Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl,String Pid) {
-    return Container(
-      height: 180,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-   Image.asset(
-  imageUrl,
-  width: 170,
-  height: 150,
-  fit: BoxFit.cover, // Optional: Adjusts how the image fits within the width and height
-),
-             Positioned(
-                right: 0,
-                child: Container(
-                  // padding: EdgeInsets.all(5),
-                  height: 40,
-                  width: 40,
-                  color: Colors.white,
-                  child: IconButton(
-                     icon: Icon(
-          userController.isFavorite.value ? Icons.favorite : Icons.favorite_border,
-          color: userController.isFavorite.value ? Colors.red : Colors.grey,
-        ),
-                    onPressed: () {
-          userController.toggleFavorite(Pid); // Pass the product ID
-        },
-                ),
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: 170,
-            child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                  Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(newPrice,
-                      style: TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough)),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(' $oldPrice',
-                      style: TextStyle(
-                        color: Colors.red,
-                      )),
-                ),
-              ],
-            ),
-              ]
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -422,16 +78,18 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
 
 class CategoriesList extends StatelessWidget {
   final ProductController controller = Get.put(ProductController());
+  final Function(String) onCategorySelected;
+
+  CategoriesList({required this.onCategorySelected});
 
   @override
   Widget build(BuildContext context) {
     controller.getAllCategories();
 
     return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-         // Check if the products list is empty
+      // if (controller.isLoading.value) {
+      //   return Center(child: CircularProgressIndicator());
+      // }
       if (controller.categories.isEmpty) {
         return Center(child: Text('No categories available.'));
       }
@@ -441,29 +99,14 @@ class CategoriesList extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
-            final product = controller.categories[index];
-            return 
-            // SizedBox(
-            //   width: 150,
-            //   child: _categoryItem(
-            //     product['value'] ?? "Fruits", // Assuming 'value' key is correct
-            //     product['image'] ?? 'assets/fruits.jpg' // Assuming API has an 'image' field
-            //   ),
-            // );
-            InkWell(
+            final category = controller.categories[index];
+            return InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CategoryScreen(
-                        // product: product,
-                        ),
-                  ),
-                );
+                onCategorySelected(category['value'] ?? "Fruits");
               },
-           child: _categoryItem(
-                product['value'] ?? "Fruits", // Assuming 'value' key is correct
-                product['image'] ?? 'assets/fruits.jpg' // Assuming API has an 'image' field
+              child: _categoryItem(
+                category['value'] ?? "Fruits",
+                category['image'] ?? 'assets/fruits.jpg',
               ),
             );
           },
@@ -494,6 +137,162 @@ class CategoriesList extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ProductListView extends StatefulWidget {
+  final String selectedCategory;
+
+  const ProductListView({required this.selectedCategory});
+
+  @override
+  _ProductListViewState createState() => _ProductListViewState();
+}
+
+class _ProductListViewState extends State<ProductListView> {
+  final ProductController controller = Get.put(ProductController());
+  final UserController userController = Get.put(UserController());
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProductsForCategory(widget.selectedCategory);
+  }
+
+  @override
+  void didUpdateWidget(covariant ProductListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedCategory != widget.selectedCategory) {
+      fetchProductsForCategory(widget.selectedCategory);
+    }
+  }
+
+  void fetchProductsForCategory(String category) {
+    controller.getfilteredprod([category]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (controller.products.isEmpty) {
+        return Center(child: Text('No Products available.'));
+      }
+      return GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: List.generate(controller.products.length, (index) {
+          final product = controller.products[index] as Map<String, dynamic>;
+
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsPage(product: product),
+                ),
+              );
+            },
+            child: _offerItemdemo(
+              product['name'] ?? "Product",
+              product['newPrice'] ?? "\$0.00",
+              product['pricePerUnit'] ?? "\$0.00",
+              product['image'] ?? 'assets/photo.png',
+              product['_id'],
+            ),
+          );
+        }),
+      );
+    });
+  }
+
+  Widget _offerItemdemo(
+      String name, String newPrice, String oldPrice, String imageUrl, String Pid) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double screenWidth = constraints.maxWidth;
+        double containerHeight = screenWidth * 0.9;
+        double containerWidth = screenWidth * 0.9;
+
+        return Container(
+          height: containerHeight,
+          width: containerWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Image.asset(
+                    imageUrl,
+                    width: containerWidth,
+                    height: containerHeight * 0.8,
+                    fit: BoxFit.cover,
+                  ),
+                   Positioned(
+                  right: 0,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    // color: Colors.white,
+                    child: IconButton(
+                      icon: Icon(
+                          userController.isFavorite.value
+                            ? Icons.favorite
+                            : Icons.favorite_rounded,
+                        color: userController.isFavorite.value
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                      onPressed: () {
+                        userController.toggleFavorite(Pid); // Pass the product ID
+                      },
+                    ),
+                  ),
+                ),
+                ],
+              ),
+              Container(
+                width: containerWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            newPrice,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            ' $oldPrice',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

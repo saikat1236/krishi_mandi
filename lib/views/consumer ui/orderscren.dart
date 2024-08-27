@@ -61,8 +61,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
             controller: _tabController,
             children: [
               _buildOrderList(),
-              const Center(child: Text('Processing Orders')),
-              const Center(child: Text('Cancelled Orders')),
+              // const Center(child: Text('Processing Orders')),
+              // const Center(child: Text('Cancelled Orders')),
             ],
           );
         }

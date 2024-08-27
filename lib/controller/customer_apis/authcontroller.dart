@@ -56,19 +56,27 @@ class AuthController extends GetxController {
       final response = await http.post(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         var respo = jsonDecode(response.body);
+        // Get.snackbar("Otp has", respo["message"]);
+        // print("1");7085959
         if (respo["status"] ==false
            ) {
           Get.snackbar("Error", respo["message"]);
+          print("2");
         } else {
+          Get.snackbar("Otp has been sent Successfully", "");
+          print("3");
           isSignedIn(true);
         }
       } else {
+        print("4");
         isSignedIn(false);
       }
     } catch (e) {
+      // print("1");
       print('Error: $e');
       isSignedIn(false);
     } finally {
+      print("1");
       isLoading(false);
     }
   }
@@ -99,14 +107,14 @@ class AuthController extends GetxController {
 
         // Update state
         isOtpVerified(true);
-        Get.snackbar("OTP Verification", "$mobileNumber and $otp and $response");
+        Get.snackbar("OTP Verified Successfully", "");
 
     // Get.to(() => HomePage());
       } else {
         isOtpVerified(false);
         Get.snackbar(
         'Verification Failed',
-        'The OTP verification failed. Please try again.',
+        '',
         snackPosition: SnackPosition.TOP,
       );
       }

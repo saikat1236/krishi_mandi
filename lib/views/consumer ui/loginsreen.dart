@@ -104,14 +104,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       //   ),
                       // );
                     // },
-                     onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OtpScreen2(mobileNumber: _phoneController.text,),
-              ),
-            );
-          },
+onPressed: () async {
+  // Call the signIn method and wait for it to complete
+  await controller.signIn(_phoneController.text, context);
+
+  // Check if the user is signed in before navigating
+  if (controller.isSignedIn.value) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OtpScreen2(mobileNumber: _phoneController.text),
+      ),
+    );
+  }
+},
+
                     child: Container(
                       width: 350,
                       child: Center(

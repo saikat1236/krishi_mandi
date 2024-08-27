@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
-// import 'package:krishi_customer_app/controllers/user_profile_controller.dart';
-
 import '../../controller/customer_apis/profile_controller.dart'; // Import your controller
 
 class CartListScreen extends StatefulWidget {
@@ -41,8 +39,6 @@ class _CartListScreenState extends State<CartListScreen> {
 
   var vouch = 0;
   double tot = 0.0; // Initialize tot as double
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -88,141 +84,134 @@ class _CartListScreenState extends State<CartListScreen> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        width: 384,
-                        height: 100,
-                        child: Stack(
+                        width: double.infinity,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x66E5E5E5),
+                              blurRadius: 10,
+                              offset: Offset(10, 10),
+                              spreadRadius: 0,
+                            )
+                          ],
+                        ),
+                        child: Row(
                           children: [
-                            Positioned(
-                              left: 0,
-                              top: 0,
-                              child: Container(
-                                width: 384,
-                                height: 100,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                            Container(
+                              width: 80,
+                              height: 80,
+                              margin: const EdgeInsets.all(8.0),
+                              child: Image.network(cartItem['productImages'][0]), // Load the image dynamically
+                            ),
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            cartItem['productName'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              height: 0,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: 'Quantity: ',
+                                                  style: TextStyle(
+                                                    color: Color(0xFFCACACA),
+                                                    fontSize: 12,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 0,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: '${cartItem['ProductQuantityAddedToCart']} ${cartItem['productUnitType']}',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 13,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 0,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        // SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Rs ${cartItem['pricePerUnit']}',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w700,
+                                              height: 0,
+                                            ),
+                                          ),
+                                        ),
+                                        // Spacer(),
+                                        
+                                      ],
+                                    ),
                                   ),
-                                  shadows: [
-                                    BoxShadow(
-                                      color: Color(0x66E5E5E5),
-                                      blurRadius: 10,
-                                      offset: Offset(10, 10),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 16,
-                              top: 10,
-                              child: Container(
-                                width: 80,
-                                height: 80,
-                                child: Image.network(cartItem['productImages'][0]), // Load the image dynamically
-                              ),
-                            ),
-                            Positioned(
-                              left: 117,
-                              top: 12,
-                              child: Text(
-                                cartItem['productName'],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 117,
-                              top: 50,
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Quantity: ',
-                                      style: TextStyle(
-                                        color: Color(0xFFCACACA),
-                                        fontSize: 10,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: '${cartItem['ProductQuantityAddedToCart']} ${cartItem['productUnitType']}',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 10,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 117,
-                              top: 73,
-                              child: Text(
-                                'Rs ${cartItem['pricePerUnit']}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                  height: 0,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 346,
-                              top: 12,
-                              child: Container(
-                                width: 20,
-                                height: 20,
-                                child: Radio<int>(
-                                  value: index,
-                                  groupValue: _rad,
-                                  onChanged: (int? value) {
-                                    setState(() {
-                                      _rad = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 250,
-                              top: 60,
-                              child: Container(
-                                height: 40,
-                                width: 110,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.remove),
-                                      onPressed: () => _decreaseQuantity(index),
-                                    ),
-                                    Text(
-                                      '${cartItem['ProductQuantityAddedToCart']}',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.add),
-                                      onPressed: () => _increaseQuantity(index),
-                                    ),
-                                  ],
-                                ),
+                                  Positioned(
+                                    top: 10,
+                                    right: 10,
+                                    child: Icon(Icons.delete)
+                                    // child: Radio<int>(
+                                    //   value: index,
+                                    //   groupValue: _rad,
+                                    //   onChanged: (int? value) {
+                                    //     setState(() {
+                                    //       _rad = value;
+                                    //     });
+                                    //   },
+                                    // ),
+                                  ),
+                                    Positioned(
+                                    bottom: 8,
+                                    right: 8,
+                                    child:  Row(
+                                         
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.remove),
+                                              onPressed: () => _decreaseQuantity(index),
+                                            ),
+                                            Text(
+                                              '${cartItem['ProductQuantityAddedToCart']}',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.add),
+                                              onPressed: () => _increaseQuantity(index),
+                                            ),
+                                          ],
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -234,27 +223,25 @@ class _CartListScreenState extends State<CartListScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    width: 386,
+                    width: double.infinity,
                     height: 45,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Positioned(
-                          left: 1,
-                          top: 0,
+                        Expanded(
                           child: Container(
-                            width: 244,
                             height: 45,
                             child: TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15.0), 
+                                  borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 hintText: 'Promo code',
                               ),
                             ),
                           ),
                         ),
+                        SizedBox(width: 10),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromRGBO(74, 230, 50, 0.7),
@@ -286,17 +273,16 @@ class _CartListScreenState extends State<CartListScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Text("Sub-total"), 
-                              // Text("Rs 245")
                               Text("Sub-total"),
-                          Obx(() => Text("Rs ${userProfileController.getCartSubtotal().toStringAsFixed(2)}")),
-                              ],
+                              Obx(() => Text("Rs ${userProfileController.getCartSubtotal().toStringAsFixed(2)}")),
+                            ],
                           ),
                         ),
                         Padding(
@@ -304,17 +290,11 @@ class _CartListScreenState extends State<CartListScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Voucher"), 
-                              Text("Rs $vouch")],
+                              Text("Voucher"),
+                              Text("Rs $vouch"),
+                            ],
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(10.0),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [Text("Delivery Fee"), Text("Rs 245")],
-                        //   ),
-                        // ),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           height: 1.0,
@@ -345,7 +325,7 @@ class _CartListScreenState extends State<CartListScreen> {
                                   fontWeight: FontWeight.w700,
                                   height: 0,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

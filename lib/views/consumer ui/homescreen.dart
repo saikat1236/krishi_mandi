@@ -52,7 +52,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final int _currentIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-  // final ProductController controller = Get.put(ProductController());
+  final ProductController controller = Get.put(ProductController());
+
+    @override
+  void initState() {
+    super.initState();
+    print("here");
+    fetchAllProducts();
+  }
+
+  void fetchAllProducts() {
+    controller.getAllProducts(1); // Method to fetch all products
+  }
 
   ImageProvider _getNetworkImage(String url) {
   try {
@@ -66,7 +77,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ProductController controller = Get.put(ProductController());
+    // final ProductController controller = Get.put(ProductController());
     final UserController userController = Get.put(UserController());
     // // controller.getAllcategories();
     return Obx((){
@@ -287,13 +298,17 @@ CircleAvatar(
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CategoryScreen(),
-                            ));
-                      },
+                         onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CategoryScreen(),
+                ),
+              ).then((_) {
+                // Refresh data or handle navigation return if needed
+                fetchAllProducts();
+              });
+            },
                       child: const Text('View All',
                           style: TextStyle(color: Colors.green)),
                     ),
@@ -414,207 +429,6 @@ CircleAvatar(
   }
 }
 
-class ProductListView extends StatelessWidget {
-  final ProductController controller = Get.put(ProductController());
-
-  ProductListView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    controller.getAllProducts(1); // Fetch products when the widget is built
-
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      return Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: SizedBox(
-          height: 550,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              final product = controller.products[index];
-              return SizedBox(
-                width: 550,
-                child: _offerItem(
-                  product['name'] ?? "Product",
-                  '\$${product["pricePerUnit"] ?? "0"}',
-                  '\$${product["pricePerUnit"] ?? "0"}',
-                  product['image'] ??
-                      'assets/photo.png', // Assuming your API has an 'image' field
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _offerItem(
-      String name, String newPrice, String oldPrice, String imageUrl) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              SizedBox(
-                  height: 80,
-                  width: 140,
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                  )),
-              Positioned(
-                left: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  color: Colors.red,
-                  child: const Text('-15%',
-                      style: TextStyle(color: Colors.white, fontSize: 12)),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(newPrice,
-                    style: const TextStyle(
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough)),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(' $oldPrice',
-                    style: const TextStyle(
-                      color: Colors.red,
-                    )),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductListView2 extends StatelessWidget {
-  final ProductController controller = Get.put(ProductController());
-
-  ProductListView2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    controller.getAllProducts(2); // Fetch products when the widget is built
-
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      return Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: SizedBox(
-          height: 220,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.products.length,
-            itemBuilder: (context, index) {
-              final product = controller.products[index];
-              return _productItem(
-                  product['name'] ?? "product",
-                  product["category"] ?? "category",
-                  product['image'] ??
-                      'assets/photo.png', // Assuming your API has an 'image' field
-                  product);
-            },
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _productItem(String name, String description, String imageUrl,
-      Map<dynamic, dynamic> data) {
-    return InkWell(
-      onTap: () {
-        Get.to(ProductDetailsScreen(data: data));
-      },
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                SizedBox(
-                    height: 140,
-                    child: Image.asset(
-                      imageUrl,
-                      fit: BoxFit.fitWidth,
-                    )),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    color: Colors.green,
-                    child: const Text('NEW',
-                        style: TextStyle(color: Colors.white, fontSize: 12)),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Row(
-                    children: <Widget>[
-                      RatingBar.builder(
-                        itemSize: 20,
-                        initialRating: 4.5,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemBuilder: (context, _) =>
-                            const Icon(Icons.star, color: Colors.amber),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.favorite_border),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(name,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(description),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ProductListViewdemo extends StatefulWidget {
   @override
   _ProductListViewdemoState createState() => _ProductListViewdemoState();
@@ -631,50 +445,6 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
   }
   final ProductController controller = Get.put(ProductController());
   final UserController userController = Get.put(UserController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 5',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 6',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
 
   // ProductListViewdemo();
 
@@ -737,75 +507,92 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
     });
   }
 
-  Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl,String Pid) {
-    return Container(
-      height: 180,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-   Image.asset(
-  imageUrl,
-  width: 170,
-  height: 150,
-  fit: BoxFit.cover, // Optional: Adjusts how the image fits within the width and height
-),
-             Positioned(
-                right: 0,
-                child: Container(
-                  // padding: EdgeInsets.all(5),
-                  height: 40,
-                  width: 40,
-                  color: Colors.white,
-                  child: IconButton(
-                     icon: Icon(
-          userController.isFavorite.value ? Icons.favorite : Icons.favorite_border,
-          color: userController.isFavorite.value ? Colors.red : Colors.grey,
-        ),
-                    onPressed: () {
-          userController.toggleFavorite(Pid); // Pass the product ID
-        },
+Widget _offerItemdemo(
+    String name, String newPrice, String oldPrice, String imageUrl, String Pid) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      double screenWidth = constraints.maxWidth;
+      double containerHeight = screenWidth * 0.9; // Adjust height ratio as needed
+      double containerWidth = screenWidth * 0.9; // Adjust width ratio as needed
+
+      return Container(
+        height: containerHeight,
+        width: containerWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Image.asset(
+                  imageUrl,
+                  width: containerWidth,
+                  height: containerHeight * 0.8, // Adjust image height ratio as needed
+                  fit: BoxFit.cover,
                 ),
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: 170,
-            child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                  Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(newPrice,
-                      style: TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough)),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(' $oldPrice',
-                      style: TextStyle(
-                        color: Colors.red,
-                      )),
+                Positioned(
+                  right: 0,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    // color: Colors.white,
+                    child: IconButton(
+                      icon: Icon(
+                        userController.isFavorite.value
+                            ? Icons.favorite_border
+                            : Icons.favorite_rounded,
+                        color: userController.isFavorite.value
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                      onPressed: () {
+                        userController.toggleFavorite(Pid); // Pass the product ID
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
-              ]
+            Container(
+              width: containerWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          newPrice,
+                          style: TextStyle(
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          ' $oldPrice',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
+    },
+  );
+}
+
 }
 
 class demo extends StatelessWidget {

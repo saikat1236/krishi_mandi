@@ -41,7 +41,8 @@ class UserProfileController extends GetxController {
         }
       } else {
         userProfile.value = {};
-        print('Failed to load user profile: ${response.body}');
+        // print('Failed to load user profile: ${response.body}');
+        print('Failed to load user profile');
       }
     } catch (e) {
       print('Error: $e');

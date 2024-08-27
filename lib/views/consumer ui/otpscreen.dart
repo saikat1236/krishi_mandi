@@ -103,7 +103,8 @@ class _OtpScreen2State extends State<OtpScreen2> {
                        mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(4, (index) {
               return Container(
-                width: 70,
+                // width: 60,
+                width: (MediaQuery.of(context).size.width-140) / 4,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextField(
                   controller: _otpControllers[index],
@@ -125,15 +126,15 @@ class _OtpScreen2State extends State<OtpScreen2> {
                     padding: const EdgeInsets.only(top: 150,bottom: 150),
                     child: Column(
                         children: [
-                          Text(
-                            "Didn’t Receive Code? Resend Code",
-                            style: TextStyle(color: Colors.grey), // Text color
-                          ),
-                          SizedBox(height: 10,),
-                        Text(
-                          "Resend code in 00:59",
-                          style: TextStyle(color: Colors.grey), // Text color
-                        ),
+                        //   Text(
+                        //     "Didn’t Receive Code? Resend Code",
+                        //     style: TextStyle(color: Colors.grey), // Text color
+                        //   ),
+                        //   SizedBox(height: 10,),
+                        // Text(
+                        //   "Resend code in 00:59",
+                        //   style: TextStyle(color: Colors.grey), // Text color
+                        // ),
                          ],
                       ),
                   ),
@@ -161,12 +162,11 @@ onPressed: () async {
   // Get.find<GlobalController>().setAuthToken(auth_token);
 
   // Navigate to the OtpScreen2 and pass the mobile number
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => HomePage(),
-    ),
-  );
+Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(builder: (context) => HomePage()),
+  (Route<dynamic> route) => false,  // This removes all the previous routes
+);
 },
     
                     child: Container(

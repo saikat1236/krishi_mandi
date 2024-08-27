@@ -50,7 +50,7 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Address added successfully", "Item has been added successfully to cart");
+        Get.snackbar("Address added successfully", "");
         userController.getUserById(); // Update the user's profile
       } else {
         print("Failed to add address: ${response.body}");
@@ -93,7 +93,7 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Address updated successfully", "Your address has been updated successfully.");
+        Get.snackbar("Address updated successfully", "");
         userController.getUserById(); // Update the user's profile or handle accordingly
       } else {
         print("Failed to update address: ${response.body}");
@@ -120,7 +120,7 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Address deleted successfully", "Item has been removed successfully from cart");
+        Get.snackbar("Address deleted successfully", "");
         userController.getUserById(); // Update the user's profile
       } else {
         print("Failed to delete address: ${response.body}");

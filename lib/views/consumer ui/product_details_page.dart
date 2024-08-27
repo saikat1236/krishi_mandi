@@ -15,40 +15,46 @@ import '../../controller/customer_apis/product_controller.dart';
 import 'package:krishi_customer_app/controller/customer_apis/profile_controller.dart';
 
 class ProductDetailsPage extends StatefulWidget {
- final Map<String, dynamic> product;
+  final Map<String, dynamic> product;
 
-  const ProductDetailsPage({Key? key, required this.product}) : super(key: key); // Added key for widget tree
-
+  const ProductDetailsPage({Key? key, required this.product})
+      : super(key: key); // Added key for widget tree
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-late int qty;
+  late int qty;
   @override
   void initState() {
     super.initState();
     // Initialize qty with product['minQuantity']
-    qty = widget.product['minQuantity'] ?? 1; 
+    qty = widget.product['minQuantity'] ?? 1;
   }
-  final cartController = Get.find<UserProfileController>(); 
+
+  final cartController = Get.find<UserProfileController>();
 
   Future<void> addToCart() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
 
-    final url = Uri.parse('http://54.159.124.169:3000/users/add-item-in-cart'); // Replace with your API endpoint
+    final url = Uri.parse(
+        'http://54.159.124.169:3000/users/add-item-in-cart'); // Replace with your API endpoint
 
     final cartItem = {
       "orderType": 1,
-      "productId": widget.product['productId'], // Assuming 'id' is the key for productId
+      "productId":
+          widget.product['productId'], // Assuming 'id' is the key for productId
       "productName": widget.product['name'],
       "ProductQuantityAddedToCart": qty,
-      "productInfo": widget.product['about'], // Assuming 'about' holds product info
-      "productImages": widget.product['images'], // Assuming 'images' is a list of image URLs
+      "productInfo":
+          widget.product['about'], // Assuming 'about' holds product info
+      "productImages":
+          widget.product['images'], // Assuming 'images' is a list of image URLs
       "pricePerUnit": widget.product['pricePerUnit'],
-      "productUnitType": widget.product['unit'], // Assuming 'unitType' is the key for product unit type
+      "productUnitType": widget.product[
+          'unit'], // Assuming 'unitType' is the key for product unit type
     };
 
     final headers = {
@@ -66,9 +72,11 @@ late int qty;
       if (response.statusCode == 200) {
         // If the server returns an OK response, parse the JSON
         final responseData = jsonDecode(response.body);
-        Get.snackbar("Product added to cart successfully: ","$responseData",snackPosition: SnackPosition.TOP);
+        // Get.snackbar("Product added to cart successfully: ","$responseData",snackPosition: SnackPosition.TOP);
+        Get.snackbar("Product added to cart successfully", "",
+            snackPosition: SnackPosition.TOP);
         // Show a success message or update the UI
-        await cartController.getUserProfile(); 
+        await cartController.getUserProfile();
       } else {
         print('Failed to add product to cart: ${response.body}');
         // Show an error message
@@ -90,10 +98,9 @@ late int qty;
         // elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-    
+
         title: const Text('',
-            style:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -104,187 +111,191 @@ late int qty;
             );
           },
         ),
-                  actions: [
+        actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CartListScreen(),
-              ),
-            );
-          },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartListScreen(),
+                ),
+              );
+            },
           ),
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-                    Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfileScreenmain(),
-              ),
-            );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreenmain(),
+                ),
+              );
             },
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Align children to the left
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                  width: double.infinity,
-                  child: Image.asset("assets/krishi-logo.png")),
-              // SizedBox(height: 80),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  product['name'],
-                  style: TextStyle(
-                    fontSize: 23,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Rs "+product['pricePerUnit'],
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.green,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  // maxLines: 2,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Select Quantity",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500
-                ),),
-              ),
-              Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                       InkWell(
-        onTap: () {
-           setState(() {
-                              int minQuantity = widget.product['minQuantity'] ?? 1;
-                              if (qty > minQuantity) {
-                                qty--; // Decrease qty
-                              }
-                            });
-        },
-        child: Container(
-          padding: EdgeInsets.all(8.0), // Add padding around the icon
-          child: Icon(
-            Icons.remove_circle,
-            size: 40.0, // Increase icon size
-            color: Colors.red, // Optional: change icon color
-          ),
-        ),
-      ),
-      SizedBox(width: 10.0), // Add space between icon and text
-      Text(
-        qty.toString(),
-        style: TextStyle(
-          fontSize: 30.0, // Increase text size
-          fontWeight: FontWeight.bold, // Optional: make text bold
-        ),
-      ),
-      SizedBox(width: 10.0), // Add space between text and icon
-      InkWell(
-        onTap: () {
-          setState(() {
-            qty++; // Increase qty
-          });
-        },
-        child: Container(
-          padding: EdgeInsets.all(8.0), // Add padding around the icon
-          child: Icon(
-            Icons.add_circle,
-            size: 40.0, // Increase icon size
-            color: Colors.green, // Optional: change icon color
-          ),
-        ),
-      ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(74, 230, 50, 0.961), // Background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30.0), // Rounded edges
-                        side: BorderSide(
-                            color: Color.fromRGBO(74, 230, 50, 0.961),
-                            width: 2.0),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 70, vertical: 15), // Button size
-                    ),
-                     onPressed: () async {
-                      await addToCart(); // Call the addToCart function
-                    },
-                    child: Text(
-                      "Add to cart",
-                      style: TextStyle(color: Colors.black), // Text color
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Description:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Container(
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  color: Colors.orange[50]
-                ),
-                child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Align children to the left
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                    width: double.infinity,
+                    child: Image.asset("assets/krishi-logo.png")),
+                // SizedBox(height: 80),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    product['about'],
-                    // "Elevate your culinary creations with our premium Kufri Chandramukhi potatoes, organically grown to deliver superior taste and quality.\n\n🌱 Organic Quality: Our Kufri Chandramukhi potatoes are grown using organic farming practices, ensuring they are free from harmful chemicals. Each potato is selected for its quality and freshness.\n\n🍲 Versatile Use: Kufri Chandramukhi potatoes are ideal for boiling, baking, and adding to salads. Their mild, nutty flavor and creamy texture make them the perfect choice for a variety of dishes.\n\n😋 Mild and Creamy: Enjoy the mild, nutty flavor and creamy texture of Kufri Chandramukhi potatoes. They enhance the taste and consistency of your recipes, making them a favorite among potato varieties.\n\n💪 Nutritional Benefits: These potatoes are high in essential nutrients and dietary fiber, making them a healthy addition to your diet. Enjoy the benefits of nutritious, delicious potatoes.\n\n🌾 Sustainably Farmed: We use sustainable farming practices to grow our Kufri Chandramukhi potatoes, ensuring they are environmentally friendly. Enjoy the fresh taste of responsibly farmed produce.",
+                    product['name'],
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 23,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Rs " + product['pricePerUnit'],
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.green,
+                      fontWeight: FontWeight.w800,
                     ),
                     // maxLines: 2,
                     textAlign: TextAlign.left,
                   ),
                 ),
-              )
-            ],
-          )
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Select Quantity",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Expanded(
+      child: Container(
+        height: 50,
+        child: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  int minQuantity = widget.product['minQuantity'] ?? 1;
+                  if (qty > minQuantity) {
+                    qty--; // Decrease qty
+                  }
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.remove_circle,
+                  size: 40.0,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            SizedBox(width: 10.0),
+            Text(
+              qty.toString(),
+              style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 10.0),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  qty++; // Increase qty
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.add_circle,
+                  size: 40.0,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
         ),
+      ),
+    ),
+    Expanded(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          double buttonWidth = constraints.maxWidth * 0.1; // 50% of available width
+          return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(74, 230, 50, 0.961),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                side: BorderSide(
+                    color: Color.fromRGBO(74, 230, 50, 0.961),
+                    width: 2.0),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: buttonWidth * 0.1, vertical: 15),
+            ),
+            onPressed: () async {
+              await addToCart();
+            },
+            child: Text(
+              "Add to cart",
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+        },
+      ),
+    ),
+  ],
+)
+
+                ,Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Description:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Container(
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(color: Colors.orange[50]),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      product['about'],
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      // maxLines: 2,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                )
+              ],
+            )),
       ),
     );
   }
