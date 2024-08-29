@@ -183,6 +183,16 @@ class ProductController extends GetxController {
 
   // Fetch favorite products
   Future<void> getFavoriteProducts() async {
+        // selectedCategory="Fruit";
+
+        favoriteProducts.value = products
+            .where((product) => product['isAvailableInFav'] == true)
+            .toList(); // Filter products based on selected category
+            // filteredProducts.value = products
+           
+            // .where((product) => product['category'] == "Vegetable")
+            // .toList(); // Filter products based on selected category
+    print(favoriteProducts);
     // Implement fetching favorite products if needed
   }
 

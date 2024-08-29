@@ -90,10 +90,10 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
               );
             },
             child: _offerItemdemo(
-               "Product",
-              "\$0.00",
-               "\$0.00",
-              'assets/photo.png',
+              product['name'],
+              product['pricePerUnit'],
+              "₹ ${product['pricePerUnit']}",
+              product['images'][0],
               product['_id'],
               product
             ),
@@ -119,7 +119,7 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Image.asset(
+                  Image.network(
                     imageUrl,
                     width: containerWidth,
                     height: containerHeight * 0.8,
