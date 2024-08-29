@@ -16,6 +16,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dar
 import 'package:krishi_customer_app/views/consumer%20ui/products.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/customer_apis/profile_controller.dart';
 import '../../controller/customer_apis/user_controller.dart';
@@ -79,6 +80,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // final ProductController controller = Get.put(ProductController());
     final UserController userController = Get.put(UserController());
+      Future<String> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token') ?? ''; // Default to empty string if token is not found
+  }
+   final token = _getToken();
+    print(token);
     // // controller.getAllcategories();
     return Obx((){
       

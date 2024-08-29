@@ -7,6 +7,7 @@ class ProductController extends GetxController {
   var isLoading = true.obs;
   var products = [].obs;
   var categories = [].obs;
+  var favoriteProducts = [].obs;
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
 
@@ -15,6 +16,7 @@ class ProductController extends GetxController {
     super.onInit();
     getAllProducts(1); // Fetch products when controller initializes
     getAllCategories();
+    getFavoriteProducts(); // Fetch favorite products
   }
 
   // Retrieve token from SharedPreferences
@@ -26,17 +28,15 @@ class ProductController extends GetxController {
   // Get all categories
   Future<void> getAllCategories() async {
     isLoading(true);
-    final url = Uri.parse('http://54.159.124.169:3000/users/get-available-categories');
+    final url = Uri.parse('$baseUrl/get-available-categories');
     final token = await _getToken();
-    // print('Token fetched from SharedPreferences: $token');
-    print('Token fetched from SharedPreferences');
+
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': token, // Use token from SharedPreferences
-            // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiMzg0MzcwNC1mMTczLTRkYWUtODM2YS0wODQ3NTI1YjZlNjkiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzIzODMwNDA4fQ.AMHrZdJf8GGWnzwteVXJqH5Yx4-iahH9alaBS6FFPyc'
     };
     try {
-       final response = await http.post(url, headers: headers);
+      final response = await http.post(url, headers: headers);
 
       if (response.statusCode == 200) {
         var decodedResponse = jsonDecode(response.body)["payload"];
@@ -47,7 +47,6 @@ class ProductController extends GetxController {
         }
       } else {
         categories.value = [];
-        // print('Failed to load categories: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');
@@ -59,7 +58,6 @@ class ProductController extends GetxController {
 
   // Get all products
   Future<void> getAllProducts(int page) async {
-    // isLoading(true);
     final url = Uri.parse('$baseUrl/filtered');
 
     try {
@@ -69,7 +67,6 @@ class ProductController extends GetxController {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token // Use token from SharedPreferences
-          //  'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiMzg0MzcwNC1mMTczLTRkYWUtODM2YS0wODQ3NTI1YjZlNjkiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzIzODMwNDA4fQ.AMHrZdJf8GGWnzwteVXJqH5Yx4-iahH9alaBS6FFPyc'
         },
         body: jsonEncode({
           'categories': [],
@@ -96,8 +93,9 @@ class ProductController extends GetxController {
       isLoading(false);
     }
   }
-  // category filtered products
-    Future<void> getfilteredprod(List<String> selectedCategories) async {
+
+  // Get filtered products by category
+  Future<void> getFilteredProducts(List<String> selectedCategories) async {
     isLoading(true);
     final url = Uri.parse('$baseUrl/filtered');
 
@@ -108,7 +106,6 @@ class ProductController extends GetxController {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token // Use token from SharedPreferences
-          //  'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiMzg0MzcwNC1mMTczLTRkYWUtODM2YS0wODQ3NTI1YjZlNjkiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzIzODMwNDA4fQ.AMHrZdJf8GGWnzwteVXJqH5Yx4-iahH9alaBS6FFPyc'
         },
         body: jsonEncode({
           'categories': selectedCategories,
@@ -135,6 +132,7 @@ class ProductController extends GetxController {
       isLoading(false);
     }
   }
+
   // Add item to favorites
   Future<void> addToFavorites(Map<String, dynamic> favItem) async {
     final url = Uri.parse('$baseUrl/add-item-in-favs');
@@ -145,21 +143,58 @@ class ProductController extends GetxController {
         url,
         headers: {
           'Content-Type': 'application/json',
-          // 'Authorization': 'Bearer $token' // Use token from SharedPreferences
-           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyZmU2YWM1Ni02OGRkLTQ5M2ItYWE5YS02MDNmNWQ4OWU5ODciLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzIzODM0NDMyfQ.66fTNMdmFGHJD5ivLze4QnRAu8YZmTQpyhoOJ08d6ak'
+          'Authorization': token // Use token from SharedPreferences
         },
         body: jsonEncode({'favItem': favItem}),
       );
 
       if (response.statusCode == 200) {
-        // print('Item added to favorites: ${response.body}');
-        // Implement any state management logic if needed
+        favoriteProducts.add(favItem['_id']);
+        Get.snackbar('Favorites', 'Product added to favorites!',
+            snackPosition: SnackPosition.TOP);
       } else {
-        // print('Failed to add item to favorites: ${response.body}');
+        print('Failed to add item to favorites: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  // Remove item from favorites
+  Future<void> removeFromFavorites(String productId) async {
+    final url = Uri.parse('$baseUrl/remove-item-from-favs');
+
+    try {
+      final token = await _getToken(); // Get token from SharedPreferences
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token // Use token from SharedPreferences
+        },
+        body: jsonEncode({'productId': productId}),
+      );
+
+      if (response.statusCode == 200) {
+        favoriteProducts.remove(productId);
+        Get.snackbar('Favorites', 'Product removed from favorites!',
+            snackPosition: SnackPosition.TOP);
+      } else {
+        print('Failed to remove item from favorites: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  // Check if product is in favorites
+  bool isProductFavorite(String productId) {
+    return favoriteProducts.contains(productId);
+  }
+
+  // Fetch favorite products
+  Future<void> getFavoriteProducts() async {
+    // Implement fetching favorite products if needed
   }
 
   // Add item to cart
@@ -178,15 +213,11 @@ class ProductController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        // print('Item added to cart: ${response.body}');
         print('Item added to cart');
-        // Implement any state management logic if needed
         return true; // Return true if successfully added to cart
       } else {
-        // print('Failed to add item to cart: ${response.body}');
-         print('Failed to add item to cart');
+        print('Failed to add item to cart');
         return false; // Return false on failure
-
       }
     } catch (e) {
       print('Error: $e');

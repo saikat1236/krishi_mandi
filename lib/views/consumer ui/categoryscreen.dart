@@ -169,7 +169,7 @@ class _ProductListViewState extends State<ProductListView> {
   }
 
   void fetchProductsForCategory(String category) {
-    controller.getfilteredprod([category]);
+    controller.getFilteredProducts([category]);
   }
 
   @override
@@ -203,6 +203,7 @@ class _ProductListViewState extends State<ProductListView> {
               product['pricePerUnit'] ?? "\$0.00",
               product['image'] ?? 'assets/photo.png',
               product['_id'],
+              controller.favoriteProducts.contains(product['_id']),
             ),
           );
         }),
@@ -211,7 +212,7 @@ class _ProductListViewState extends State<ProductListView> {
   }
 
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl, String Pid) {
+      String name, String newPrice, String oldPrice, String imageUrl, String Pid,bool isFavorite) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;

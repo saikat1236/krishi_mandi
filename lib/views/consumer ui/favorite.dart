@@ -1,418 +1,200 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/product_controller.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/address.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/checkoutscreen1.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/item.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
+import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
-
-import '../../controller/customer_apis/profile_controller.dart';
-
 
 class FavPage extends StatefulWidget {
   const FavPage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _FavPageState createState() => _FavPageState();
 }
 
-class _HomePageState extends State<FavPage> {
-    bool isFavorite = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
-
-  final int _currentIndex = 0;
-  final TextEditingController _searchController = TextEditingController();
-  final List<String> imgList = [
-    'assets/Small banner.png',
-    'assets/Small banner.png',
-    'assets/Small banner.png',
-  ];
-  final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
+class _FavPageState extends State<FavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Color.fromARGB(255, 235, 232, 232),
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text('Favorite',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.arrow_back),
-               onPressed: () {
-                    /// Close Navigation drawer before
-                    Navigator.pop(context);
-                  }
-            );
+        title: const Text('Favorite', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.shopping_cart),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => CartListScreen(),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        //   IconButton(
-        //     icon: Icon(Icons.person),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => ProfileScreenmain(),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // const Text('Favorite Products',
-                    //     style: TextStyle(
-                    //         fontSize: 20, fontWeight: FontWeight.bold))
+                    // Additional UI elements can be added here
                   ],
                 ),
               ),
-
-              ProductListViewdemo(),
-
+              FavoriteProductListView(),
             ],
           ),
         ),
       ),
     );
   }
-
-  Widget _categoryItem(String title, String imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: AssetImage(imageUrl),
-          ),
-          Container(
-            width: 100,
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black),
-            ),
-            child: Center(child: Text(title)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _sectionTitle(String title, String viewAllText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title,
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          TextButton(
-            onPressed: () {},
-            child:
-                Text(viewAllText, style: const TextStyle(color: Colors.green)),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-
-class ProductListViewdemo extends StatefulWidget {
+class FavoriteProductListView extends StatefulWidget {
   @override
-  _ProductListViewdemoState createState() => _ProductListViewdemoState();
+  _FavoriteProductListViewState createState() => _FavoriteProductListViewState();
 }
 
-class _ProductListViewdemoState extends State<ProductListViewdemo> {
-    bool isFavorite = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
+class _FavoriteProductListViewState extends State<FavoriteProductListView> {
   final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 5',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 6',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
+  final UserController userController = Get.put(UserController());
 
-  // ProductListViewdemo();
+  @override
+  void initState() {
+    super.initState();
+    controller.getFavoriteProducts(); // Fetch favorite products when the widget is initialized
+  }
 
   @override
   Widget build(BuildContext context) {
-    controller.getAllProducts(1); // Fetch products when the widget is built
-
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
-       if (controller.categories.isEmpty) {
-        return Center(child: Text('No Products available.'));
+      if (controller.favoriteProducts.isEmpty) {
+        return Center(child: Text('No favorite products available.'));
       }
-      return SingleChildScrollView(
-        // scrollDirection: Axis.horizontal,
-        child: GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true, // Important for nested scrollable widgets
-          physics:
-              NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
-          // children: List.generate(products.length, (index) {
-          //   final product = products[index];
-          //   // OnTap(
-          //   //   NavigationBar(destinations: ProductDetailsPage())
-          //   // ),
-          //   return _offerItemdemo(
-          //     product['name'] ?? "product",
-          //     product['newPrice'] ?? "\$0.00",
-          //     product['oldPrice'] ?? "\$0.00",
-          //     product['image'] ?? 'assets/photo.png',
-          //   );
-          // }
-          // ),
-          children: List.generate(controller.products.length, (index) {
-            final product = controller.products[index];
-
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailsPage(
-                        product: product['name'],
-                        ),
-                  ),
-                );
-              },
-              child: _offerItemdemo(
-                product['name'] ?? "Product",
-                product['newPrice'] ?? "\$0.00",
-                product['pricePerUnit'] ?? "\$0.00",
-                product['image'] ?? 'assets/photo.png',
-              ),
-            );
-          }),
-        ),
+      return GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+        children: List.generate(controller.favoriteProducts.length, (index) {
+          final product = controller.favoriteProducts[index];
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsPage(product: product),
+                ),
+              );
+            },
+            child: _offerItemdemo(
+               "Product",
+              "\$0.00",
+               "\$0.00",
+              'assets/photo.png',
+              product['_id'],
+              product
+            ),
+          );
+        }),
       );
     });
   }
+
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Stack(
+      String name, String newPrice, String oldPrice, String imageUrl, String Pid, Map<String, dynamic> product) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double screenWidth = constraints.maxWidth;
+        double containerHeight = screenWidth * 0.9;
+        double containerWidth = screenWidth * 0.9;
+
+        return Container(
+          height: containerHeight,
+          width: containerWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 100, child: Image.asset(imageUrl)),
-              // Positioned(
-              //   left: 0,
-              //   child: Container(
-              //     padding: EdgeInsets.all(5),
-              //     color: Colors.red,
-              //     child: Text('-15%',
-              //         style: TextStyle(color: Colors.white, fontSize: 12)),
-              //   ),
-              // ),
-              Positioned(
-                right: 0,
-                child: Container(
-                  // padding: EdgeInsets.all(5),
-                  height: 40,
-                  width: 40,
-                  color: Colors.white,
-                  child: IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : Colors.grey,
+              Stack(
+                children: <Widget>[
+                  Image.asset(
+                    imageUrl,
+                    width: containerWidth,
+                    height: containerHeight * 0.8,
+                    fit: BoxFit.cover,
                   ),
-                  onPressed: toggleFavorite,
-                ),
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      child: IconButton(
+                        icon: Icon(
+                          userController.isFavorite.value
+                              ? Icons.favorite
+                              : Icons.favorite_rounded,
+                          color: userController.isFavorite.value
+                              ? Colors.red
+                              : Colors.white,
+                        ),
+                        onPressed: () {
+                          userController.toggleFavorite(Pid);
+                          // Map<String, dynamic> favItem = {
+                          //   'productId': product['productId'],
+                          //   'productName': product['name'],
+                          //   'productInfo': product['about'],
+                          //   'productImage': product['images'][0],
+                          //   'pricePerUnit': product['pricePerUnit'],
+                          //   'productUnitType': product['unit'],
+                          // };
+
+                          // controller.addToFavorites(favItem);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: containerWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            newPrice,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            ' $oldPrice',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(newPrice,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough)),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(' $oldPrice',
-                    style: TextStyle(
-                      color: Colors.red,
-                    )),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class demo extends StatelessWidget {
-  // final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
-
-  // ProductListViewdemo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.black,
-      ),
+        );
+      },
     );
   }
 }

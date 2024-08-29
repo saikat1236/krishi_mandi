@@ -16,7 +16,6 @@ import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 import '../../controller/customer_apis/profile_controller.dart';
 import '../../controller/customer_apis/user_controller.dart';
 
-
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
 
@@ -25,74 +24,48 @@ class ProductsPage extends StatefulWidget {
 }
 
 class ProductsPageState extends State<ProductsPage> {
-    bool isFavorite = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
-
   final int _currentIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-
   final ProductController controller = Get.put(ProductController());
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Color.fromARGB(255, 235, 232, 232),
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text('Products',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text('Products', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.arrow_back),
-               onPressed: () {
-                    /// Close Navigation drawer before
-                    Navigator.pop(context);
-                  }
+              onPressed: () {
+                Navigator.pop(context);
+              },
             );
           },
         ),
-
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // const Text('Favorite Products',
-                    //     style: TextStyle(
-                    //         fontSize: 20, fontWeight: FontWeight.bold))
-                  ],
                 ),
               ),
-
               ProductListViewdemo(),
-
             ],
           ),
         ),
       ),
     );
   }
-
-
-
 }
-
 
 class ProductListViewdemo extends StatefulWidget {
   @override
@@ -103,16 +76,15 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
   final ProductController controller = Get.put(ProductController());
   final UserController userController = Get.put(UserController());
 
-@override
-void initState() {
-  super.initState();
-  fetchProducts();
-}
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
 
-Future<void> fetchProducts() async {
-  await controller.getAllProducts(1); // Fetch products on init
-}
-
+  Future<void> fetchProducts() async {
+    await controller.getAllProducts(1); // Fetch products on init
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,38 +95,48 @@ Future<void> fetchProducts() async {
       if (controller.products.isEmpty) {
         return Center(child: Text('No Products available.'));
       }
-      return SingleChildScrollView(
-        child: GridView.count(
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          children: List.generate(controller.products.length, (index) {
-            final product = controller.products[index] as Map<String, dynamic>;
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailsPage(product: product),
-                  ),
-                );
-              },
-              child: _offerItemdemo(
-                product['name'] ?? "Product",
-                product['newPrice'] ?? "\$0.00",
-                product['pricePerUnit'] ?? "\$0.00",
-                product['image'] ?? 'assets/photo.png',
-                product['_id'],
-              ),
-            );
-          }),
+          childAspectRatio: 0.8,
         ),
+        itemCount: controller.products.length,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final product = controller.products[index] as Map<String, dynamic>;
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsPage(product: product),
+                ),
+              );
+            },
+            child: _offerItemdemo(
+              product['name'] ?? "Product",
+              product['newPrice'] ?? "\$0.00",
+              product['pricePerUnit'] ?? "\$0.00",
+              product['image'] ?? 'assets/photo.png',
+              product['_id'],
+              product,
+              controller.favoriteProducts.contains(product['_id']),
+            ),
+          );
+        },
       );
     });
   }
 
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl, String Pid) {
+      String name,
+      String newPrice,
+      String oldPrice,
+      String imageUrl,
+      String Pid,
+      Map<String, dynamic> product,
+      bool isFavorite) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
@@ -182,15 +164,17 @@ Future<void> fetchProducts() async {
                       width: 40,
                       child: IconButton(
                         icon: Icon(
-                          userController.isFavorite.value
-                              ? Icons.favorite
-                              : Icons.favorite_rounded,
-                          color: userController.isFavorite.value
-                              ? Colors.red
-                              : Colors.white,
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : Colors.white,
                         ),
                         onPressed: () {
-                          userController.toggleFavorite(Pid);
+                          setState(() {
+                            if (isFavorite) {
+                              controller.removeFromFavorites(Pid);
+                            } else {
+                              controller.addToFavorites(product);
+                            }
+                          });
                         },
                       ),
                     ),
@@ -213,14 +197,15 @@ Future<void> fetchProducts() async {
                           child: Text(
                             newPrice,
                             style: TextStyle(
-                                color: Colors.grey,
-                                decoration: TextDecoration.lineThrough),
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            ' $oldPrice',
+                            oldPrice,
                             style: TextStyle(
                               color: Colors.red,
                             ),
@@ -238,5 +223,3 @@ Future<void> fetchProducts() async {
     );
   }
 }
-
-

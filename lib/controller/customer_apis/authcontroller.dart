@@ -23,7 +23,7 @@ class AuthController extends GetxController {
     final url = Uri.parse('$baseUrl/register-user');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
-      'name': userName,
+      'userName': userName,
       'email': email,
       'mobileNumber': mobileNumber,
     });

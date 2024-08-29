@@ -88,7 +88,8 @@ class ShippingAddressController extends GetxController {
           "addressLine2": addressLine2,
           "city": city,
           "pin": pin,
-          "addressId":addressId
+          "addressId":addressId,
+          "default": false
         }),
       );
 
@@ -127,6 +128,32 @@ class ShippingAddressController extends GetxController {
       }
     } catch (e) {
       print("Exception while deleting address: $e");
+    }
+  }
+
+    // Method to set an address as the default
+  Future<void> setDefaultAddress({required String addressId}) async {
+    final token = await _getToken();
+    try {
+      var response = await http.post(
+        Uri.parse('$apiUrl/set-default-address'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: jsonEncode({
+          "addressId": addressId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        Get.snackbar("Default address set successfully", "");
+        userController.getUserById(); // Update the user's profile
+      } else {
+        print("Failed to set default address: ${response.body}");
+      }
+    } catch (e) {
+      print("Exception while setting default address: $e");
     }
   }
 }

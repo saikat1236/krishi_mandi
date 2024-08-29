@@ -172,107 +172,119 @@ class AddressCard extends StatelessWidget {
           // Display all addresses with action buttons
           ...addressList.map((address) {
             if (address is Map) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '$userName',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        Text('$mobileNumber'),
-                        Text(
-                          '${address['addressLine1'] ?? 'Address Line 1'}, '
-                          '${address['addressLine2'] ?? 'Address Line 2'}, '
-                          '${address['city'] ?? 'City'}, '
-                          '${address['pin']?.toString() ?? 'PIN Code'}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
+             return Padding(
+  padding: EdgeInsets.symmetric(vertical: 5.0),
+  child: Stack(
+    children: [
+      Container(
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$userName',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              Text('$mobileNumber'),
+              Text(
+                '${address['addressLine1'] ?? 'Address Line 1'}, '
+                '${address['addressLine2'] ?? 'Address Line 2'}, '
+                '${address['city'] ?? 'City'}, '
+                '${address['pin']?.toString() ?? 'PIN Code'}',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green, // Background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10), // Button size
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdShippingAddressScreen(
+                            address: Address(
+                              name: '$userName' ?? '',
+                              mobile: '$mobileNumber' ?? '',
+                              email: '$email' ?? '',
+                              addressLine1: address['addressLine1'] ?? '',
+                              addressLine2: address['addressLine2'] ?? '',
+                              city: address['city'] ?? '',
+                              // pin: address['pin'] ?? '',
+                              // addressId: address['addressId']
+                            ),
+                            addressId: address['addressId'] ?? ''
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Colors.green, // Background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10), // Button size
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        UpdShippingAddressScreen(
-                                      address: Address(
-                                        name: '$userName' ?? '',
-                                        mobile: '$mobileNumber' ?? '',
-                                        email: '$email' ?? '',
-                                        addressLine1:
-                                            address['addressLine1'] ?? '',
-                                        addressLine2:
-                                            address['addressLine2'] ?? '',
-                                        city: address['city'] ?? '',
-                                        // pin: address['pin'] ?? '',
-                                        // addressId: address['addressId']
-                                      ),
-                                      addressId: address['addressId'] ?? ''
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Edit",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(
-                                    244, 67, 54, 1), // Background color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10), // Button size
-                              ),
-                              onPressed: () {
-                                // Add delete functionality here
-                                print(
-                                    'Delete address with ID: ${address['addressId']}');
-                                shippingAddressController.deleteAddress(
-                                    addressId: address['addressId']);
-                              },
-                              child: Text(
-                                "Delete",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      );
+                    },
+                    child: Text(
+                      "Edit",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(244, 67, 54, 1), // Background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10), // Button size
+                    ),
+                    onPressed: () {
+                      // Add delete functionality here
+                      print('Delete address with ID: ${address['addressId']}');
+                      shippingAddressController.deleteAddress(
+                          addressId: address['addressId']);
+                    },
+                    child: Text(
+                      "Delete",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      Positioned(
+        top: 5,
+        right: 5,
+        child: Radio(
+          value: true,
+          groupValue: address["default"] == true, // Check if this address is default
+          onChanged: (value) {
+            if (value == true) {
+              shippingAddressController.setDefaultAddress(
+                addressId: address['addressId'],
               );
+            }
+          },
+        ),
+      ),
+    ],
+  ),
+);
+
             } else {
               return SizedBox
                   .shrink(); // Return an empty widget if address is not a map
