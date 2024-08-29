@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
 import 'package:krishi_customer_app/models/address.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/add_address.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/update_address.dart';
 
 import '../../controller/customer_apis/addresscontroller.dart';
@@ -49,6 +50,30 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
               );
             },
           ),
+          actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartListScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreenmain(),
+                ),
+              );
+            },
+          ),
+        ],
         ),
         body: Obx(() {
           if (userController.isLoading.value) {

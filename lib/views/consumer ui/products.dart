@@ -118,7 +118,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
               product['name'] ?? "Product",
               product['newPrice'] ?? "\$0.00",
               product['pricePerUnit'] ?? "\$0.00",
-              product['image'] ?? 'assets/photo.png',
+              product['images'][0] ?? 'assets/photo.png',
               product['_id'],
               product,
               controller.favoriteProducts.contains(product['_id']),
@@ -151,7 +151,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Image.asset(
+                  Image.network(
                     imageUrl,
                     width: containerWidth,
                     height: containerHeight * 0.8,

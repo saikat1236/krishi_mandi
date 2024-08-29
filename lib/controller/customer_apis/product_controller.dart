@@ -5,18 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
   var isLoading = true.obs;
-  var products = [].obs;
-  var categories = [].obs;
-  var favoriteProducts = [].obs;
+  var products = [].obs; // Use a List<Map<String, dynamic>> for products
+  var filteredProducts = [].obs; // Filtered products to display
+  var categories = [].obs; // List of categories
+  var favoriteProducts = [].obs; // List of favorite product IDs
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
 
   @override
   void onInit() {
     super.onInit();
-    getAllProducts(1); // Fetch products when controller initializes
+    getAllProducts(1); // Fetch all products when controller initializes
     getAllCategories();
-    getFavoriteProducts(); // Fetch favorite products
+    // getFavoriteProducts(); // Fetch favorite products
   }
 
   // Retrieve token from SharedPreferences
@@ -27,13 +28,13 @@ class ProductController extends GetxController {
 
   // Get all categories
   Future<void> getAllCategories() async {
-    isLoading(true);
+    // isLoading(true);
     final url = Uri.parse('$baseUrl/get-available-categories');
     final token = await _getToken();
 
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': token, // Use token from SharedPreferences
+          'Authorization': token // Use token from SharedPreferences
     };
     try {
       final response = await http.post(url, headers: headers);
@@ -58,6 +59,7 @@ class ProductController extends GetxController {
 
   // Get all products
   Future<void> getAllProducts(int page) async {
+    // isLoading(true);
     final url = Uri.parse('$baseUrl/filtered');
 
     try {
@@ -69,9 +71,9 @@ class ProductController extends GetxController {
           'Authorization': token // Use token from SharedPreferences
         },
         body: jsonEncode({
-          'categories': [],
+          'categories': [], // Fetch all products without filtering
           'page': page,
-          'limit': 10,
+          'limit': 100, // Increase limit to fetch more products
         }),
       );
 
@@ -79,58 +81,45 @@ class ProductController extends GetxController {
         var decodedResponse = jsonDecode(response.body)["payload"];
         if (decodedResponse is List) {
           products.value = decodedResponse;
+          filteredProducts.value = decodedResponse; // Initialize filteredProducts with all products
         } else {
           products.value = [];
+          filteredProducts.value = [];
         }
       } else {
         products.value = [];
+        filteredProducts.value = [];
         print('Failed to load products');
       }
     } catch (e) {
       print('Error: $e');
       products.value = [];
+      filteredProducts.value = [];
     } finally {
       isLoading(false);
     }
   }
 
-  // Get filtered products by category
-  Future<void> getFilteredProducts(List<String> selectedCategories) async {
-    isLoading(true);
-    final url = Uri.parse('$baseUrl/filtered');
+  // Filter products by selected categories
+  void filterProductsByCategory(String selectedCategory) {
+  if(selectedCategory=='fruits') selectedCategory='Fruit';
+   if(selectedCategory=='vegetables') selectedCategory='Vegetable';
 
-    try {
-      final token = await _getToken(); // Get token from SharedPreferences
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token // Use token from SharedPreferences
-        },
-        body: jsonEncode({
-          'categories': selectedCategories,
-          'page': 1,
-          'limit': 10,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        var decodedResponse = jsonDecode(response.body)["payload"];
-        if (decodedResponse is List) {
-          products.value = decodedResponse;
-        } else {
-          products.value = [];
-        }
+    // selectedCategory="Fruit";
+    if (products.isNotEmpty) {
+      if (selectedCategory.isEmpty) {
+        filteredProducts.value = products; // Show all products if no category is selected
       } else {
-        products.value = [];
-        print('Failed to load products');
+        filteredProducts.value = products
+            .where((product) => product['category'] == selectedCategory)
+            .toList(); // Filter products based on selected category
       }
-    } catch (e) {
-      print('Error: $e');
-      products.value = [];
-    } finally {
-      isLoading(false);
     }
+            // filteredProducts.value = products
+           
+            // .where((product) => product['category'] == "Vegetable")
+            // .toList(); // Filter products based on selected category
+    print(filteredProducts);
   }
 
   // Add item to favorites

@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
       // home: MyOrdersScreen()
       // home: OrderDetailsScreen()
       // home: SaikatHome()
-      // home: HomePage()
+      home: HomePage()
       // home: OtpScreen2()
       // home: ProductsPage()
       // home: FinalOrderScreen()
@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
       // home: FavPage()
       // home: CategoryScreen()
       // home: SignUpScreen()
-      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
 }

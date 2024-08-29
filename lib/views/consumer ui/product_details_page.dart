@@ -146,7 +146,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               children: [
                 Container(
                     width: double.infinity,
-                    child: Image.asset("assets/krishi-logo.png")),
+                    child: Image.network(product["images"][0])),
                 // SizedBox(height: 80),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

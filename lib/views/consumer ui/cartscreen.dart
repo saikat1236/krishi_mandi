@@ -225,48 +225,48 @@ class _CartListScreenState extends State<CartListScreen> {
                   child: Container(
                     width: double.infinity,
                     height: 45,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 45,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                hintText: 'Promo code',
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(74, 230, 50, 0.7),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage(),
-                              ),
-                            );
-                          },
-                          child: Center(
-                            child: Text(
-                              "Apply",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // child: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Expanded(
+                    //       child: Container(
+                    //         height: 45,
+                    //         child: TextField(
+                    //           decoration: InputDecoration(
+                    //             border: OutlineInputBorder(
+                    //               borderRadius: BorderRadius.circular(15.0),
+                    //             ),
+                    //             hintText: 'Promo code',
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 10),
+                    //     ElevatedButton(
+                    //       style: ElevatedButton.styleFrom(
+                    //         backgroundColor: Color.fromRGBO(74, 230, 50, 0.7),
+                    //         shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(15.0),
+                    //         ),
+                    //         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
+                    //       ),
+                    //       onPressed: () {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => HomePage(),
+                    //           ),
+                    //         );
+                    //       },
+                    //       child: Center(
+                    //         child: Text(
+                    //           "Apply",
+                    //           style: TextStyle(color: Colors.white),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                 ),
                 Padding(

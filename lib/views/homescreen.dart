@@ -367,7 +367,7 @@ class _HomePageState extends State<HomePage2> {
           _sectionTitle('Offers', 'View All'),
           ProductListViewdemo(),
           _sectionTitle('Fresh', 'View All'),
-          ProductListView2()
+          // ProductListView2()
         ],
       ),
     );
@@ -862,109 +862,7 @@ class ProductListView extends StatelessWidget {
   }
 }
 
-class ProductListView2 extends StatelessWidget {
-  final ProductController controller = Get.put(ProductController());
 
-
-  ProductListView2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    controller.getAllProducts(2); // Fetch products when the widget is built
-
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-
-      return SizedBox(
-        height: 240,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            final product = controller.products[index];
-            return _productItem(
-              product['name'] ?? "Product",
-              '\$${product["pricePerUnit"] ?? "0"}',
-              '\$${product["pricePerUnit"] ?? "0"}',
-              product['image'] ??
-                  'assets/photo.png', // Assuming your API has an 'image' field
-            );
-          },
-        ),
-      );
-    }
-    );
-  }
-
-  Widget _productItem(String name, String description, String imageUrl,Map<dynamic, dynamic> data) {
-    return InkWell(
-      onTap: () {
-        Get.to(ProductDetailsScreen(data: data));
-      },
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                SizedBox(
-                    height: 140,
-                    child: Image.asset(
-                      imageUrl,
-                      fit: BoxFit.fitWidth,
-                    )),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    color: Colors.green,
-                    child: Text('NEW',
-                        style: TextStyle(color: Colors.white, fontSize: 12)),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Row(
-                    children: <Widget>[
-                      RatingBar.builder(
-                        itemSize: 20,
-                        initialRating: 4.5,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemBuilder: (context, _) =>
-                            Icon(Icons.star, color: Colors.amber),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.favorite_border),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(name,
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Text(description),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class ProductListViewdemo extends StatelessWidget {
   final ProductController controller = Get.put(ProductController());

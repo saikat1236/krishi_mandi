@@ -8,13 +8,28 @@ import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import '../../controller/customer_apis/user_controller.dart';
 
 class CategoryScreen extends StatefulWidget {
+    final String category;
+  CategoryScreen({super.key, this.category='Fruit'}); // Added key for widget tree
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
   final ProductController controller = Get.put(ProductController());
-  String selectedCategory = "vegetables"; // Default category
+  late  String selectedCategory; // Default category
+
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = widget.category; // Initialize selectedCategory
+    fetchProductsForCategory(selectedCategory); // Fetch products based on category
+  }
+
+    void fetchProductsForCategory(String category) {
+    controller.filterProductsByCategory(category);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +117,10 @@ class CategoriesList extends StatelessWidget {
             final category = controller.categories[index];
             return InkWell(
               onTap: () {
-                onCategorySelected(category['value'] ?? "Fruits");
+                onCategorySelected(category['value'] ?? "Fruit");
               },
               child: _categoryItem(
-                category['value'] ?? "Fruits",
+                category['value'] ?? "Fruit",
                 category['image'] ?? 'assets/fruits.jpg',
               ),
             );
@@ -157,6 +172,7 @@ class _ProductListViewState extends State<ProductListView> {
   @override
   void initState() {
     super.initState();
+    
     fetchProductsForCategory(widget.selectedCategory);
   }
 
@@ -165,11 +181,12 @@ class _ProductListViewState extends State<ProductListView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.selectedCategory != widget.selectedCategory) {
       fetchProductsForCategory(widget.selectedCategory);
+
     }
   }
 
   void fetchProductsForCategory(String category) {
-    controller.getFilteredProducts([category]);
+    controller.filterProductsByCategory(category);
   }
 
   @override
@@ -185,8 +202,8 @@ class _ProductListViewState extends State<ProductListView> {
         crossAxisCount: 2,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        children: List.generate(controller.products.length, (index) {
-          final product = controller.products[index] as Map<String, dynamic>;
+        children: List.generate(controller.filteredProducts.length, (index) {
+          final product = controller.filteredProducts[index] as Map<String, dynamic>;
 
           return InkWell(
             onTap: () {
@@ -201,7 +218,7 @@ class _ProductListViewState extends State<ProductListView> {
               product['name'] ?? "Product",
               product['newPrice'] ?? "\$0.00",
               product['pricePerUnit'] ?? "\$0.00",
-              product['image'] ?? 'assets/photo.png',
+              product['images'][0] ?? 'assets/photo.png',
               product['_id'],
               controller.favoriteProducts.contains(product['_id']),
             ),
@@ -227,7 +244,7 @@ class _ProductListViewState extends State<ProductListView> {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Image.asset(
+                  Image.network(
                     imageUrl,
                     width: containerWidth,
                     height: containerHeight * 0.8,

@@ -504,7 +504,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                 product['name'] ?? "Product",
                 product['newPrice'] ?? "\0.00",
                 "₹ ${product['pricePerUnit']}" ?? "\₹0.00",
-                product['image'] ?? 'assets/photo.png',
+                product['images'][0] ?? 'assets/photo.png',
                 product['productId']
               ),
             );
@@ -530,7 +530,7 @@ Widget _offerItemdemo(
           children: <Widget>[
             Stack(
               children: <Widget>[
-                Image.asset(
+                Image.network(
                   imageUrl,
                   width: containerWidth,
                   height: containerHeight * 0.8, // Adjust image height ratio as needed
@@ -602,51 +602,7 @@ Widget _offerItemdemo(
 
 }
 
-class demo extends StatelessWidget {
-  // final ProductController controller = Get.put(ProductController());
-  final List<Map<String, String>> products = [
-    {
-      'name': 'Product 1',
-      'category': 'Category 1',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$20.00',
-      'oldPrice': '\$25.00',
-    },
-    {
-      'name': 'Product 2',
-      'category': 'Category 2',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$15.00',
-      'oldPrice': '\$20.00',
-    },
-    {
-      'name': 'Product 3',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-    {
-      'name': 'Product 4',
-      'category': 'Category 3',
-      'image': 'assets/fruits.jpg',
-      'newPrice': '\$10.00',
-      'oldPrice': '\$15.00',
-    },
-  ];
 
-  // ProductListViewdemo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.black,
-      ),
-    );
-  }
-}
 
 class CategoriesList extends StatelessWidget {
   final ProductController controller = Get.put(ProductController());
@@ -684,6 +640,7 @@ class CategoriesList extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CategoryScreen(
+                      category: product['value']
                         // product: product,
                         ),
                   ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/order_success.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
+import 'package:krishi_customer_app/views/homescreen.dart';
 
 import '../../controller/customer_apis/order_controller.dart';
 import '../../controller/customer_apis/profile_controller.dart';
@@ -17,6 +19,23 @@ class FinalOrderScreen extends StatefulWidget {
 }
 
 class _CartListScreenState extends State<FinalOrderScreen> {
+    // Address should not be final if you need to update it
+  late Map<String, dynamic> address;
+
+  @override
+  void initState() {
+    super.initState();
+    final UserProfileController userProfileController = Get.find<UserProfileController>();
+    
+    // Fetch the default address
+    address = userProfileController.userProfile['Address']
+        .firstWhere((addr) => addr['default'] == true, orElse: () => {});
+
+    if (address.isEmpty) {
+      // Handle the case where no default address is found
+      print('No default address found.');
+    }
+  }
   int? _rad; // The currently selected value
 
   int _quantity = 3; // Initial quantity
@@ -39,7 +58,20 @@ class _CartListScreenState extends State<FinalOrderScreen> {
   @override
   Widget build(BuildContext context) {
     final UserProfileController userProfileController = Get.find<UserProfileController>();
-    final address = userProfileController.userProfile['Address'][0];
+    // final address = userProfileController.userProfile['Address'][0];
+    // Fetch the address where default is true
+// final address = userProfileController.userProfile['Address']
+//     .firstWhere((addr) => addr['default'] == true, orElse: () => null);
+
+// // Check if an address was found
+// if (address != null) {
+//   // Address with default: true found
+//   print('Default Address: $address');
+// } else {
+//   // No address with default: true found
+//   print('No default address found.');
+// }
+
     // Create the order object
 final order = {
   "orderType": 1, // Static value; adjust as needed
@@ -137,8 +169,8 @@ final order = {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    // height: 220,
-                    height: 180,
+                    height: 220,
+                    // height: 180,
                     width: 550,
                     decoration: BoxDecoration(
                       // color: Colors.grey[200],
@@ -164,45 +196,55 @@ final order = {
                             children: [
                               Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text("Saikat Biswas",
+                                child: Text("${address['name']}",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700)),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text("${order['address']['addressLine1']}, ${order['address']['addressLine2']}, ${order['address']['city']}, ${order['address']['pin']} "),
+                                child: Text("${address['addressLine1']}, ${address['addressLine2']}, ${address['city']}, ${address['pin']} "),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text("${order['address']['email']}"),
+                                child: Text("${address['email']}"),
                               ),
                                Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text("${order['address']['mobile']}"),
+                                child: Text("${address['mobile']}"),
                               ),
                               Row(children: [
-                                // ElevatedButton(
-                                //   style: ElevatedButton.styleFrom(
-                                //     backgroundColor:
-                                //         Colors.green, // Background color
-                                //     shape: RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.circular(
-                                //           18.0), // Rounded edges
-                                //     ),
-                                //     padding: EdgeInsets.symmetric(
-                                //         horizontal: 30,
-                                //         vertical: 10), // Button size
-                                //   ),
-                                //   onPressed: () {
-                                //     // Get.to(widget.initialScreen);
-                                //     // Add navigation or functionality here for consumer
-                                //   },
-                                //   child: Text(
-                                //     "Change/Edit",
-                                //     style: TextStyle(
-                                //         color: Colors.white), // Text color
-                                //   ),
-                                // ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.green, // Background color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          18.0), // Rounded edges
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30,
+                                        vertical: 10), // Button size
+                                  ),
+                       onPressed: () async {
+                                    final updatedAddress = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfileScreenmain(),
+                                      ),
+                                    );
+
+                                    if (updatedAddress != null) {
+                                      setState(() {
+                                        address = updatedAddress; // Update the address
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    "Change/Edit",
+                                    style: TextStyle(
+                                        color: Colors.white), // Text color
+                                  ),
+                                ),
                                 // SizedBox(width: 30),
                                 // ElevatedButton(
                                 //   style: ElevatedButton.styleFrom(
