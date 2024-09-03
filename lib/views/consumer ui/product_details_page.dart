@@ -26,14 +26,29 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late int qty;
+  bool _isInCart = false;
+
   @override
   void initState() {
     super.initState();
     // Initialize qty with product['minQuantity']
     qty = widget.product['minQuantity'] ?? 1;
+    _checkIfInCart(); // Check if the product is already in the cart
   }
 
   final cartController = Get.find<UserProfileController>();
+
+  // Function to check if the product is in the cart
+  void _checkIfInCart() async {
+    // Assuming cartController has a method to get cart items
+    await cartController.getUserProfile();
+    final cartItems = cartController.userProfile['cartItems'] ?? [];
+    setState(() {
+      _isInCart = cartItems.any((item) => item['productId'] == widget.product['productId']);
+    });
+  }
+
+  // final cartController = Get.find<UserProfileController>();
 
   Future<void> addToCart() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -164,7 +179,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Rs " + product['pricePerUnit'],
+                    "Rs " + product['pricePerUnit'] + " " + product['unit'],
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.green,
@@ -181,90 +196,109 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                 ),
-                Row(
+    Row(
   mainAxisAlignment: MainAxisAlignment.spaceBetween,
   children: [
     Expanded(
-      child: Container(
-        height: 50,
-        child: Row(
-          children: [
-            InkWell(
-              onTap: () {
-                setState(() {
-                  int minQuantity = widget.product['minQuantity'] ?? 1;
-                  if (qty > minQuantity) {
-                    qty--; // Decrease qty
-                  }
-                });
-              },
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.remove_circle,
-                  size: 40.0,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-            SizedBox(width: 10.0),
-            Text(
-              qty.toString(),
-              style: TextStyle(
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 10.0),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  qty++; // Increase qty
-                });
-              },
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.add_circle,
-                  size: 40.0,
-                  color: Colors.green,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-    Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double buttonWidth = constraints.maxWidth * 0.1; // 50% of available width
-          return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(74, 230, 50, 0.961),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                side: BorderSide(
-                    color: Color.fromRGBO(74, 230, 50, 0.961),
-                    width: 2.0),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: buttonWidth * 0.1, vertical: 15),
-            ),
-            onPressed: () async {
-              await addToCart();
-            },
-            child: Text(
-              "Add to cart",
-              style: TextStyle(color: Colors.black),
+          double quantityWidth = constraints.maxWidth * 0.5; // Adjust percentage as needed
+          return Container(
+            width: quantityWidth,
+            height: 50,
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      int minQuantity = widget.product['minQuantity'] ?? 1;
+                      if (qty > minQuantity) {
+                        qty--; // Decrease qty
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.remove_circle,
+                      size: 40.0,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10.0),
+                Text(
+                  qty.toString(),
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(width: 10.0),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      qty++; // Increase qty
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.add_circle,
+                      size: 40.0,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },
       ),
     ),
+Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        double buttonWidth = constraints.maxWidth * 0.5;
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _isInCart
+                                ? Colors.grey
+                                : Color.fromRGBO(74, 230, 50, 0.961),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              side: BorderSide(
+                                color: _isInCart
+                                    ? Colors.grey
+                                    : Color.fromRGBO(74, 230, 50, 0.961),
+                                width: 2.0,
+                              ),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: buttonWidth * 0.1,
+                              vertical: 15,
+                            ),
+                          ),
+                          onPressed: _isInCart
+                              ? null
+                              : () async {
+                                  await addToCart();
+                                  setState(() {
+                                    _isInCart = true;
+                                  });
+                                },
+                          child: Text(
+                            _isInCart ? "Already in cart" : "Add to cart",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
   ],
-)
+),
 
-                ,Padding(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     "Description:",

@@ -50,7 +50,7 @@ class UserController extends GetxController {
 
   // Get user by ID
   Future<void> getUserById() async {
-    // isLoading(true);
+    isLoading(true);
     final url = Uri.parse('http://54.159.124.169:3000/users/get-user-profile');
       // Fetch the token from SharedPreferences
   final token = await _getToken();

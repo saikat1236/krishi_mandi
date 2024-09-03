@@ -9,6 +9,7 @@ class ProductController extends GetxController {
   var filteredProducts = [].obs; // Filtered products to display
   var categories = [].obs; // List of categories
   var favoriteProducts = [].obs; // List of favorite product IDs
+    var searchResults = [].obs;
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
 
@@ -25,7 +26,32 @@ class ProductController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
   }
+  void searchProducts(String query) async {
+        final token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/search'),
+      
+      body: jsonEncode({
+        "page": 1,
+        "limit": 10,
+        "query": query,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token, // Use your token retrieval method
+      },
+    );
 
+    if (response.statusCode == 200) {
+      searchResults.value = jsonDecode(response.body)['payload'];
+    } else {
+      searchResults.value = [];
+    }
+  }
+
+    void clearSearchResults() {
+    searchResults.clear();
+  }
   // Get all categories
   Future<void> getAllCategories() async {
     // isLoading(true);

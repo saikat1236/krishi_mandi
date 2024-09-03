@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert'; // Import this package to use jsonEncode
-import 'package:krishi_customer_app/constants/AppConstants.dart';
+import 'dart:convert';
 import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,16 +8,16 @@ class ShippingAddressController extends GetxController {
   final String apiUrl = "http://54.159.124.169:3000/users";
   final UserController userController = Get.find<UserController>();
 
-    // Retrieve token from SharedPreferences
+  var isLoading = false.obs; // Observable for loading state
+
+  // Retrieve token from SharedPreferences
   Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
   }
-  
 
   // Method to add address
   Future<void> addAddress({
-    
     required String name,
     required String mobile,
     required String email,
@@ -27,11 +26,11 @@ class ShippingAddressController extends GetxController {
     required String city,
     required int pin,
   }) async {
+    isLoading(true); // Start loading
     try {
       final token = await _getToken();
       var response = await http.post(
         Uri.parse('$apiUrl/add-address'),
-        
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token,
@@ -57,11 +56,12 @@ class ShippingAddressController extends GetxController {
       }
     } catch (e) {
       print("Exception while adding address: $e");
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 
-
-   // Method to update address
+  // Method to update address
   Future<void> updateAddress({
     required String name,
     required String mobile,
@@ -70,12 +70,13 @@ class ShippingAddressController extends GetxController {
     required String addressLine2,
     required String city,
     required int pin,
-    required String addressId, // Add addressId to identify which address to update
+    required String addressId,
   }) async {
+    isLoading(true); // Start loading
     try {
       final token = await _getToken();
       var response = await http.post(
-        Uri.parse('$apiUrl/update-address'), // Use correct endpoint
+        Uri.parse('$apiUrl/update-address'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token,
@@ -88,29 +89,31 @@ class ShippingAddressController extends GetxController {
           "addressLine2": addressLine2,
           "city": city,
           "pin": pin,
-          "addressId":addressId,
+          "addressId": addressId,
           "default": false
         }),
       );
 
       if (response.statusCode == 200) {
         Get.snackbar("Address updated successfully", "");
-        userController.getUserById(); // Update the user's profile or handle accordingly
+        userController.getUserById(); // Update the user's profile
       } else {
         print("Failed to update address: ${response.body}");
       }
     } catch (e) {
       print("Exception while updating address: $e");
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 
-
-  // Method to delete address by addressId
+  // Method to delete address
   Future<void> deleteAddress({required String addressId}) async {
-       final token = await _getToken();
+    isLoading(true); // Start loading
     try {
+      final token = await _getToken();
       var response = await http.post(
-        Uri.parse('http://54.159.124.169:3000/users/removeAddress'),
+        Uri.parse('$apiUrl/removeAddress'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token,
@@ -128,13 +131,16 @@ class ShippingAddressController extends GetxController {
       }
     } catch (e) {
       print("Exception while deleting address: $e");
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 
-    // Method to set an address as the default
+  // Method to set an address as the default
   Future<void> setDefaultAddress({required String addressId}) async {
-    final token = await _getToken();
+    isLoading(true); // Start loading
     try {
+      final token = await _getToken();
       var response = await http.post(
         Uri.parse('$apiUrl/set-default-address'),
         headers: {
@@ -154,6 +160,8 @@ class ShippingAddressController extends GetxController {
       }
     } catch (e) {
       print("Exception while setting default address: $e");
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 }

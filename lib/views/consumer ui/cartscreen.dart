@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
-import '../../controller/customer_apis/profile_controller.dart'; // Import your controller
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../controller/customer_apis/profile_controller.dart';
 
 class CartListScreen extends StatefulWidget {
   @override
@@ -14,12 +17,112 @@ class _CartListScreenState extends State<CartListScreen> {
 
   int? _rad; // The currently selected value
 
+  bool _isLoadingComplete = false; // Flag to control the OK button
+
   @override
   void initState() {
     super.initState();
-    // Fetch the user profile on initialization
-    userProfileController.getUserProfile();
+    // Schedule the loading dialog to show after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showLoadingDialog();
+      userProfileController.getUserProfile().then((_) {
+        setState(() {
+          _isLoadingComplete = true; // Enable the OK button when loading is complete
+        });
+        Future.delayed(Duration(seconds: 1), () {
+          if (mounted) {
+            Navigator.of(context).pop(); // Close the dialog automatically after 2 seconds
+          }
+        });
+      });
+    });
   }
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(20), // Add padding around content
+          content: SizedBox(
+            width: 200, // Set a fixed width for the dialog
+            height: 150, // Increase height to accommodate the button
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+              children: [
+                Text(
+                  "Cart page is Loading...",
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 20), // Space between spinner and text
+                CircularProgressIndicator(),
+                // SizedBox(height: 20), // Space between spinner and button
+                // StatefulBuilder(
+                //   builder: (context, setState) {
+                //     return ElevatedButton(
+                //       onPressed: _isLoadingComplete
+                //           ? () {
+                //               Get.back(); // Close the dialog when the button is clicked
+                //             }
+                //           : null, // Disable the button until loading is complete
+                //       style: ElevatedButton.styleFrom(
+                //         backgroundColor: _isLoadingComplete ? Colors.green : Colors.grey, // Change color based on loading state
+                //       ),
+                //       child: Text("OK"),
+                //     );
+                //   },
+                // ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+// @override
+// void initState() {
+//   super.initState();
+//   // Schedule the loading dialog to show after the first frame is rendered
+//   WidgetsBinding.instance.addPostFrameCallback((_) {
+//     _showLoadingDialog(); 
+//     userProfileController.getUserProfile().then((_) {
+//       Get.back(); // Close the loading dialog once the profile is loaded
+//     });
+//   });
+// }
+
+// void _showLoadingDialog() {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         contentPadding: EdgeInsets.all(20), // Add padding around content
+//         content: SizedBox(
+//           width: 200, // Set a fixed width for the dialog
+//           height: 100, // Set a fixed height for the dialog
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+//             children: [
+//               Text(
+//                 "Cart page is Loading...",
+//                 style: TextStyle(fontSize: 16),
+//               ),
+//               SizedBox(height: 20), // Space between spinner and text
+//               CircularProgressIndicator(),
+//             ],
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }
+
+
+
 
   void _increaseQuantity(int index) {
     setState(() {
@@ -35,6 +138,40 @@ class _CartListScreenState extends State<CartListScreen> {
         tot = userProfileController.getCartSubtotal() + vouch; 
       }
     });
+  }
+
+  Future<String> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token') ?? ''; // Default to empty string if token is not found
+  }
+
+  Future<void> _removeItemFromCart(String productId) async {
+    final url = Uri.parse('http://54.159.124.169:3000/users/remove-item-from-favs');
+    final token = await _getToken();
+    
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token, // Use token from SharedPreferences
+        },
+        body: jsonEncode({
+          'productId': productId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Successfully deleted the item
+        userProfileController.getUserProfile(); // Refresh the cart items
+      } else {
+        // Handle the error
+        print('Failed to delete the item: ${response.body}');
+      }
+    } catch (e) {
+      // Handle any exceptions that occur
+      print('Error occurred while deleting the item: $e');
+    }
   }
 
   var vouch = 0;
@@ -104,7 +241,16 @@ class _CartListScreenState extends State<CartListScreen> {
                               width: 80,
                               height: 80,
                               margin: const EdgeInsets.all(8.0),
-                              child: Image.network(cartItem['productImages'][0]), // Load the image dynamically
+                              child: Image.network(
+                                cartItem['productImages'][0] ?? '',
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  return Image.asset(
+                                    'assets/no_image.jpg', // Path to your fallback asset image
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              ), // Load the image dynamically
                             ),
                             Expanded(
                               child: Stack(
@@ -114,7 +260,6 @@ class _CartListScreenState extends State<CartListScreen> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
@@ -157,7 +302,6 @@ class _CartListScreenState extends State<CartListScreen> {
                                             ),
                                           ),
                                         ),
-                                        // SizedBox(height: 10),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
@@ -171,45 +315,39 @@ class _CartListScreenState extends State<CartListScreen> {
                                             ),
                                           ),
                                         ),
-                                        // Spacer(),
-                                        
                                       ],
                                     ),
                                   ),
                                   Positioned(
                                     top: 10,
                                     right: 10,
-                                    child: Icon(Icons.delete)
-                                    // child: Radio<int>(
-                                    //   value: index,
-                                    //   groupValue: _rad,
-                                    //   onChanged: (int? value) {
-                                    //     setState(() {
-                                    //       _rad = value;
-                                    //     });
-                                    //   },
-                                    // ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        print(cartItem['productId']);
+                                        _removeItemFromCart(cartItem['productId']); // Call the delete API
+                                      },
+                                    ),
                                   ),
-                                    Positioned(
+                                  Positioned(
                                     bottom: 8,
                                     right: 8,
-                                    child:  Row(
-                                         
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(Icons.remove),
-                                              onPressed: () => _decreaseQuantity(index),
-                                            ),
-                                            Text(
-                                              '${cartItem['ProductQuantityAddedToCart']}',
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.add),
-                                              onPressed: () => _increaseQuantity(index),
-                                            ),
-                                          ],
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(Icons.remove),
+                                          onPressed: () => _decreaseQuantity(index),
                                         ),
+                                        Text(
+                                          '${cartItem['ProductQuantityAddedToCart']}',
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.add),
+                                          onPressed: () => _increaseQuantity(index),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -219,55 +357,6 @@ class _CartListScreenState extends State<CartListScreen> {
                       ),
                     );
                   },
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: double.infinity,
-                    height: 45,
-                    // child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Expanded(
-                    //       child: Container(
-                    //         height: 45,
-                    //         child: TextField(
-                    //           decoration: InputDecoration(
-                    //             border: OutlineInputBorder(
-                    //               borderRadius: BorderRadius.circular(15.0),
-                    //             ),
-                    //             hintText: 'Promo code',
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     SizedBox(width: 10),
-                    //     ElevatedButton(
-                    //       style: ElevatedButton.styleFrom(
-                    //         backgroundColor: Color.fromRGBO(74, 230, 50, 0.7),
-                    //         shape: RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.circular(15.0),
-                    //         ),
-                    //         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
-                    //       ),
-                    //       onPressed: () {
-                    //         Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) => HomePage(),
-                    //           ),
-                    //         );
-                    //       },
-                    //       child: Center(
-                    //         child: Text(
-                    //           "Apply",
-                    //           style: TextStyle(color: Colors.white),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -317,7 +406,7 @@ class _CartListScreenState extends State<CartListScreen> {
                                 ),
                               ),
                               Text(
-                                "Rs $tot",
+                                "Rs ${userProfileController.getCartSubtotal().toStringAsFixed(2)}",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -333,44 +422,21 @@ class _CartListScreenState extends State<CartListScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 110, vertical: 8),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FinalOrderScreen(cartItems: userProfileController.getCartItems(),),
-                            ),
-                          );
-                        },
-                        child: Center(
-                          child: Text(
-                            "Place Order",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
         );
       }),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Get.to(() => FinalOrderScreen(cartItems:  userProfileController.getCartItems(),)); // Navigate to the final order screen
+        },
+        label: Text('Place Order',
+        style: TextStyle(color: Colors.white,fontSize: 16 ),),
+        // icon: Icon(Icons.shopping_cart_checkout),
+        backgroundColor: Colors.black, // Customize button color
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, // Position at the bottom center
     );
   }
 }

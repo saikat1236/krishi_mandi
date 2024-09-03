@@ -26,6 +26,10 @@ class UserProfileController extends GetxController {
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
   }
 
+    bool isProductInCart(String productId) {
+    return cartItems.any((item) => item['productId'] == productId);
+  }
+
   // Get subtotal of cart items
   double getCartSubtotal() {
     double subtotal = 0;
@@ -69,7 +73,7 @@ class UserProfileController extends GetxController {
           cartItems.value = userProfile['cartItems'] ?? [];
           orders.value = userProfile['orders'] ?? [];
           favorites.value = userProfile['favorites'] ?? [];
-
+        // cartItems.clear();
           print("cart: " + jsonEncode(cartItems));
           print("orders: " + jsonEncode(orders));
           print("favorites: " + jsonEncode(favorites));

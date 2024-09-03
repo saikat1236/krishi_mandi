@@ -70,6 +70,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+   scaffoldBackgroundColor: Colors.white,
       ),
       builder: (context, child) {
         return MediaQuery(

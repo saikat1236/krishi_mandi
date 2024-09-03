@@ -8,6 +8,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/update_address.dart';
 
 import '../../controller/customer_apis/addresscontroller.dart';
+import '../../controller/customer_apis/profile_controller.dart';
 
 class ProfileScreenmain extends StatefulWidget {
   const ProfileScreenmain({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class ProfileScreenmain extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreenmain> {
   final UserController userController = Get.put(UserController());
+   final UserProfileController userProfileController = Get.find<UserProfileController>();
 
   void _hideKeyboard(BuildContext context) {
     final currentFocus = FocusScope.of(context);
@@ -25,6 +27,52 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
       currentFocus.unfocus();
     }
   }
+
+@override
+void initState() {
+  super.initState();
+  // Schedule the loading dialog to show after the first frame is rendered
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _showLoadingDialog();
+    
+    // Fetch the user profile and close the dialog after a 2-second delay
+    userProfileController.getUserProfile().then((_) {
+      Future.delayed(Duration(seconds: 2), () {
+        if (mounted) {
+          Get.back(); // Close the loading dialog after a 2-second delay
+        }
+      });
+    });
+  });
+}
+
+void _showLoadingDialog() {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.all(20), // Add padding around content
+        content: SizedBox(
+          width: 200, // Set a fixed width for the dialog
+          height: 100, // Set a fixed height for the dialog
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+            children: [
+              Text(
+                "Profile page is Loading...",
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 20), // Space between spinner and text
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,29 +99,29 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
             },
           ),
           actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartListScreen(),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreenmain(),
-                ),
-              );
-            },
-          ),
-        ],
+            IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartListScreen(),
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreenmain(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: Obx(() {
           if (userController.isLoading.value) {
@@ -91,14 +139,31 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
                       children: [
                         Row(
                           children: [
-CircleAvatar(
-  radius: 40.0,
-  backgroundImage: (userController.user['imageProfile'] != null &&
-          userController.user['imageProfile'].isNotEmpty)
-      ? NetworkImage(userController.user['imageProfile']) as ImageProvider<Object>
-      : const AssetImage('assets/potato.png') as ImageProvider<Object>,
-),
-
+                            Container(
+                              width: 104, // 2 * radius of 52
+                              height: 104, // 2 * radius of 52
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: ClipOval(
+                                child: Image.network(
+                                  userController.user['imageProfile'] != null &&
+                                          userController
+                                              .user['imageProfile'].isNotEmpty
+                                      ? userController.user['imageProfile']
+                                      : '',
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/avatar.png',
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
                               child: Column(
@@ -197,119 +262,129 @@ class AddressCard extends StatelessWidget {
           // Display all addresses with action buttons
           ...addressList.map((address) {
             if (address is Map) {
-             return Padding(
-  padding: EdgeInsets.symmetric(vertical: 5.0),
-  child: Stack(
-    children: [
-      Container(
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$userName',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-              Text('$mobileNumber'),
-              Text(
-                '${address['addressLine1'] ?? 'Address Line 1'}, '
-                '${address['addressLine2'] ?? 'Address Line 2'}, '
-                '${address['city'] ?? 'City'}, '
-                '${address['pin']?.toString() ?? 'PIN Code'}',
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green, // Background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: Stack(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.white,
                       ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10), // Button size
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UpdShippingAddressScreen(
-                            address: Address(
-                              name: '$userName' ?? '',
-                              mobile: '$mobileNumber' ?? '',
-                              email: '$email' ?? '',
-                              addressLine1: address['addressLine1'] ?? '',
-                              addressLine2: address['addressLine2'] ?? '',
-                              city: address['city'] ?? '',
-                              // pin: address['pin'] ?? '',
-                              // addressId: address['addressId']
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '$userName',
+                              style: TextStyle(fontWeight: FontWeight.w700),
                             ),
-                            addressId: address['addressId'] ?? ''
-                          ),
+                            Text('$mobileNumber'),
+                            Text(
+                              '${address['addressLine1'] ?? 'Address Line 1'}, '
+                              '${address['addressLine2'] ?? 'Address Line 2'}, '
+                              '${address['city'] ?? 'City'}, '
+                              '${address['pin']?.toString() ?? 'PIN Code'}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.green, // Background color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 10), // Button size
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            UpdShippingAddressScreen(
+                                                address: Address(
+                                                  name: '$userName' ?? '',
+                                                  mobile: '$mobileNumber' ?? '',
+                                                  email: '$email' ?? '',
+                                                  addressLine1:
+                                                      address['addressLine1'] ??
+                                                          '',
+                                                  addressLine2:
+                                                      address['addressLine2'] ??
+                                                          '',
+                                                  city: address['city'] ?? '',
+                                                  // pin: address['pin'] ?? '',
+                                                  // addressId: address['addressId']
+                                                ),
+                                                addressId:
+                                                    address['addressId'] ?? ''),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    "Edit",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromRGBO(
+                                        244, 67, 54, 1), // Background color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 10), // Button size
+                                  ),
+                                  onPressed: () {
+                                    // Add delete functionality here
+                                    print(
+                                        'Delete address with ID: ${address['addressId']}');
+                                    shippingAddressController.deleteAddress(
+                                        addressId: address['addressId']);
+                                  },
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Edit",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(244, 67, 54, 1), // Background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
                       ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10), // Button size
                     ),
-                    onPressed: () {
-                      // Add delete functionality here
-                      print('Delete address with ID: ${address['addressId']}');
-                      shippingAddressController.deleteAddress(
-                          addressId: address['addressId']);
-                    },
-                    child: Text(
-                      "Delete",
-                      style: TextStyle(color: Colors.white),
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: Radio(
+                        value: true,
+                        groupValue: address["default"] ==
+                            true, // Check if this address is default
+                        onChanged: (value) {
+                          if (value == true) {
+                            shippingAddressController.setDefaultAddress(
+                              addressId: address['addressId'],
+                            );
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      Positioned(
-        top: 5,
-        right: 5,
-        child: Radio(
-          value: true,
-          groupValue: address["default"] == true, // Check if this address is default
-          onChanged: (value) {
-            if (value == true) {
-              shippingAddressController.setDefaultAddress(
-                addressId: address['addressId'],
+                  ],
+                ),
               );
-            }
-          },
-        ),
-      ),
-    ],
-  ),
-);
-
             } else {
               return SizedBox
                   .shrink(); // Return an empty widget if address is not a map

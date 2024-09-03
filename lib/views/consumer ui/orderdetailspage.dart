@@ -60,7 +60,8 @@ class OrderDetailsScreen extends StatelessWidget {
             ...productsOrdered.map((product) => _buildOrderItem(
               product['productName'],
               '₹${product['pricePerUnit']}',
-              'assets/potato.png',
+              // 'assets/potato.png',
+              product['image']??""
             )).toList(),
             const SizedBox(height: 16.0),
             const Text(
@@ -118,7 +119,20 @@ class OrderDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Image.asset(imageUrl, width: 50, height: 50),
+                       Image.network(
+  imageUrl,
+  width: 50,
+  height: 50, // Adjust image height ratio as needed
+  fit: BoxFit.cover,
+  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+    return Image.asset(
+      'assets/no_image.jpg', // Path to your asset image
+      width: 50,
+      height: 50, // Adjust image height ratio as needed
+      fit: BoxFit.cover,
+    );
+  },
+),
             const SizedBox(width: 16.0),
             Expanded(
               child: Text(name, style: const TextStyle(fontSize: 16)),

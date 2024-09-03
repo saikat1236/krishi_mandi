@@ -62,6 +62,7 @@ class OrderController extends GetxController {
       } else {
         // Handle error
         errorMessage.value = 'Failed to create order: ${response.reasonPhrase}';
+        print(order);
         Get.snackbar('Error', errorMessage.value);
       }
     } catch (e) {
