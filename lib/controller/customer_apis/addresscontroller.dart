@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,12 +9,52 @@ class ShippingAddressController extends GetxController {
   final String apiUrl = "http://54.159.124.169:3000/users";
   final UserController userController = Get.find<UserController>();
 
-  var isLoading = false.obs; // Observable for loading state
+  bool _isDialogVisible = false;
 
   // Retrieve token from SharedPreferences
   Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
+  }
+
+  // Method to show a loading dialog
+  void _showLoadingDialog() {
+    if (!_isDialogVisible) {
+      Get.dialog(
+        AlertDialog(
+          contentPadding: EdgeInsets.all(20),
+          content: SizedBox(
+            width: 200,
+            height: 100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Please wait...",
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 20),
+                CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ),
+        barrierDismissible: false,
+      );
+      _isDialogVisible = true;
+    }
+  }
+
+  // Method to hide the loading dialog
+  void _hideLoadingDialog() async {
+    // Ensure dialog has at least been shown for 2 seconds
+    await Future.delayed(Duration(seconds: 2));
+    if (_isDialogVisible) {
+      if (Get.isDialogOpen!) {
+        Get.back(); // Close the loading dialog
+      }
+      _isDialogVisible = false;
+    }
   }
 
   // Method to add address
@@ -26,7 +67,7 @@ class ShippingAddressController extends GetxController {
     required String city,
     required int pin,
   }) async {
-    isLoading(true); // Start loading
+    // _showLoadingDialog(); // Show loading dialog
     try {
       final token = await _getToken();
       var response = await http.post(
@@ -49,15 +90,18 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Address added successfully", "");
+        Get.snackbar("Success", "Address added successfully");
         userController.getUserById(); // Update the user's profile
+          // Get.back();
       } else {
         print("Failed to add address: ${response.body}");
+        Get.snackbar("Error", "Failed to add address. Please try again.");
       }
     } catch (e) {
       print("Exception while adding address: $e");
+      Get.snackbar("Error", "An error occurred. Please try again.");
     } finally {
-      isLoading(false); // Stop loading
+      // _hideLoadingDialog(); // Hide loading dialog with a delay
     }
   }
 
@@ -72,7 +116,7 @@ class ShippingAddressController extends GetxController {
     required int pin,
     required String addressId,
   }) async {
-    isLoading(true); // Start loading
+    _showLoadingDialog(); // Show loading dialog
     try {
       final token = await _getToken();
       var response = await http.post(
@@ -95,21 +139,27 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Address updated successfully", "");
+        Get.snackbar("Success", "Address updated successfully");
         userController.getUserById(); // Update the user's profile
+             await Future.delayed(Duration(seconds: 2));
+      if (Get.isDialogOpen!) {
+        Get.back(); // Close the loading dialog
+      }
       } else {
         print("Failed to update address: ${response.body}");
+        Get.snackbar("Error", "Failed to update address. Please try again.");
       }
     } catch (e) {
       print("Exception while updating address: $e");
+      Get.snackbar("Error", "An error occurred. Please try again.");
     } finally {
-      isLoading(false); // Stop loading
+      _hideLoadingDialog(); // Hide loading dialog with a delay
     }
   }
 
   // Method to delete address
   Future<void> deleteAddress({required String addressId}) async {
-    isLoading(true); // Start loading
+    _showLoadingDialog(); // Show loading dialog
     try {
       final token = await _getToken();
       var response = await http.post(
@@ -124,21 +174,27 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Address deleted successfully", "");
+        Get.snackbar("Success", "Address deleted successfully");
         userController.getUserById(); // Update the user's profile
+     await Future.delayed(Duration(seconds: 2));
+      if (Get.isDialogOpen!) {
+        Get.back(); // Close the loading dialog
+      }
       } else {
         print("Failed to delete address: ${response.body}");
+        Get.snackbar("Error", "Failed to delete address. Please try again.");
       }
     } catch (e) {
       print("Exception while deleting address: $e");
+      Get.snackbar("Error", "An error occurred. Please try again.");
     } finally {
-      isLoading(false); // Stop loading
+      _hideLoadingDialog(); // Hide loading dialog with a delay
     }
   }
 
   // Method to set an address as the default
   Future<void> setDefaultAddress({required String addressId}) async {
-    isLoading(true); // Start loading
+    _showLoadingDialog(); // Show loading dialog
     try {
       final token = await _getToken();
       var response = await http.post(
@@ -153,15 +209,21 @@ class ShippingAddressController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Default address set successfully", "");
+        Get.snackbar("Success", "Default address set successfully");
         userController.getUserById(); // Update the user's profile
+      await Future.delayed(Duration(seconds: 2));
+      if (Get.isDialogOpen!) {
+        Get.back(); // Close the loading dialog
+      }
       } else {
         print("Failed to set default address: ${response.body}");
+        Get.snackbar("Error", "Failed to set default address. Please try again.");
       }
     } catch (e) {
       print("Exception while setting default address: $e");
+      Get.snackbar("Error", "An error occurred. Please try again.");
     } finally {
-      isLoading(false); // Stop loading
+      _hideLoadingDialog(); // Hide loading dialog with a delay
     }
   }
 }

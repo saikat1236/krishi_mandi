@@ -60,24 +60,24 @@ class _HomePageState extends State<HomePage> {
       Get.find<UserProfileController>();
   bool _hasFocus = false;
 
-@override
-void initState() {
-  super.initState();
-  print("here");
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    fetchAllProducts();
-    _showLoadingDialog();
+  @override
+  void initState() {
+    super.initState();
+    print("here");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchAllProducts();
+      // _showLoadingDialog();
 
-    // Fetch user profile and close the dialog after a 2-second delay
-    userProfileController.getUserProfile().then((_) {
-      Future.delayed(Duration(seconds: 2), () {
-        if (mounted) {
-          Get.back(); // Close the loading dialog after a 2-second delay
-        }
-      });
+      // Fetch user profile and close the dialog after a 2-second delay
+      // userProfileController.getUserProfile().then((_) {
+      //   Future.delayed(Duration(seconds: 2), () {
+      //     if (mounted) {
+      //       Get.back(); // Close the loading dialog after a 2-second delay
+      //     }
+      //   });
+      // });
     });
-  });
-}
+  }
 
   void _clearSearch() {
     _searchController.clear();
@@ -97,7 +97,7 @@ void initState() {
       return NetworkImage(url);
     } catch (e) {
       // Return a fallback image if an error occurs
-      return const AssetImage('assets/avatar.png');
+      return const AssetImage('assets/avatar2.svg');
     }
   }
 
@@ -217,7 +217,7 @@ void initState() {
             padding: EdgeInsets.zero,
             children: <Widget>[
               Material(
-                color: Colors.blueAccent,
+                color: Color.fromARGB(255, 9, 223, 120),
                 child: InkWell(
                   onTap: () {
                     /// Close Navigation drawer before
@@ -246,7 +246,7 @@ void initState() {
                               errorBuilder: (BuildContext context,
                                   Object exception, StackTrace? stackTrace) {
                                 return Image.asset(
-                                  'assets/avatar.png',
+                                  'assets/avatar3.jpg',
                                   fit: BoxFit.cover,
                                 );
                               },
@@ -332,24 +332,25 @@ void initState() {
                   const Divider(
                     color: Colors.black45,
                   ),
-                ListTile(
-  leading: Icon(Icons.update),
-  title: Text('Logout'),
-  onTap: () async {
-    // Get the SharedPreferences instance
-    final prefs = await SharedPreferences.getInstance();
-    
-    // Clear the token from SharedPreferences
-    await prefs.remove('token');
-    
-    // Navigate to SplashScreen
-    Get.offAll(() => SplashScreen(
-      initialScreen: LoginScreen(), // Redirect to login screen or any other screen as needed
-      farmerscreen: Uploadpage(), // This can be adjusted based on your requirements
-    ));
-  },
-),
+                  ListTile(
+                    leading: Icon(Icons.update),
+                    title: Text('Logout'),
+                    onTap: () async {
+                      // Get the SharedPreferences instance
+                      final prefs = await SharedPreferences.getInstance();
 
+                      // Clear the token from SharedPreferences
+                      await prefs.remove('token');
+
+                      // Navigate to SplashScreen
+                      Get.offAll(() => SplashScreen(
+                            initialScreen:
+                                LoginScreen(), // Redirect to login screen or any other screen as needed
+                            farmerscreen:
+                                Uploadpage(), // This can be adjusted based on your requirements
+                          ));
+                    },
+                  ),
 
                   // ListTile(
                   //   leading: Icon(Icons.account_tree_outlined),
@@ -584,9 +585,9 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
     controller.getAllProducts(1); // Fetch products when the widget is built
 
     return Obx(() {
-      // if (controller.isLoading.value) {
-      //   return Center(child: CircularProgressIndicator());
-      // }
+      if (controller.isLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
       if (controller.categories.isEmpty) {
         return Center(child: Text('No Products available.'));
       }
@@ -748,9 +749,9 @@ class CategoriesList extends StatelessWidget {
     controller.getAllCategories();
 
     return Obx(() {
-      // if (controller.isLoading.value) {
-      //   return Center(child: CircularProgressIndicator());
-      // }
+      if (controller.isLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
       // Check if the products list is empty
       if (controller.categories.isEmpty) {
         return Center(child: Text('No categories available.'));

@@ -33,7 +33,7 @@ void initState() {
   super.initState();
   // Schedule the loading dialog to show after the first frame is rendered
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    _showLoadingDialog();
+    // _showLoadingDialog();
     
     // Fetch the user profile and close the dialog after a 2-second delay
     userProfileController.getUserProfile().then((_) {
@@ -126,6 +126,7 @@ void _showLoadingDialog() {
         body: Obx(() {
           if (userController.isLoading.value) {
             return Center(child: CircularProgressIndicator());
+            // _showLoadingDialog();
           } else {
             if (userController.user.isEmpty) {
               return Center(child: Text("No user data found."));
@@ -157,7 +158,7 @@ void _showLoadingDialog() {
                                       Object exception,
                                       StackTrace? stackTrace) {
                                     return Image.asset(
-                                      'assets/avatar.png',
+                                      'assets/avatar3.jpg',
                                       fit: BoxFit.cover,
                                     );
                                   },

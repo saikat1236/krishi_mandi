@@ -24,62 +24,62 @@ class _CartListScreenState extends State<CartListScreen> {
     super.initState();
     // Schedule the loading dialog to show after the first frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showLoadingDialog();
+      // _showLoadingDialog();
       userProfileController.getUserProfile().then((_) {
         setState(() {
           _isLoadingComplete = true; // Enable the OK button when loading is complete
         });
-        Future.delayed(Duration(seconds: 1), () {
-          if (mounted) {
-            Navigator.of(context).pop(); // Close the dialog automatically after 2 seconds
-          }
-        });
+        // Future.delayed(Duration(seconds: 1), () {
+        //   if (mounted) {
+        //     Navigator.of(context).pop(); // Close the dialog automatically after 2 seconds
+        //   }
+        // });
       });
     });
   }
 
-  void _showLoadingDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(20), // Add padding around content
-          content: SizedBox(
-            width: 200, // Set a fixed width for the dialog
-            height: 150, // Increase height to accommodate the button
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
-              children: [
-                Text(
-                  "Cart page is Loading...",
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 20), // Space between spinner and text
-                CircularProgressIndicator(),
-                // SizedBox(height: 20), // Space between spinner and button
-                // StatefulBuilder(
-                //   builder: (context, setState) {
-                //     return ElevatedButton(
-                //       onPressed: _isLoadingComplete
-                //           ? () {
-                //               Get.back(); // Close the dialog when the button is clicked
-                //             }
-                //           : null, // Disable the button until loading is complete
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: _isLoadingComplete ? Colors.green : Colors.grey, // Change color based on loading state
-                //       ),
-                //       child: Text("OK"),
-                //     );
-                //   },
-                // ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void _showLoadingDialog() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         contentPadding: EdgeInsets.all(20), // Add padding around content
+  //         content: SizedBox(
+  //           width: 200, // Set a fixed width for the dialog
+  //           height: 150, // Increase height to accommodate the button
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+  //             children: [
+  //               Text(
+  //                 "Cart page is Loading...",
+  //                 style: TextStyle(fontSize: 16),
+  //               ),
+  //               SizedBox(height: 20), // Space between spinner and text
+  //               CircularProgressIndicator(),
+  //               // SizedBox(height: 20), // Space between spinner and button
+  //               // StatefulBuilder(
+  //               //   builder: (context, setState) {
+  //               //     return ElevatedButton(
+  //               //       onPressed: _isLoadingComplete
+  //               //           ? () {
+  //               //               Get.back(); // Close the dialog when the button is clicked
+  //               //             }
+  //               //           : null, // Disable the button until loading is complete
+  //               //       style: ElevatedButton.styleFrom(
+  //               //         backgroundColor: _isLoadingComplete ? Colors.green : Colors.grey, // Change color based on loading state
+  //               //       ),
+  //               //       child: Text("OK"),
+  //               //     );
+  //               //   },
+  //               // ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
 
 // @override
@@ -133,10 +133,15 @@ class _CartListScreenState extends State<CartListScreen> {
 
   void _decreaseQuantity(int index) {
     setState(() {
-      if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] > 1) {
-        userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
-        tot = userProfileController.getCartSubtotal() + vouch; 
-      }
+      // if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] > 1) {
+      //   userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
+      //   tot = userProfileController.getCartSubtotal() + vouch; 
+      // }
+      //  int minQuantity = userProfileController.cartItems[index]['minQuantity'] ?? 1;
+    if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] > userProfileController.cartItems[index]['minQuantity']) {
+      userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
+      tot = userProfileController.getCartSubtotal() + vouch;
+    }
     });
   }
 
@@ -146,7 +151,7 @@ class _CartListScreenState extends State<CartListScreen> {
   }
 
   Future<void> _removeItemFromCart(String productId) async {
-    final url = Uri.parse('http://54.159.124.169:3000/users/remove-item-from-favs');
+    final url = Uri.parse('http://54.159.124.169:3000/users/remove-item-from-cart');
     final token = await _getToken();
     
     try {
@@ -336,7 +341,25 @@ class _CartListScreenState extends State<CartListScreen> {
                                       children: [
                                         IconButton(
                                           icon: Icon(Icons.remove),
-                                          onPressed: () => _decreaseQuantity(index),
+                       onPressed: () {
+  setState(() {
+    int minQuantity = cartItem['minQ'] ?? 1;
+    int currentQuantity = userProfileController.cartItems[index]['ProductQuantityAddedToCart'];
+
+    if (currentQuantity > minQuantity) {
+      // Decrease the quantity if it's above the minimum
+      userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
+    } else {
+      // Show a pop-up message if the quantity is at or below the minimum
+      Get.snackbar(
+        "Cannot Decrease",
+        "Quantity cannot be less than the minimum quantity of $minQuantity.",
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  });
+},
+
                                         ),
                                         Text(
                                           '${cartItem['ProductQuantityAddedToCart']}',

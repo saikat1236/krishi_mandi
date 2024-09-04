@@ -44,9 +44,30 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     await cartController.getUserProfile();
     final cartItems = cartController.userProfile['cartItems'] ?? [];
     setState(() {
-      _isInCart = cartItems.any((item) => item['productId'] == widget.product['productId']);
+      _isInCart = cartItems
+          .any((item) => item['productId'] == widget.product['productId']);
     });
   }
+
+  void _showMinimumQuantityDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Minimum Quantity Reached"),
+        content: Text("You can't go below the minimum quantity of ${widget.product['minQuantity'] ?? 1}."),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   // final cartController = Get.find<UserProfileController>();
 
@@ -65,11 +86,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       "ProductQuantityAddedToCart": qty,
       "productInfo":
           widget.product['about'], // Assuming 'about' holds product info
+      
       "productImages":
           widget.product['images'], // Assuming 'images' is a list of image URLs
       "pricePerUnit": widget.product['pricePerUnit'],
       "productUnitType": widget.product[
           'unit'], // Assuming 'unitType' is the key for product unit type
+      "minQ":widget.product['minQuantity']
     };
 
     final headers = {
@@ -196,107 +219,113 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                 ),
-    Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Expanded(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          double quantityWidth = constraints.maxWidth * 0.5; // Adjust percentage as needed
-          return Container(
-            width: quantityWidth,
-            height: 50,
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      int minQuantity = widget.product['minQuantity'] ?? 1;
-                      if (qty > minQuantity) {
-                        qty--; // Decrease qty
-                      }
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.remove_circle,
-                      size: 40.0,
-                      color: Colors.red,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double quantityWidth = constraints.maxWidth *
+                              0.5; // Adjust percentage as needed
+                          return Container(
+                            width: quantityWidth,
+                            height: 50,
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      int minQuantity =
+                                          widget.product['minQuantity'] ?? 1;
+                                      if (qty > minQuantity) {
+                                        print("min");
+                                        qty--; // Decrease qty
+                                      } else {
+                                        // Show a pop-up message
+                                        _showMinimumQuantityDialog();
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.remove_circle,
+                                      size: 40.0,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  qty.toString(),
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 10.0),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      qty++; // Increase qty
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.add_circle,
+                                      size: 40.0,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(width: 10.0),
-                Text(
-                  qty.toString(),
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(width: 10.0),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      qty++; // Increase qty
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.add_circle,
-                      size: 40.0,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    ),
-Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        double buttonWidth = constraints.maxWidth * 0.5;
-                        return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _isInCart
-                                ? Colors.grey
-                                : Color.fromRGBO(74, 230, 50, 0.961),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              side: BorderSide(
-                                color: _isInCart
-                                    ? Colors.grey
-                                    : Color.fromRGBO(74, 230, 50, 0.961),
-                                width: 2.0,
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double buttonWidth = constraints.maxWidth * 0.5;
+                          return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isInCart
+                                  ? Colors.grey
+                                  : Color.fromRGBO(74, 230, 50, 0.961),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                                side: BorderSide(
+                                  color: _isInCart
+                                      ? Colors.grey
+                                      : Color.fromRGBO(74, 230, 50, 0.961),
+                                  width: 2.0,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: buttonWidth * 0.1,
+                                vertical: 15,
                               ),
                             ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: buttonWidth * 0.1,
-                              vertical: 15,
+                            onPressed: _isInCart
+                                ? null
+                                : () async {
+                                    await addToCart();
+                                    setState(() {
+                                      _isInCart = true;
+                                    });
+                                  },
+                            child: Text(
+                              _isInCart ? "Already in cart" : "Add to cart",
+                              style: TextStyle(color: Colors.black),
                             ),
-                          ),
-                          onPressed: _isInCart
-                              ? null
-                              : () async {
-                                  await addToCart();
-                                  setState(() {
-                                    _isInCart = true;
-                                  });
-                                },
-                          child: Text(
-                            _isInCart ? "Already in cart" : "Add to cart",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-  ],
-),
+                  ],
+                ),
 
                 Padding(
                   padding: const EdgeInsets.all(8.0),
