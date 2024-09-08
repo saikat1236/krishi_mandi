@@ -24,6 +24,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Unc
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
 
 import 'controller/customer_apis/profile_controller.dart';
+import 'views/farmerui/f-homepage.dart';
 
 // import 'views/consumer ui/signupscreen.dart';
 
@@ -47,9 +48,9 @@ void main() async {
   }
   Widget farmerinitialScreen;
   if (farmertoken != null && farmertoken.isNotEmpty) {
-    farmerinitialScreen = Uploadpage(); // Uncomment this if HomeScreen is available
+    farmerinitialScreen = FarmHome(); // Uncomment this if HomeScreen is available
   } else {
-    farmerinitialScreen = Uploadpage();
+    farmerinitialScreen = FarmHome();
   }
   // Get.put(GlobalController());
     Get.put(UserProfileController()); 
@@ -93,7 +94,8 @@ class MyApp extends StatelessWidget {
       // home: FavPage()
       // home: CategoryScreen()
       // home: SignUpScreen()
-      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      home: FarmHome()
+      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
 }
