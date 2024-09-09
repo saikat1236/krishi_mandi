@@ -12,7 +12,7 @@ import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class FarmHome extends StatefulWidget {
   const FarmHome();
@@ -30,7 +30,7 @@ class _FarmHomeState extends State<FarmHome> {
   // Replace with your API endpoint
   final String apiUrl = 'http://54.159.124.169:3000/common/forecast-weather';
 
-  Future<void> fetchWeatherData() async {
+  Future<void> fetchWeatherData(double lat, double lon) async {
     try {
       // Fetch the token from SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,7 +45,7 @@ class _FarmHomeState extends State<FarmHome> {
       }
 
       // Prepare the request body with lat and lon
-      final body = json.encode({"lat": 23.829321, "lan": 91.277847});
+      final body = json.encode({"lat": lat, "lan": lon});
 
       // Prepare the headers with Authorization
       final headers = {
@@ -86,35 +86,35 @@ class _FarmHomeState extends State<FarmHome> {
     }
   }
 
-  // Future<void> _getLocationAndFetchWeather() async {
-  //   try {
-  //     // Check location permission
-  //     LocationPermission permission = await Geolocator.checkPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       permission = await Geolocator.requestPermission();
-  //       if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-  //         print('Location permissions are denied');
-  //         return;
-  //       }
-  //     }
+  Future<void> _getLocationAndFetchWeather() async {
+    try {
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+          print('Location permissions are denied');
+          return;
+        }
+      }
 
-  //     // Get current location
-  //     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      // Get current location
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-  //     // Fetch weather data with current location
-  //     fetchWeatherData(position.latitude, position.longitude);
-  //   } catch (e) {
-  //     print('Error getting location: $e');
-  //   }
-  // }
+      // Fetch weather data with current location
+      fetchWeatherData(position.latitude, position.longitude);
+    } catch (e) {
+      print('Error getting location: $e');
+    }
+  }
 
 
   @override
   void initState() {
     super.initState();
     // _loadImageFromAssets();
-    //  _getLocationAndFetchWeather(); 
-    fetchWeatherData();
+     _getLocationAndFetchWeather(); 
+    // fetchWeatherData();
   }
 
   @override

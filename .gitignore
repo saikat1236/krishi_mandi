@@ -3,6 +3,8 @@
 *.log
 *.pyc
 *.swp
+*.apk
+*.bin
 .DS_Store
 .atom/
 .buildlog/
@@ -30,6 +32,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+android/app/build
 
 # Symbolication related
 app.*.symbols
