@@ -94,8 +94,8 @@ class MyApp extends StatelessWidget {
       // home: FavPage()
       // home: CategoryScreen()
       // home: SignUpScreen()
-      home: FarmHome()
-      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      // home: FarmHome()
+      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
 }

@@ -200,43 +200,60 @@ class _RateCalcState extends State<RateCalc> {
                   height: 40,
                 ),
         
-                Center(
-                  child: Container(
-                    width: 150,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment
-                            .centerRight, // Start from the right (270deg equivalent)
-                        end: Alignment.centerLeft, // End towards the left
-                        colors: [
-                          Color(0xFF362A84), // Hex color #362A84
-                          Color(0xFF84D761), // Hex color #84D761
-                        ],
-                        stops: [
-                          0.0023,
-                          0.942
-                        ], // Percentage stops 0.23% and 94.2%
-                      ),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Get Rate",
-                          style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 2,
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              Center(
+  child: ElevatedButton(
+    onPressed: () {
+      // Your button action here
+      print("button");
+    },
+    style: ElevatedButton.styleFrom(
+      minimumSize: Size(150, 50), // Same size as the Container
+      padding: EdgeInsets.zero, // Remove padding to match exact size
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0), // Rounded corners
+      ),
+      // Use a gradient as background using a decoration box with Ink
+      backgroundColor: Colors.transparent, // Set transparent background color
+      shadowColor: Colors.transparent, // Remove button's default shadow
+    ),
+    child: Ink(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerRight, // Start from the right (270deg equivalent)
+          end: Alignment.centerLeft, // End towards the left
+          colors: [
+            Color(0xFF362A84), // Hex color #362A84
+            Color(0xFF84D761), // Hex color #84D761
+          ],
+          stops: [
+            0.0023,
+            0.942,
+          ], // Percentage stops 0.23% and 94.2%
+        ),
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Container(
+        width: 150,
+        height: 50,
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Get Rate",
+            style: TextStyle(
+              fontSize: 25,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+            maxLines: 2,
+            textAlign: TextAlign.left,
+          ),
+        ),
+      ),
+    ),
+  ),
+)
+,
                 SizedBox(
                   height: 30,
                 ),

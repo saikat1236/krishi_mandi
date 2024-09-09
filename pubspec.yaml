@@ -42,6 +42,7 @@ dependencies:
   mirai_dropdown_menu: ^0.0.9
   dropdown_model_list: ^2.1.2
   path_provider: ^2.0.11
+  # geolocator: ^13.0.1
 
 dev_dependencies:
   flutter_test:

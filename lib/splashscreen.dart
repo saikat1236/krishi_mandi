@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/constants/AppConstants.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
+import 'package:krishi_customer_app/views/farmerui/f-homepage.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
 
@@ -91,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                               Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Uploadpage(),
+                                builder: (context) => FarmHome(),
                               ),
                             );
                   // Add navigation or functionality here for farmer

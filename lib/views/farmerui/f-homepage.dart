@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_model_list/drop_down/model.dart';
 import 'package:dropdown_model_list/drop_down/select_drop_radio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,8 @@ import 'package:krishi_customer_app/views/farmerui/ratecalc.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:geolocator/geolocator.dart';
 
 class FarmHome extends StatefulWidget {
   const FarmHome();
@@ -18,13 +22,99 @@ class FarmHome extends StatefulWidget {
 }
 
 class _FarmHomeState extends State<FarmHome> {
-  File? _image;
-  String? _response;
+  int? _temperature;
+  String? cond;
+  String? loc;
+  int? htemp;
+  int? ltemp;
+  // Replace with your API endpoint
+  final String apiUrl = 'http://54.159.124.169:3000/common/forecast-weather';
+
+  Future<void> fetchWeatherData() async {
+    try {
+      // Fetch the token from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      // String? token = prefs.getString('token');
+      String token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMmUxZGViMi01YWQyLTRkNDQtYWJjOS1hZTAyMjU0Zjc4ZmYiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzI1ODkzOTcyfQ.YoMldPlLkuWm3OZIHEdvAltMB4dLqVdCNmYiKdY6hxY";
+
+      if (token == null) {
+        // Handle the case where the token is missing
+        print('Token is missing');
+        return;
+      }
+
+      // Prepare the request body with lat and lon
+      final body = json.encode({"lat": 23.829321, "lan": 91.277847});
+
+      // Prepare the headers with Authorization
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': token, // Add 'Bearer' before the token
+      };
+
+      // Make the POST request
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // Successfully received a response
+        print('Weather data: ${response.body}');
+        final jsonData = jsonDecode(response.body);
+        setState(() {
+          var payload = jsonData["payload"];
+          var day = payload["days"];
+          double? temperature = day[0]["temp"]?.toDouble();
+          _temperature = temperature!.round();
+          cond = day[0]["conditions"];
+          loc = payload["timezone"];
+          htemp = day[0]["tempmax"].round();
+          ltemp = day[0]["tempmin"].round();
+          print(_temperature);
+          print(cond);
+        });
+        // You can now handle the response and update the UI or state as needed
+      } else {
+        print(
+            'Failed to fetch weather data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching weather data: $e');
+    }
+  }
+
+  // Future<void> _getLocationAndFetchWeather() async {
+  //   try {
+  //     // Check location permission
+  //     LocationPermission permission = await Geolocator.checkPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       permission = await Geolocator.requestPermission();
+  //       if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+  //         print('Location permissions are denied');
+  //         return;
+  //       }
+  //     }
+
+  //     // Get current location
+  //     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+  //     // Fetch weather data with current location
+  //     fetchWeatherData(position.latitude, position.longitude);
+  //   } catch (e) {
+  //     print('Error getting location: $e');
+  //   }
+  // }
+
 
   @override
   void initState() {
     super.initState();
     // _loadImageFromAssets();
+    //  _getLocationAndFetchWeather(); 
+    fetchWeatherData();
   }
 
   @override
@@ -110,24 +200,90 @@ class _FarmHomeState extends State<FarmHome> {
                           height: 200,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage("assets/Group 42.png"),
+                              image: AssetImage("assets/Rectangle 39.png"),
                               fit: BoxFit
                                   .contain, // Adjust the image fit as per your design
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 0, // Places the image at the top
-                                right: 0, // Places the image at the right
-                                child: Image.asset(
-                                  'assets/Group 52.png',
-                                  width: 220, // Adjust the width as needed
-                                  // height: 100, // Adjust the height as needed
+                          child: _temperature == null ||
+                                  cond == null ||
+                                  loc == null
+                              ? Center(
+                                  child:
+                                      CircularProgressIndicator()) // Show a loading indicator while data is being fetched
+                              : Stack(
+                                  children: [
+                                    Positioned(
+                                        top: 30,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start, // To align all texts to the left
+                                            children: [
+                                              Text(
+                                                "$_temperature°",
+                                                style: TextStyle(
+                                                  color: Colors
+                                                      .white, // Text color
+                                                  fontSize: 60, // Font size
+                                                  fontWeight: FontWeight
+                                                      .w500, // Font weight
+                                                ),
+                                              ),
+                                              Text(
+                                                "H: $htemp° L: $ltemp°",
+                                                style: TextStyle(
+                                                  color: Colors
+                                                      .white, // Text color
+                                                  fontSize: 16, // Font size
+                                                  fontWeight: FontWeight
+                                                      .w400, // Medium weight
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "$loc",
+                                                    style: TextStyle(
+                                                      color: Colors
+                                                          .white, // Text color
+                                                      fontSize: 16, // Font size
+                                                      fontWeight: FontWeight
+                                                          .w500, // Regular weight
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          30), // Add some space between the two texts
+                                                  Text(
+                                                    "$cond",
+                                                    style: TextStyle(
+                                                      color: Colors
+                                                          .white, // Text color
+                                                      fontSize: 17, // Font size
+                                                      fontWeight: FontWeight
+                                                          .w400, // Regular weight
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                    Positioned(
+                                      top: 0, // Places the image at the top
+                                      right: 0, // Places the image at the right
+                                      child: Image.asset(
+                                        'assets/Group 52.png',
+                                        width:
+                                            220, // Adjust the width as needed
+                                        // height: 100, // Adjust the height as needed
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         )),
                   ),
                   // SizedBox(height: 20),
@@ -146,7 +302,7 @@ class _FarmHomeState extends State<FarmHome> {
                   ),
                   Column(
                     children: [
-                           GestureDetector(
+                      GestureDetector(
                         onTap: () {
                           // Navigate to another screen when tapped
                           Navigator.push(
@@ -156,8 +312,8 @@ class _FarmHomeState extends State<FarmHome> {
                                     Uploadpage()), // Replace 'TargetScreen' with your screen
                           );
                         },
-                      child: Center(
-                        child: Container(
+                        child: Center(
+                            child: Container(
                           height: 100.0,
                           width: 400.0,
                           decoration: BoxDecoration(
@@ -207,13 +363,12 @@ class _FarmHomeState extends State<FarmHome> {
                               ],
                             ),
                           ),
-                        )
-                        ),
+                        )),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                           GestureDetector(
+                      GestureDetector(
                         onTap: () {
                           // Navigate to another screen when tapped
                           Navigator.push(
@@ -223,60 +378,61 @@ class _FarmHomeState extends State<FarmHome> {
                                     RateCalc()), // Replace 'TargetScreen' with your screen
                           );
                         },
-                      child: Center(
-                        child: Container(
-                          height: 100.0,
-                          width: 400.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Background color
-                            borderRadius:
-                                BorderRadius.circular(15.0), // Rounded corners
-                            border: Border.all(
-                              color: Color.fromARGB(
-                                  200, 131, 221, 93), // Border color
-                              width: 2.0, // Border width
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey
-                                    .withOpacity(0.5), // Shadow color
-                                spreadRadius: 1, // Shadow spread
-                                blurRadius: 6, // Shadow blur
-                                offset: Offset(0, 1), // Shadow position
+                        child: Center(
+                          child: Container(
+                            height: 100.0,
+                            width: 400.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Background color
+                              borderRadius: BorderRadius.circular(
+                                  15.0), // Rounded corners
+                              border: Border.all(
+                                color: Color.fromARGB(
+                                    200, 131, 221, 93), // Border color
+                                width: 2.0, // Border width
                               ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Mandi Rates Fetcher',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      'Real time Price Updates',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                  ],
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey
+                                      .withOpacity(0.5), // Shadow color
+                                  spreadRadius: 1, // Shadow spread
+                                  blurRadius: 6, // Shadow blur
+                                  offset: Offset(0, 1), // Shadow position
                                 ),
-                                Spacer(),
-                                Image.asset('assets/Vector (1).png'),
                               ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Mandi Rates Fetcher',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        'Real time Price Updates',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Image.asset('assets/Vector (1).png'),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                           ),
                       SizedBox(
                         height: 20,
                       ),
@@ -371,8 +527,3 @@ class _FarmHomeState extends State<FarmHome> {
         ));
   }
 }
-
-
-
-
-
