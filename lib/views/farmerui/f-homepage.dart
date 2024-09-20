@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:krishi_customer_app/splashscreen.dart';
+import 'package:krishi_customer_app/views/farmerui/crop_prof_calc.dart';
 import 'package:krishi_customer_app/views/farmerui/loginsreen.dart';
 import 'package:krishi_customer_app/views/farmerui/ratecalc.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
@@ -493,7 +494,7 @@ class _FarmHomeState extends State<FarmHome> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    Uploadpage()), // Replace 'TargetScreen' with your screen
+                                    CropProfCalc()), // Replace 'TargetScreen' with your screen
                           );
                         },
                         child: Center(
@@ -547,7 +548,9 @@ class _FarmHomeState extends State<FarmHome> {
                               ],
                             ),
                           ),
-                        )),
+                        
+                        )
+                        ),
                       ),
                       SizedBox(
                         height: 20,
