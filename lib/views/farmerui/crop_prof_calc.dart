@@ -20,42 +20,52 @@ class _RateCalcState extends State<CropProfCalc> {
   String? _response;
   final _formKey = GlobalKey<FormState>();
   // Text editing controllers for each field
-  final TextEditingController _expectedYieldController = TextEditingController();
+  final TextEditingController _expectedYieldController =
+      TextEditingController();
   final TextEditingController _marketPriceController = TextEditingController();
   final TextEditingController _seedCostController = TextEditingController();
-  final TextEditingController _fertilizerCostController = TextEditingController();
-  final TextEditingController _pesticideCostController = TextEditingController();
+  final TextEditingController _fertilizerCostController =
+      TextEditingController();
+  final TextEditingController _pesticideCostController =
+      TextEditingController();
   final TextEditingController _laborCostController = TextEditingController();
-  final TextEditingController _otherInputCostController = TextEditingController();
+  final TextEditingController _otherInputCostController =
+      TextEditingController();
   // This function can handle API calls to send the form data
-void _submitForm() {
-  if (_formKey.currentState!.validate()) {
-    // Collecting all form data
-    final double expectedYield = double.tryParse(_expectedYieldController.text) ?? 0;
-    final double marketPrice = double.tryParse(_marketPriceController.text) ?? 0;
-    final double seedCost = double.tryParse(_seedCostController.text) ?? 0;
-    final double fertilizerCost = double.tryParse(_fertilizerCostController.text) ?? 0;
-    final double pesticideCost = double.tryParse(_pesticideCostController.text) ?? 0;
-    final double laborCost = double.tryParse(_laborCostController.text) ?? 0;
-    final double otherInputCost = double.tryParse(_otherInputCostController.text) ?? 0;
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Collecting all form data
+      final double expectedYield =
+          double.tryParse(_expectedYieldController.text) ?? 0;
+      final double marketPrice =
+          double.tryParse(_marketPriceController.text) ?? 0;
+      final double seedCost = double.tryParse(_seedCostController.text) ?? 0;
+      final double fertilizerCost =
+          double.tryParse(_fertilizerCostController.text) ?? 0;
+      final double pesticideCost =
+          double.tryParse(_pesticideCostController.text) ?? 0;
+      final double laborCost = double.tryParse(_laborCostController.text) ?? 0;
+      final double otherInputCost =
+          double.tryParse(_otherInputCostController.text) ?? 0;
 
-    // Calculate profitability
-    double profitability = (expectedYield * marketPrice) -
-        seedCost -
-        fertilizerCost -
-        pesticideCost -
-        laborCost -
-        otherInputCost;
+      // Calculate profitability
+      double profitability = (expectedYield * marketPrice) -
+          seedCost -
+          fertilizerCost -
+          pesticideCost -
+          laborCost -
+          otherInputCost;
 
-    // Update the response variable to show the result
-    setState(() {
-      _response = profitability.toStringAsFixed(2); // Limit to 2 decimal places
-    });
+      // Update the response variable to show the result
+      setState(() {
+        _response =
+            profitability.toStringAsFixed(2); // Limit to 2 decimal places
+      });
 
-    // Handle the API call here if needed with formData
-    print("Form Submitted. Profitability: $profitability");
+      // Handle the API call here if needed with formData
+      print("Form Submitted. Profitability: $profitability");
+    }
   }
-}
 
   @override
   void initState() {
@@ -64,10 +74,6 @@ void _submitForm() {
   }
 
   // final ImagePicker _picker = ImagePicker();
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -157,89 +163,96 @@ void _submitForm() {
                 //   ),
                 // ),
                 Padding(
-  padding: const EdgeInsets.only(left: 15, right: 15),
-  child: Form(
-        key: _formKey, // Associating the Form widget with _formKey
-        child: Column(
-          children: [
-            buildRowWithTextFormField("Expected Yield in Kg.", _expectedYieldController),
-            SizedBox(height: 10),
-            buildRowWithTextFormField("Market Price in Rs.", _marketPriceController),
-            SizedBox(height: 10),
-            buildRowWithTextFormField("Seed Cost in Rs.", _seedCostController),
-            SizedBox(height: 10),
-            buildRowWithTextFormField("Fertilizer Cost in Rs.", _fertilizerCostController),
-            SizedBox(height: 10),
-            buildRowWithTextFormField("Pesticide Cost in Rs.", _pesticideCostController),
-            SizedBox(height: 10),
-            buildRowWithTextFormField("Labor Cost in Rs.", _laborCostController),
-            SizedBox(height: 10),
-            buildRowWithTextFormField("Other Input Cost in Rs.", _otherInputCostController),
-            SizedBox(height: 20),
-            ElevatedButton(
-                    onPressed: _submitForm,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(150, 50), // Same size as the Container
-                      padding:
-                          EdgeInsets.zero, // Remove padding to match exact size
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(15.0), // Rounded corners
-                      ),
-                      // Use a gradient as background using a decoration box with Ink
-                      backgroundColor: Colors
-                          .transparent, // Set transparent background color
-                      shadowColor:
-                          Colors.transparent, // Remove button's default shadow
-                    ),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment
-                              .centerRight, // Start from the right (270deg equivalent)
-                          end: Alignment.centerLeft, // End towards the left
-                          colors: [
-                            Color(0xFF362A84), // Hex color #362A84
-                            Color(0xFF84D761), // Hex color #84D761
-                          ],
-                          stops: [
-                            0.0023,
-                            0.942,
-                          ], // Percentage stops 0.23% and 94.2%
-                        ),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Container(
-                        width: 150,
-                        height: 50,
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Get Rate",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Form(
+                      key:
+                          _formKey, // Associating the Form widget with _formKey
+                      child: Column(
+                        children: [
+                          buildRowWithTextFormField("Expected Yield in Kg.",
+                              _expectedYieldController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField(
+                              "Market Price in Rs.", _marketPriceController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField(
+                              "Seed Cost in Rs.", _seedCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Fertilizer Cost in Rs.",
+                              _fertilizerCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Pesticide Cost in Rs.",
+                              _pesticideCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField(
+                              "Labor Cost in Rs.", _laborCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Other Input Cost in Rs.",
+                              _otherInputCostController),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: _submitForm,
+                            style: ElevatedButton.styleFrom(
+                              minimumSize:
+                                  Size(150, 50), // Same size as the Container
+                              padding: EdgeInsets
+                                  .zero, // Remove padding to match exact size
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15.0), // Rounded corners
+                              ),
+                              // Use a gradient as background using a decoration box with Ink
+                              backgroundColor: Colors
+                                  .transparent, // Set transparent background color
+                              shadowColor: Colors
+                                  .transparent, // Remove button's default shadow
                             ),
-                            maxLines: 2,
-                            textAlign: TextAlign.left,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment
+                                      .centerRight, // Start from the right (270deg equivalent)
+                                  end: Alignment
+                                      .centerLeft, // End towards the left
+                                  colors: [
+                                    Color(0xFF362A84), // Hex color #362A84
+                                    Color(0xFF84D761), // Hex color #84D761
+                                  ],
+                                  stops: [
+                                    0.0023,
+                                    0.942,
+                                  ], // Percentage stops 0.23% and 94.2%
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Get Rate",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 2,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-          ],
-        )
-        ),
-),
+                        ],
+                      )),
+                ),
 
-                
                 SizedBox(
                   height: 20,
                 ),
 
-    
                 SizedBox(
                   height: 20,
                 ),
@@ -266,8 +279,8 @@ void _submitForm() {
     );
   }
 
-
-Widget buildRowWithTextFormField(String label, TextEditingController controller) {
+  Widget buildRowWithTextFormField(
+      String label, TextEditingController controller) {
     return Row(
       children: [
         Container(
@@ -309,6 +322,7 @@ Widget buildRowWithTextFormField(String label, TextEditingController controller)
                   border: InputBorder.none, // Removes the underline
                   hintText: '$label',
                 ),
+                keyboardType: TextInputType.number, 
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter $label';
@@ -322,7 +336,4 @@ Widget buildRowWithTextFormField(String label, TextEditingController controller)
       ],
     );
   }
-
-
 }
-

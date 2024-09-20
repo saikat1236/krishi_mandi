@@ -103,8 +103,8 @@ class MyApp extends StatelessWidget {
       // home: CategoryScreen()
       // home: SignUpScreen()
       // home: FarmHome()
-      home: CropProfCalc(),
-      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      // home: CropProfCalc(),
+      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
     );
   }
 }
