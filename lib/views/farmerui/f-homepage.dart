@@ -7,12 +7,17 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:krishi_customer_app/splashscreen.dart';
+import 'package:krishi_customer_app/views/farmerui/loginsreen.dart';
 import 'package:krishi_customer_app/views/farmerui/ratecalc.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../controller/farmer_apis/farmer_controller.dart';
+import '../../controller/farmer_apis/profile_controller.dart';
 
 class FarmHome extends StatefulWidget {
   const FarmHome();
@@ -22,6 +27,8 @@ class FarmHome extends StatefulWidget {
 }
 
 class _FarmHomeState extends State<FarmHome> {
+
+  final FarmProfileController farmProfileController = Get.put(FarmProfileController());
   int? _temperature;
   String? cond;
   String? loc;
@@ -119,7 +126,22 @@ class _FarmHomeState extends State<FarmHome> {
 
   @override
   Widget build(BuildContext context) {
+    final FarmController farmerController = Get.put(FarmController());
+    Future<String> _getToken() async {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString('farmertoken') ?? ''; // Default to empty string if token is not found
+    }
+
+    final token = _getToken();
+    print(token);
     // Variable to hold the selected value
+        return Obx(() {
+      //  final user = userController.user; // Assuming `user` is an RxMap
+      // final categories = controller.categories; // Assuming `categories` is an RxList
+
+      String userName = farmerController.farmer['userName'] ?? '';
+      String mobileNumber = farmerController.farmer['mobileNumber'] ?? '';
+      String email = farmerController.farmer['email'] ?? '';
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -150,9 +172,12 @@ class _FarmHomeState extends State<FarmHome> {
           ),
           leading: Builder(
             builder: (BuildContext context) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Image.asset('assets/krishi-logo.png'),
+              return  IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               );
             },
           ),
@@ -180,6 +205,165 @@ class _FarmHomeState extends State<FarmHome> {
           //     },
           //   ),
           // ],
+        ),
+       
+          drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              Material(
+                color: Color.fromARGB(255, 9, 223, 120),
+                child: InkWell(
+                  onTap: () {
+                    /// Close Navigation drawer before
+                    Navigator.pop(context);
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()),);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top, bottom: 24),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 104, // 2 * radius of 52
+                          height: 104, // 2 * radius of 52
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            // child: Image.network(
+                            //   userController.user['imageProfile'] != null &&
+                            //           userController
+                            //               .user['imageProfile'].isNotEmpty
+                            //       ? userController.user['imageProfile']
+                            //       : '',
+                            //   fit: BoxFit.cover,
+                            //   errorBuilder: (BuildContext context,
+                            //       Object exception, StackTrace? stackTrace) {
+                            //     return Image.asset(
+                            //       'assets/avatar3.jpg',
+                            //       fit: BoxFit.cover,
+                            //     );
+                            //   },
+                            // ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Text(
+                          // "Name",
+                          '$userName',
+                          style: TextStyle(fontSize: 28, color: Colors.white),
+                        ),
+                        Text(
+                          // "Number",
+                          '$mobileNumber',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        Text(
+                          // "Email",
+                          '$email',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ProfileScreenmain(),
+                            //   ),
+                            // );
+                          },
+                          child: Text(
+                            "Edit profile",
+                            style: TextStyle(color: Colors.white), // Text color
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side:
+                                BorderSide(color: Colors.white), // Border color
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              /// Header Menu items
+              Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.home_outlined),
+                    title: Text('Home'),
+                    onTap: () {
+                      /// Close Navigation drawer before
+                      Navigator.pop(context);
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()),);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.favorite_border),
+                    title: Text('Favourites'),
+                    onTap: () {
+                      /// Close Navigation drawer before
+                      // Navigator.pop(context);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => FavPage()),
+                      // );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Orders'),
+                    onTap: () {
+                      /// Close Navigation drawer before
+                      // Navigator.pop(context);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => MyOrdersScreen()),
+                      // );
+                    },
+                  ),
+                  const Divider(
+                    color: Colors.black45,
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.update),
+                    title: Text('Logout'),
+                    onTap: () async {
+                      // Get the SharedPreferences instance
+                      final prefs = await SharedPreferences.getInstance();
+
+                      // Clear the token from SharedPreferences
+                      await prefs.remove('token');
+
+                      // Navigate to SplashScreen
+                      Get.offAll(() => SplashScreen(
+                            initialScreen:
+                                LoginScreenfarm(), // Redirect to login screen or any other screen as needed
+                            farmerscreen:
+                                FarmHome(), // This can be adjusted based on your requirements
+                          ));
+                    },
+                  ),
+
+                  // ListTile(
+                  //   leading: Icon(Icons.account_tree_outlined),
+                  //   title: Text('Plugins'),
+                  //   onTap: () {},
+                  // ),
+                  // ListTile(
+                  //   leading: Icon(Icons.notifications_outlined),
+                  //   title: Text('Notifications'),
+                  //   onTap: () {},
+                  // ),
+                ],
+              )
+            ],
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -525,5 +709,6 @@ class _FarmHomeState extends State<FarmHome> {
                 ],
               )),
         ));
+        });
   }
 }

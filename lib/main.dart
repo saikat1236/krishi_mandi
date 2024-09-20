@@ -25,6 +25,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
 
 import 'controller/customer_apis/profile_controller.dart';
 import 'views/farmerui/f-homepage.dart';
+import 'views/farmerui/loginsreen.dart';
 
 // import 'views/consumer ui/signupscreen.dart';
 
@@ -38,7 +39,7 @@ void main() async {
   AppContants.apptoken = token.toString();
   
   final farmertoken = prefs.getString('farmertoken');
-  AppContants.farmertoken = farmertoken.toString();
+  AppContants.apptoken = farmertoken.toString();
   // Determine the initial route based on the token
   Widget initialScreen;
   if (token != null && token.isNotEmpty) {
@@ -46,16 +47,22 @@ void main() async {
   } else {
     initialScreen = LoginScreen();
   }
-  Widget farmerinitialScreen;
-  if (farmertoken != null && farmertoken.isNotEmpty) {
-    farmerinitialScreen = FarmHome(); // Uncomment this if HomeScreen is available
+  Widget farmerscreen;
+  // if (farmertoken != null && farmertoken.isNotEmpty) {
+  //   farmerinitialScreen = FarmHome(); // Uncomment this if HomeScreen is available
+  // } else {
+  //   farmerinitialScreen = FarmHome();
+  // }
+    if (farmertoken != null && farmertoken.isNotEmpty) {
+    farmerscreen = FarmHome(); // Uncomment this if HomeScreen is available
   } else {
-    farmerinitialScreen = FarmHome();
+      print("farmertoken: $farmertoken");
+    farmerscreen = LoginScreenfarm();
   }
   // Get.put(GlobalController());
     Get.put(UserProfileController()); 
 
-  runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerinitialScreen,));
+  runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerscreen,));
 }
 
 class MyApp extends StatelessWidget {
