@@ -84,8 +84,7 @@ class _RateCalcState extends State<RateCalc> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height:800,
-            
+          height: 800,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter, // 180 degrees equivalent
@@ -112,7 +111,7 @@ class _RateCalcState extends State<RateCalc> {
                   "Mandi Rate Calculator",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
                 )),
-        
+
                 SizedBox(
                   height: 30,
                 ),
@@ -129,15 +128,14 @@ class _RateCalcState extends State<RateCalc> {
                 //     textAlign: TextAlign.left,
                 //   ),
                 // ),
-        
+
                 SelectDropRadio(
                   height: 70.0, // Example property for height
                   width: 330.0, // Example property for width
                   arrowColor: Colors.black,
                   hintColorTitle: Colors.black,
-                     borderColor: Colors.green,
-                        borderRadius:
-                                  BorderRadius.circular(15.0), 
+                  borderColor: Colors.green,
+                  borderRadius: BorderRadius.circular(15.0),
                   defaultText: optionItemSelected,
                   dropListModel: dropListModel1,
                   showIcon: false,
@@ -173,12 +171,9 @@ class _RateCalcState extends State<RateCalc> {
                   width: 330.0, // Example property for width
                   hintColorTitle: Colors.black,
                   borderColor: Colors.green,
-                  
-           borderRadius:
-                                  BorderRadius.circular(15.0), 
-                                  boxShadow: [
-                                    
-                                  ],
+
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [],
                   defaultText: optionItemSelected2,
                   dropListModel: dropListModel2,
                   showIcon: false,
@@ -199,65 +194,69 @@ class _RateCalcState extends State<RateCalc> {
                 SizedBox(
                   height: 40,
                 ),
-        
-              Center(
-  child: ElevatedButton(
-    onPressed: () {
-      // Your button action here
-      print("button");
-    },
-    style: ElevatedButton.styleFrom(
-      minimumSize: Size(150, 50), // Same size as the Container
-      padding: EdgeInsets.zero, // Remove padding to match exact size
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0), // Rounded corners
-      ),
-      // Use a gradient as background using a decoration box with Ink
-      backgroundColor: Colors.transparent, // Set transparent background color
-      shadowColor: Colors.transparent, // Remove button's default shadow
-    ),
-    child: Ink(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerRight, // Start from the right (270deg equivalent)
-          end: Alignment.centerLeft, // End towards the left
-          colors: [
-            Color(0xFF362A84), // Hex color #362A84
-            Color(0xFF84D761), // Hex color #84D761
-          ],
-          stops: [
-            0.0023,
-            0.942,
-          ], // Percentage stops 0.23% and 94.2%
-        ),
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Container(
-        width: 150,
-        height: 50,
-        alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Get Rate",
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-            maxLines: 2,
-            textAlign: TextAlign.left,
-          ),
-        ),
-      ),
-    ),
-  ),
-)
-,
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Your button action here
+                      print("button");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(150, 50), // Same size as the Container
+                      padding:
+                          EdgeInsets.zero, // Remove padding to match exact size
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(15.0), // Rounded corners
+                      ),
+                      // Use a gradient as background using a decoration box with Ink
+                      backgroundColor: Colors
+                          .transparent, // Set transparent background color
+                      shadowColor:
+                          Colors.transparent, // Remove button's default shadow
+                    ),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment
+                              .centerRight, // Start from the right (270deg equivalent)
+                          end: Alignment.centerLeft, // End towards the left
+                          colors: [
+                            Color(0xFF362A84), // Hex color #362A84
+                            Color(0xFF84D761), // Hex color #84D761
+                          ],
+                          stops: [
+                            0.0023,
+                            0.942,
+                          ], // Percentage stops 0.23% and 94.2%
+                        ),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Container(
+                        width: 150,
+                        height: 50,
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Get Rate",
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 2,
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 30,
                 ),
-        
+
                 Center(
                   child: Container(
                       height: 150,
@@ -280,10 +279,6 @@ class _RateCalcState extends State<RateCalc> {
     );
   }
 }
-
-
-
-
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -381,4 +376,3 @@ class _RateCalcState extends State<RateCalc> {
 //     );
 //   }
 // }
-

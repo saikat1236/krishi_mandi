@@ -8,6 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+const List<String> fertilizerList = <String>[
+  'Organic',
+  'Chemical',
+  'Vermicompost',
+  'Others'
+];
+
 class CropProfCalc extends StatefulWidget {
   const CropProfCalc();
 
@@ -18,6 +25,17 @@ class CropProfCalc extends StatefulWidget {
 class _RateCalcState extends State<CropProfCalc> {
   File? _image;
   String? _response;
+
+  String selectedFertilizer = fertilizerList.first;
+
+  DropListModel dropListModel2 = DropListModel([
+    OptionItem(id: "1", title: "Organic", data: 'CSE Student'),
+    OptionItem(id: "2", title: "Chemical", data: 'CSE Student'),
+    OptionItem(id: "3", title: "Vermicompost", data: 'CSE Student'),
+    OptionItem(id: "4", title: "Others", data: 'CSE Student'),
+  ]);
+  OptionItem optionItemSelected = OptionItem(title: "Choose Fertilizer Used");
+
   final _formKey = GlobalKey<FormState>();
   // Text editing controllers for each field
   final TextEditingController _expectedYieldController =
@@ -62,6 +80,7 @@ class _RateCalcState extends State<CropProfCalc> {
             profitability.toStringAsFixed(2); // Limit to 2 decimal places
       });
 
+      Get.snackbar("Form Submitted. Profitability: ", "$profitability");
       // Handle the API call here if needed with formData
       print("Form Submitted. Profitability: $profitability");
     }
@@ -118,7 +137,7 @@ class _RateCalcState extends State<CropProfCalc> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: 900,
+          height: 850,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter, // 180 degrees equivalent
@@ -189,6 +208,196 @@ class _RateCalcState extends State<CropProfCalc> {
                           SizedBox(height: 10),
                           buildRowWithTextFormField("Other Input Cost in Rs.",
                               _otherInputCostController),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Container(
+                                width:
+                                    150, // Fixed width for the label to ensure alignment
+                                child: Text(
+                                  "Crop Used",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                child: Container(
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white, // Background color
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // Rounded corners
+                                    border: Border.all(
+                                      color: Color.fromARGB(
+                                          200, 131, 221, 93), // Border color
+                                      width: 2.0, // Border width
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                        spreadRadius: 1, // Shadow spread
+                                        blurRadius: 6, // Shadow blur
+                                        offset: Offset(0, 1), // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: TextFormField(
+                                      // controller: controller,
+                                      decoration: InputDecoration(
+                                        border: InputBorder
+                                            .none, // Removes the underline
+                                        hintText: 'Crop Used',
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter Crop Used';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Container(
+                                width:
+                                    150, // Fixed width for the label to ensure alignment
+                                child: Text(
+                                  "Area",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                child: Container(
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white, // Background color
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // Rounded corners
+                                    border: Border.all(
+                                      color: Color.fromARGB(
+                                          200, 131, 221, 93), // Border color
+                                      width: 2.0, // Border width
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                        spreadRadius: 1, // Shadow spread
+                                        blurRadius: 6, // Shadow blur
+                                        offset: Offset(0, 1), // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: TextFormField(
+                                      // controller: controller,
+                                      decoration: InputDecoration(
+                                        border: InputBorder
+                                            .none, // Removes the underline
+                                        hintText: 'Area',
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter Crop Used';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Container(
+                                width:
+                                    150, // Fixed width for the label to ensure alignment
+                                child: Text(
+                                  "Fertilizer Used",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20),
+
+                              Expanded(
+                                child: Container(
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white, // Background color
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // Rounded corners
+                                    border: Border.all(
+                                      color: Color.fromARGB(
+                                          200, 131, 221, 93), // Border color
+                                      width: 2.0, // Border width
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                        spreadRadius: 1, // Shadow spread
+                                        blurRadius: 6, // Shadow blur
+                                        offset: Offset(0, 1), // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: DropdownButton<String>(
+                                      value: selectedFertilizer,
+                                      icon: const Icon(Icons.arrow_drop_down_sharp),
+                                      elevation: 16,
+                                      style: const TextStyle(
+                                          color: Colors.black),
+                                      underline: Container(
+                                        height: 0, // Removes default underline
+                                      ),
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          selectedFertilizer = value!;
+                                        });
+                                      },
+                                      items: fertilizerList
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // ),
+                            ],
+                          ),
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: _submitForm,
@@ -257,20 +466,20 @@ class _RateCalcState extends State<CropProfCalc> {
                   height: 20,
                 ),
 
-                Center(
-                  child: Container(
-                      height: 150,
-                      width: 250,
-                      decoration: BoxDecoration(
-                          // color:Colors.green[100],
-                          borderRadius: BorderRadius.circular(30.0),
-                          border: Border.all(color: Colors.white)),
-                      child: Center(
-                          child: Text(
-                        '$_response',
-                        style: TextStyle(fontSize: 40),
-                      ))),
-                )
+                // Center(
+                //   child: Container(
+                //       height: 150,
+                //       width: 250,
+                //       decoration: BoxDecoration(
+                //           // color:Colors.green[100],
+                //           borderRadius: BorderRadius.circular(30.0),
+                //           border: Border.all(color: Colors.white)),
+                //       child: Center(
+                //           child: Text(
+                //         '$_response',
+                //         style: TextStyle(fontSize: 40),
+                //       ))),
+                // )
               ],
             ),
           ),
@@ -322,7 +531,7 @@ class _RateCalcState extends State<CropProfCalc> {
                   border: InputBorder.none, // Removes the underline
                   hintText: '$label',
                 ),
-                keyboardType: TextInputType.number, 
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter $label';
