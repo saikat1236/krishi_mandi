@@ -21,8 +21,11 @@ import 'package:krishi_customer_app/views/consumer%20ui/settingspage.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/AppConstants.dart';
 import '../../controller/customer_apis/profile_controller.dart';
 import '../../controller/customer_apis/user_controller.dart';
+import '../farmerui/f-homepage.dart';
+import '../farmerui/loginsreen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -63,6 +66,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // _checkTokenAndNavigate;
     print("here");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchAllProducts();
@@ -77,6 +81,38 @@ class _HomePageState extends State<HomePage> {
       //   });
       // });
     });
+  }
+
+  Future<void> _checkTokenAndNavigate() async {
+    // Retrieve the token from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final farmertoken = prefs.getString('farmertoken');
+
+    // Set the token in AppContants
+    // AppContants.apptoken = farmertoken ?? ''; // Ensure token is not null
+
+    Widget farmerscreen;
+    // if (farmertoken != null && farmertoken.isNotEmpty) {
+    //   farmerinitialScreen = FarmHome(); // Uncomment this if HomeScreen is available
+    // } else {
+    //   farmerinitialScreen = FarmHome();
+    // }
+    if (farmertoken != null && farmertoken.isNotEmpty) {
+      farmerscreen = FarmHome(); // Uncomment this if HomeScreen is available
+    } else {
+      print("farmertoken: $farmertoken");
+      farmerscreen = LoginScreenfarm();
+    }
+
+    await prefs.remove('token');
+
+    // Navigate to SplashScreen with the determined initialScreen
+    Get.offAll(() => SplashScreen(
+          initialScreen:
+              LoginScreen(), // Redirect to login screen or any other screen as needed
+          farmerscreen:
+              farmerscreen, // This can be adjusted based on your requirements
+        ));
   }
 
   void _clearSearch() {
@@ -335,21 +371,22 @@ class _HomePageState extends State<HomePage> {
                   ListTile(
                     leading: Icon(Icons.update),
                     title: Text('Logout'),
-                    onTap: () async {
-                      // Get the SharedPreferences instance
-                      final prefs = await SharedPreferences.getInstance();
+                    onTap: _checkTokenAndNavigate,
+                    // onTap: () async {
+                    //   // Get the SharedPreferences instance
+                    //   final prefs = await SharedPreferences.getInstance();
 
-                      // Clear the token from SharedPreferences
-                      await prefs.remove('token');
+                    //   // Clear the token from SharedPreferences
+                    //   await prefs.remove('token');
 
-                      // Navigate to SplashScreen
-                      Get.offAll(() => SplashScreen(
-                            initialScreen:
-                                LoginScreen(), // Redirect to login screen or any other screen as needed
-                            farmerscreen:
-                                Uploadpage(), // This can be adjusted based on your requirements
-                          ));
-                    },
+                    //   // Navigate to SplashScreen
+                    //   Get.offAll(() => SplashScreen(
+                    //         initialScreen:
+                    //             LoginScreen(), // Redirect to login screen or any other screen as needed
+                    //         farmerscreen:
+                    //             farmerscreen, // This can be adjusted based on your requirements
+                    //       ));
+                    // },
                   ),
 
                   // ListTile(

@@ -20,6 +20,33 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+
+  //  Future<void> _checkTokenAndNavigate() async {
+  //   // Retrieve the token from SharedPreferences
+  //   final prefs = await SharedPreferences.getInstance();
+  // final token = prefs.getString('token');
+
+  //   // Set the token in AppContants
+  //   // AppContants.apptoken = farmertoken ?? ''; // Ensure token is not null
+
+  //   // Determine the initial route based on the token
+  //   Widget initialScreen;
+  // if (token != null && token.isNotEmpty) {
+  //   initialScreen = HomePage(); // Uncomment this if HomeScreen is available
+  // } else {
+  //   initialScreen = LoginScreen();
+  // }
+
+  //   await prefs.remove('farmertoken');
+
+  //   // Navigate to SplashScreen with the determined initialScreen
+  //   Get.offAll(() => SplashScreen(
+  //         initialScreen: initialScreen, // Navigate to determined screen
+  //         farmerscreen: FarmHome(), // Farmer home page or another page based on your need
+  //       ));
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,8 +96,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       horizontal: 100, vertical: 15), // Button size
                 ),
                 onPressed: () {
-                  AppContants.isfarmer = false;
+                  // AppContants.isfarmer = false;
                   Get.to(widget.initialScreen);
+                  print("customer");
                   // Add navigation or functionality here for consumer
                 },
                 child: Text(
@@ -92,8 +120,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       horizontal: 100, vertical: 15), // Button size
                 ),
                 onPressed: () {
-                  AppContants.isfarmer = true;
+                  // AppContants.isfarmer = true;
                   Get.to(widget.farmerscreen);
+                     print("farmer");
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(

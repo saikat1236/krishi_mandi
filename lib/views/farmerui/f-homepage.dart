@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:krishi_customer_app/splashscreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
 import 'package:krishi_customer_app/views/farmerui/crop_prof_calc.dart';
 import 'package:krishi_customer_app/views/farmerui/loginsreen.dart';
 import 'package:krishi_customer_app/views/farmerui/ratecalc.dart';
@@ -17,14 +18,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../constants/AppConstants.dart';
 import '../../controller/farmer_apis/farmer_controller.dart';
 import '../../controller/farmer_apis/profile_controller.dart';
+import '../consumer ui/homescreen.dart';
+
+
 
 class FarmHome extends StatefulWidget {
   const FarmHome();
 
   @override
   State<FarmHome> createState() => _FarmHomeState();
+
+  
 }
 
 class _FarmHomeState extends State<FarmHome> {
@@ -35,6 +42,40 @@ class _FarmHomeState extends State<FarmHome> {
   String? loc;
   int? htemp;
   int? ltemp;
+
+   @override
+  void initState() {
+    super.initState();
+     _getLocationAndFetchWeather(); 
+    // _checkTokenAndNavigate();
+  }
+
+
+ Future<void> _checkTokenAndNavigate() async {
+    // Retrieve the token from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('token');
+
+    // Set the token in AppContants
+    // AppContants.apptoken = farmertoken ?? ''; // Ensure token is not null
+
+    // Determine the initial route based on the token
+    Widget initialScreen;
+  if (token != null && token.isNotEmpty) {
+    initialScreen = HomePage(); // Uncomment this if HomeScreen is available
+  } else {
+    initialScreen = LoginScreen();
+  }
+
+    await prefs.remove('farmertoken');
+
+    // Navigate to SplashScreen with the determined initialScreen
+    Get.offAll(() => SplashScreen(
+          initialScreen: initialScreen, // Navigate to determined screen
+          farmerscreen: FarmHome(), // Farmer home page or another page based on your need
+        ));
+  }
+
   // Replace with your API endpoint
   final String apiUrl = 'http://54.159.124.169:3000/common/forecast-weather';
 
@@ -117,13 +158,13 @@ class _FarmHomeState extends State<FarmHome> {
   }
 
 
-  @override
-  void initState() {
-    super.initState();
-    // _loadImageFromAssets();
-     _getLocationAndFetchWeather(); 
-    // fetchWeatherData();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // _loadImageFromAssets();
+  //    _getLocationAndFetchWeather(); 
+  //   // fetchWeatherData();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -334,21 +375,22 @@ class _FarmHomeState extends State<FarmHome> {
                   ListTile(
                     leading: Icon(Icons.update),
                     title: Text('Logout'),
-                    onTap: () async {
-                      // Get the SharedPreferences instance
-                      final prefs = await SharedPreferences.getInstance();
+                    onTap: _checkTokenAndNavigate,
+                    // onTap: () async {
+                    //   // Get the SharedPreferences instance
+                    //   final prefs = await SharedPreferences.getInstance();
 
-                      // Clear the token from SharedPreferences
-                      await prefs.remove('token');
+                    //   // Clear the token from SharedPreferences
+                    //   await prefs.remove('farmertoken');
 
-                      // Navigate to SplashScreen
-                      Get.offAll(() => SplashScreen(
-                            initialScreen:
-                                LoginScreenfarm(), // Redirect to login screen or any other screen as needed
-                            farmerscreen:
-                                FarmHome(), // This can be adjusted based on your requirements
-                          ));
-                    },
+                    //   // Navigate to SplashScreen
+                    //   Get.offAll(() => SplashScreen(
+                    //         initialScreen:
+                    //             initialScreen, // Redirect to login screen or any other screen as needed
+                    //         farmerscreen:
+                    //             FarmHome(), // This can be adjusted based on your requirements
+                    //       ));
+                    // },
                   ),
 
                   // ListTile(
