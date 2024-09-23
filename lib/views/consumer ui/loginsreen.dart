@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpscreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
+
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -128,6 +130,25 @@ onPressed: () async {
                         ),
                       ),
                     ),
+                  ),
+                   TextButton(
+                     onPressed: () async {
+                      // Call the signIn method and wait for it to complete
+                      // await controller.signIn(_phoneController.text, context);
+
+                      // Check if the user is signed in before navigating
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SignUpScreen()
+                      
+                          ),
+                        );
+
+                    },
+                  child: Text( "New user? Sign up here")
                   ),
                   //       GradientButton(
                   //         label: "Create Account",

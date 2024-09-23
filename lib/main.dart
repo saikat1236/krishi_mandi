@@ -44,6 +44,7 @@ void main() async {
   // Determine the initial route based on the token
   Widget initialScreen;
   if (token != null && token.isNotEmpty) {
+        await prefs.remove('farmertoken');
     initialScreen = HomePage(); // Uncomment this if HomeScreen is available
   } else {
     initialScreen = LoginScreen();
@@ -55,6 +56,7 @@ void main() async {
   //   farmerinitialScreen = FarmHome();
   // }
     if (farmertoken != null && farmertoken.isNotEmpty) {
+          await prefs.remove('token');
     farmerscreen = FarmHome(); // Uncomment this if HomeScreen is available
   } else {
       print("farmertoken: $farmertoken");

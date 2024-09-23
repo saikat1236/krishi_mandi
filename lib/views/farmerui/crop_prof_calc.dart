@@ -80,7 +80,7 @@ class _RateCalcState extends State<CropProfCalc> {
             profitability.toStringAsFixed(2); // Limit to 2 decimal places
       });
 
-      Get.snackbar("Form Submitted. Profitability: ", "$profitability");
+      Get.snackbar("Form Submitted. Profitability: ", "$profitability");  // replace this with dialouge box
       // Handle the API call here if needed with formData
       print("Form Submitted. Profitability: $profitability");
     }

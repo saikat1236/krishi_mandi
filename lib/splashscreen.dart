@@ -137,35 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              RichText(
-                text: TextSpan(
-                  text: 'New here? ', // Normal text
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Sign up',
-                      style: TextStyle(
-                        color:
-                            Colors.greenAccent, // Color for the clickable text
-                        fontWeight: FontWeight.bold,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          // Navigate to the SignUpScreen when "Sign up" is clicked
-                          Get.to(SignUpScreen()); // Using GetX for navigation
-                          // or use Navigator.push if not using GetX
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => SignUpScreen()),
-                          // );
-                        },
-                    ),
-                  ],
-                ),
-              )
+ 
             ],
           ),
         ),
