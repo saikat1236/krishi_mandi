@@ -38,41 +38,69 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
   AppContants.apptoken = token.toString();
-  
+
   final farmertoken = prefs.getString('farmertoken');
   AppContants.apptoken = farmertoken.toString();
   // Determine the initial route based on the token
+
+
   Widget initialScreen;
-  if (token != null && token.isNotEmpty) {
-        await prefs.remove('farmertoken');
-    initialScreen = HomePage(); // Uncomment this if HomeScreen is available
-  } else {
-    initialScreen = LoginScreen();
-  }
-  Widget farmerscreen;
-  // if (farmertoken != null && farmertoken.isNotEmpty) {
-  //   farmerinitialScreen = FarmHome(); // Uncomment this if HomeScreen is available
+
+  // if (token != null && token.isNotEmpty) {
+  //       await prefs.remove('farmertoken');
+  //   initialScreen = HomePage(); // Uncomment this if HomeScreen is available
   // } else {
-  //   farmerinitialScreen = FarmHome();
+  //   initialScreen = LoginScreen();
   // }
-    if (farmertoken != null && farmertoken.isNotEmpty) {
-          await prefs.remove('token');
-    farmerscreen = FarmHome(); // Uncomment this if HomeScreen is available
+  // Widget farmerscreen;
+  // // if (farmertoken != null && farmertoken.isNotEmpty) {
+  // //   farmerinitialScreen = FarmHome(); // Uncomment this if HomeScreen is available
+  // // } else {
+  // //   farmerinitialScreen = FarmHome();
+  // // }
+  //   if (farmertoken != null && farmertoken.isNotEmpty) {
+  //         await prefs.remove('token');
+  //   farmerscreen = FarmHome(); // Uncomment this if HomeScreen is available
+  // } else {
+  //     print("farmertoken: $farmertoken");
+  //   farmerscreen = LoginScreenfarm();
+  // }
+
+  if (token != null && token.isNotEmpty) {
+    // If user token is available, open HomePage and remove farmertoken
+    await prefs.remove('farmertoken');
+    initialScreen = HomePage();
+  } else if (farmertoken != null && farmertoken.isNotEmpty) {
+    // If farmer token is available, open FarmHome and remove user token
+    await prefs.remove('token');
+    initialScreen = FarmHome();
   } else {
-      print("farmertoken: $farmertoken");
-    farmerscreen = LoginScreenfarm();
+    // If no token is available, show login screen (or splash screen if needed)
+    initialScreen = SplashScreen(
+      initialScreen: LoginScreen(),
+      farmerscreen: LoginScreenfarm(),
+    );
   }
+
+
   // Get.put(GlobalController());
     Get.put(UserProfileController()); 
 
-  runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerscreen,));
+  // runApp(MyApp(initialScreen: initialScreen,farmerscreen: farmerscreen,));
+
+
+    runApp(MyApp(initialScreen: initialScreen));
 }
 
 class MyApp extends StatelessWidget {
-  final Widget initialScreen;
-  final Widget farmerscreen;
+  // final Widget initialScreen;
+  // final Widget farmerscreen;
 
-  const MyApp({Key? key, required this.initialScreen, required this.farmerscreen}) : super(key: key);
+  // const MyApp({Key? key, required this.initialScreen, required this.farmerscreen}) : super(key: key);
+
+   final Widget initialScreen;
+
+  const MyApp({Key? key, required this.initialScreen}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +134,8 @@ class MyApp extends StatelessWidget {
       // home: SignUpScreen()
       // home: FarmHome()
       // home: CropProfCalc(),
-      home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
+      home: initialScreen,
     );
   }
 }

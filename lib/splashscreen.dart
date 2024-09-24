@@ -97,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 onPressed: () {
                   // AppContants.isfarmer = false;
-                  Get.to(widget.initialScreen);
+                  Get.off(widget.initialScreen);
                   print("customer");
                   // Add navigation or functionality here for consumer
                 },
@@ -121,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 onPressed: () {
                   // AppContants.isfarmer = true;
-                  Get.to(widget.farmerscreen);
+                  Get.off(widget.farmerscreen);
                      print("farmer");
                   // Navigator.push(
                   //   context,

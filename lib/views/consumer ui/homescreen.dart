@@ -198,6 +198,8 @@ class _HomePageState extends State<HomePage> {
       String mobileNumber = userController.user['mobileNumber'] ?? '';
       String email = userController.user['email'] ?? '';
 
+      bool cart = userProfileController.cartItems.isNotEmpty;
+
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -224,17 +226,39 @@ class _HomePageState extends State<HomePage> {
           ),
 
           actions: [
-            IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartListScreen(),
-                  ),
-                );
-              },
-            ),
+         Stack(
+  children: <Widget>[
+    IconButton(
+      icon: Icon(Icons.shopping_cart),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CartListScreen(),
+          ),
+        );
+      },
+    ),
+    // Conditionally show the red dot if the cart is not empty
+    if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
+      Positioned(
+        right: 10,
+        top: 10,
+        child: Container(
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          constraints: BoxConstraints(
+            minWidth: 10,
+            minHeight: 10,
+          ),
+        ),
+      ),
+  ],
+),
+
             IconButton(
               icon: Icon(Icons.person),
               onPressed: () {
@@ -633,8 +657,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
         child: GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true, // Important for nested scrollable widgets
-          physics:
-              NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+          physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
           // children: List.generate(products.length, (index) {
           //   final product = products[index];
           //   // OnTap(
@@ -662,13 +685,16 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   ),
                 );
               },
-              child: _offerItemdemo(
-                  product['name'] ?? "Product",
-                  product['newPrice'] ?? "\0.00",
-                  "₹ ${product['pricePerUnit']}" ?? "\₹0.00",
-                  product['images'][0],
-                  // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
-                  product['productId']),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: _offerItemdemo(
+                    product['name'] ?? "Product",
+                    product['newPrice'] ?? "\0.00",
+                    "₹ ${product['pricePerUnit']}" ?? "\₹0.00",
+                    product['images'][0],
+                    // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
+                    product['productId']),
+              ),
             );
           }),
         ),
@@ -682,34 +708,55 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
         double containerHeight =
-            screenWidth * 0.9; // Adjust height ratio as needed
+            screenWidth * 0.8; // Adjust height ratio as needed
         double containerWidth =
             screenWidth * 0.9; // Adjust width ratio as needed
 
         return Container(
           height: containerHeight,
           width: containerWidth,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+   
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x66E5E5E5),
+                
+                blurRadius: 5,
+                offset: Offset(1, 1),
+                spreadRadius: 5,
+              )
+            ],
+              border: Border.all(
+    color: Colors.grey, // Your border color
+    width: 0.5, // Border width
+  ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Image.network(
-                    imageUrl,
-                    width: containerWidth,
-                    height: containerHeight *
-                        0.8, // Adjust image height ratio as needed
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return Image.asset(
-                        'assets/no_image.jpg', // Path to your asset image
-                        width: containerWidth,
-                        height: containerHeight *
-                            0.8, // Adjust image height ratio as needed
-                        fit: BoxFit.cover,
-                      );
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Image.network(
+                      imageUrl,
+                      width: containerWidth,
+                      height: containerHeight *
+                          0.8, // Adjust image height ratio as needed
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/no_image.jpg', // Path to your asset image
+                          width: containerWidth,
+                          height: containerHeight *
+                              0.8, // Adjust image height ratio as needed
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
                   ),
                   Positioned(
                     right: 0,
@@ -735,25 +782,56 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   ),
                 ],
               ),
-              Container(
-                width: containerWidth,
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(name,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(color: Colors.red),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text("55% off",style: TextStyle(color:Colors.white,fontSize: 10),),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(name,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
                     ),
+                    //  Padding(
+                    //       padding: EdgeInsets.symmetric(horizontal: 8),
+                    //       child: Text(
+                    //         ' $oldPrice',
+                    //         style: TextStyle(
+                    //           color: Colors.red,
+                    //         ),
+                    //       ),
+                    //     ),
                     Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "M.R.P",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w700
+                                ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3),
                           child: Text(
                             newPrice,
                             style: TextStyle(
                                 color: Colors.grey,
-                                decoration: TextDecoration.lineThrough),
+                                decoration: TextDecoration.lineThrough,
+                                    fontWeight: FontWeight.w700),
                           ),
                         ),
                         Padding(
@@ -762,6 +840,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                             ' $oldPrice',
                             style: TextStyle(
                               color: Colors.red,
+                              fontSize: 15
                             ),
                           ),
                         ),

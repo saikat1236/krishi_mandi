@@ -184,8 +184,28 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               children: [
                 Container(
                     width: double.infinity,
-                    child: Image.network(product["images"][0])),
+                    child: Image.network(product["images"][0])
+                    ),
                 // SizedBox(height: 80),
+                 Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                    Icon(Icons.star),
+                      SizedBox(width: 10,),
+                    Text("4.7",
+                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600) ,
+                  
+                    ),
+                    SizedBox(width: 10,),
+                    Text(
+                      "(324) Reviews"
+                    )
+
+                  ],),
+             
+
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(

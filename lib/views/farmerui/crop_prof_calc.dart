@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_model_list/drop_down/model.dart';
 import 'package:dropdown_model_list/drop_down/select_drop_radio.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const List<String> fertilizerList = <String>[
   'Organic',
@@ -49,8 +52,12 @@ class _RateCalcState extends State<CropProfCalc> {
   final TextEditingController _laborCostController = TextEditingController();
   final TextEditingController _otherInputCostController =
       TextEditingController();
-  // This function can handle API calls to send the form data
-  void _submitForm() {
+  final TextEditingController _irrigationCostController =
+      TextEditingController();
+  final TextEditingController _crop = TextEditingController();
+
+  // Function to handle the API call
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       // Collecting all form data
       final double expectedYield =
@@ -66,25 +73,186 @@ class _RateCalcState extends State<CropProfCalc> {
       final double otherInputCost =
           double.tryParse(_otherInputCostController.text) ?? 0;
 
-      // Calculate profitability
-      double profitability = (expectedYield * marketPrice) -
-          seedCost -
-          fertilizerCost -
-          pesticideCost -
-          laborCost -
-          otherInputCost;
+      // Call the API to calculate profit
+      try {
+        final response = await _calculateProfit(
+          cropName: 'Wheat', // Replace with your crop name field if dynamic
+          expYield: expectedYield,
+          mktPrice: marketPrice,
+          seedCost: seedCost,
+          fertilizerCost: fertilizerCost,
+          pesticideCost: pesticideCost,
+          labourCost: laborCost,
+          otherInputCost: otherInputCost,
+        );
 
-      // Update the response variable to show the result
-      setState(() {
-        _response =
-            profitability.toStringAsFixed(2); // Limit to 2 decimal places
-      });
+        if (response['status']) {
+          final profit = response['payload']['profit'];
+          final profitPercentage = response['payload']['profitPercentage'];
+          final advice = response['payload']['advice'];
 
-      Get.snackbar("Form Submitted. Profitability: ", "$profitability");  // replace this with dialouge box
-      // Handle the API call here if needed with formData
-      print("Form Submitted. Profitability: $profitability");
+          // Show the result in a dialog box
+          _showDialog("Profitability Calculation", "$profit",
+              "$profitPercentage", "$advice"
+              // "Profit: ₹$profit\n"
+              // "Profit Percentage: $profitPercentage%\n"
+              // "Advice: $advice",
+              );
+
+          setState(() {
+            _response = profit.toString();
+          });
+        } else {
+          _showDialog("Error", response['message'], response['message'],
+              response['message']);
+        }
+      } catch (e) {
+        _showDialog("Error", "$e", "$e", "$e");
+      }
     }
   }
+
+  // Function to show the dialog box
+  void _showDialog(String title, String a, String b, String c) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          // content: Text(content),
+          content: Container(
+            height: 120,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Profit: ₹$a",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),), 
+                Text("Profit Percentage: $b%",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),), 
+                Text("Advice: $c",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),)
+                ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('farmer') ??
+        ''; // Default to empty string if token is not found
+  }
+
+  // API call to calculate profit
+  Future<Map<String, dynamic>> _calculateProfit({
+    required String cropName,
+    required double expYield,
+    required double mktPrice,
+    required double seedCost,
+    required double fertilizerCost,
+    required double pesticideCost,
+    required double labourCost,
+    required double otherInputCost,
+  }) async {
+    final url =
+        Uri.parse('http://54.159.124.169:3000/farmers/calculate-profits');
+
+    // Request body
+    final body = jsonEncode({
+      "cropName": cropName,
+      "expYield": expYield,
+      "mktPrice": mktPrice,
+      "seedCost": seedCost,
+      "fertilizerCost": fertilizerCost,
+      "pesticideCost": pesticideCost,
+      "labourCost": labourCost,
+      "otherInputCost": otherInputCost,
+    });
+    // final token = await _getToken();
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwOWI0MjAxNS00NTRkLTRiZDEtOWZjYS1lMTBjNDg3ODEzNTgiLCJ1c2VyVHlwZSI6ImZhcm1lciIsImlhdCI6MTcyNzE4OTk2MH0.ljNuHRrpr5dSIAHiZljqhNsg_sjzH6sjP8pwAqhwBUA";
+    // Sending POST request
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
+      body: body,
+    );
+
+    // Handling the response
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+          'Failed to calculate profit. Server error: ${response.statusCode}');
+    }
+  }
+  // This function can handle API calls to send the form data
+  // void _submitForm() {
+  //   if (_formKey.currentState!.validate()) {
+  //     // Collecting all form data
+  //     final double expectedYield =
+  //         double.tryParse(_expectedYieldController.text) ?? 0;
+  //     final double marketPrice =
+  //         double.tryParse(_marketPriceController.text) ?? 0;
+  //     final double seedCost = double.tryParse(_seedCostController.text) ?? 0;
+  //     final double fertilizerCost =
+  //         double.tryParse(_fertilizerCostController.text) ?? 0;
+  //     final double pesticideCost =
+  //         double.tryParse(_pesticideCostController.text) ?? 0;
+  //     final double laborCost = double.tryParse(_laborCostController.text) ?? 0;
+  //     final double otherInputCost =
+  //         double.tryParse(_otherInputCostController.text) ?? 0;
+  //     final double irriCost =
+  //         double.tryParse(_irrigationCostController.text) ?? 0;
+
+  //     // Calculate profitability
+  //     double profitability = (expectedYield * marketPrice) -
+  //         seedCost -
+  //         fertilizerCost -
+  //         pesticideCost -
+  //         laborCost -
+  //         otherInputCost;
+  //      // Show the result in a dialog box
+  //     _showDialog("Profitability Calculation", "Profitability: ₹${profitability.toStringAsFixed(2)}");
+  //     // Update the response variable to show the result
+  //     setState(() {
+  //       _response =
+  //           profitability.toStringAsFixed(2); // Limit to 2 decimal places
+  //     });
+
+  //     // Get.snackbar("Form Submitted. Profitability: ", "$profitability");  // replace this with dialouge box
+  //     // Handle the API call here if needed with formData
+  //     print("Form Submitted. Profitability: $profitability");
+  //   }
+  // }
+
+  //   // Function to show the dialog box
+  // void _showDialog(String title, String content) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(title),
+  //         content: Text(content),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text("OK"),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();  // Close the dialog
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void initState() {
@@ -137,7 +305,7 @@ class _RateCalcState extends State<CropProfCalc> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: 850,
+          height: 900,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter, // 180 degrees equivalent
@@ -205,6 +373,9 @@ class _RateCalcState extends State<CropProfCalc> {
                           SizedBox(height: 10),
                           buildRowWithTextFormField(
                               "Labor Cost in Rs.", _laborCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Irrigation Cost in Rs.",
+                              _irrigationCostController),
                           SizedBox(height: 10),
                           buildRowWithTextFormField("Other Input Cost in Rs.",
                               _otherInputCostController),
@@ -371,10 +542,11 @@ class _RateCalcState extends State<CropProfCalc> {
                                     padding: const EdgeInsets.only(left: 20),
                                     child: DropdownButton<String>(
                                       value: selectedFertilizer,
-                                      icon: const Icon(Icons.arrow_drop_down_sharp),
+                                      icon: const Icon(
+                                          Icons.arrow_drop_down_sharp),
                                       elevation: 16,
-                                      style: const TextStyle(
-                                          color: Colors.black),
+                                      style:
+                                          const TextStyle(color: Colors.black),
                                       underline: Container(
                                         height: 0, // Removes default underline
                                       ),
