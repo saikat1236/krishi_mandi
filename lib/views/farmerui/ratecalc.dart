@@ -75,10 +75,14 @@ class _RateCalcState extends State<RateCalc> {
         ),
         leading: Builder(
           builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Image.asset('assets/krishi-logo.png'),
-            );
+           return IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        );
+            // return Padding(
+            //   padding: const EdgeInsets.only(left: 10),
+            //   child: Image.asset('assets/krishi-logo.png'),
+            // );
           },
         ),
       ),

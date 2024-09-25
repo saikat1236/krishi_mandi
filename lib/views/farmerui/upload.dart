@@ -53,8 +53,8 @@ class _UploadpageState extends State<Uploadpage> {
 
   Future<void> _loadImageFromAssets() async {
     try {
-      final byteData = await rootBundle.load('assets/pana.png');
-      final file = File('${(await getTemporaryDirectory()).path}/pana.png');
+      final byteData = await rootBundle.load('assets/no_image.jpg');
+      final file = File('${(await getTemporaryDirectory()).path}/no_image.jpg');
       await file.writeAsBytes(byteData.buffer.asUint8List());
       setState(() {
         _image = file;
@@ -122,7 +122,8 @@ class _UploadpageState extends State<Uploadpage> {
                     child: Container(
                       width: double.infinity,
                       height: 300,
-                      child: Image.file(_image!, fit: BoxFit.cover),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),),
+                      child: Image.file(_image!, fit: BoxFit.cover,),
                     ),
                   )
                 : Padding(
@@ -130,6 +131,7 @@ class _UploadpageState extends State<Uploadpage> {
                     child: Container(
                       width: double.infinity,
                       height: 300,
+                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),),
                       child: Center(
                         child: Image.asset(
                           "assets/fileupload.png",
@@ -145,43 +147,153 @@ class _UploadpageState extends State<Uploadpage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(74, 230, 50, 0.961),
-                            width: 2.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                    ),
-                    onPressed: _pickImage,
-                    child: const Text(
-                      "Pick Image",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(30.0),
+                  //       side: const BorderSide(
+                  //           color: Color.fromRGBO(74, 230, 50, 0.961),
+                  //           width: 2.0),
+                  //     ),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 30, vertical: 15),
+                  //   ),
+                  //   onPressed: _pickImage,
+                  //   child: const Text(
+                  //     "Pick Image",
+                  //     style: TextStyle(color: Colors.black),
+                  //   ),
+                  // ),
+                   ElevatedButton(
+                            onPressed: _pickImage,
+                            style: ElevatedButton.styleFrom(
+                              minimumSize:
+                                  Size(150, 50), // Same size as the Container
+                              padding: EdgeInsets
+                                  .zero, // Remove padding to match exact size
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15.0), // Rounded corners
+                              ),
+                              // Use a gradient as background using a decoration box with Ink
+                              backgroundColor: Colors
+                                  .transparent, // Set transparent background color
+                              shadowColor: Colors
+                                  .transparent, // Remove button's default shadow
+                            ),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment
+                                      .centerRight, // Start from the right (270deg equivalent)
+                                  end: Alignment
+                                      .centerLeft, // End towards the left
+                                  colors: [
+                                    Color(0xFF362A84), // Hex color #362A84
+                                    Color(0xFF84D761), // Hex color #84D761
+                                  ],
+                                  stops: [
+                                    0.0023,
+                                    0.942,
+                                  ], // Percentage stops 0.23% and 94.2%
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Pick Image",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 2,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                   const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(74, 230, 50, 0.961),
-                            width: 2.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                    ),
-                    onPressed: _uploadImage,
-                    child: const Text(
-                      "Upload Image",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(30.0),
+                  //       side: const BorderSide(
+                  //           color: Color.fromRGBO(74, 230, 50, 0.961),
+                  //           width: 2.0),
+                  //     ),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 30, vertical: 15),
+                  //   ),
+                  //   onPressed: _uploadImage,
+                  //   child: const Text(
+                  //     "Upload Image",
+                  //     style: TextStyle(color: Colors.black),
+                  //   ),
+                  // ),
+                   ElevatedButton(
+                            onPressed: _uploadImage,
+                            style: ElevatedButton.styleFrom(
+                              minimumSize:
+                                  Size(150, 50), // Same size as the Container
+                              padding: EdgeInsets
+                                  .zero, // Remove padding to match exact size
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15.0), // Rounded corners
+                              ),
+                              // Use a gradient as background using a decoration box with Ink
+                              backgroundColor: Colors
+                                  .transparent, // Set transparent background color
+                              shadowColor: Colors
+                                  .transparent, // Remove button's default shadow
+                            ),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment
+                                      .centerRight, // Start from the right (270deg equivalent)
+                                  end: Alignment
+                                      .centerLeft, // End towards the left
+                                  colors: [
+                                    Color(0xFF362A84), // Hex color #362A84
+                                    Color(0xFF84D761), // Hex color #84D761
+                                  ],
+                                  stops: [
+                                    0.0023,
+                                    0.942,
+                                  ], // Percentage stops 0.23% and 94.2%
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Upload Image",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 2,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                 ],
               ),
             ),

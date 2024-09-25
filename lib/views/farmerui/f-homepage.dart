@@ -288,6 +288,10 @@ class _FarmHomeState extends State<FarmHome> {
                             //     );
                             //   },
                             // ),
+                            child: Image.asset(
+                                  'assets/avatar3.jpg',
+                                  fit: BoxFit.cover,
+                                )
                           ),
                         ),
                         SizedBox(
@@ -336,17 +340,24 @@ class _FarmHomeState extends State<FarmHome> {
               Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.home_outlined),
-                    title: Text('Home'),
+                    // leading: Icon(Icons.home_outlined),
+                    title: Text('Calculator'),
                     onTap: () {
                       /// Close Navigation drawer before
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()),);
+
+                       Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CropProfCalc()), // Replace 'TargetScreen' with your screen
+                          );
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.favorite_border),
-                    title: Text('Favourites'),
+                    // leading: Icon(Icons.favorite_border),
+                    title: Text('Mandi Rate Fetcher'),
                     onTap: () {
                       /// Close Navigation drawer before
                       // Navigator.pop(context);
@@ -354,11 +365,17 @@ class _FarmHomeState extends State<FarmHome> {
                       //   context,
                       //   MaterialPageRoute(builder: (context) => FavPage()),
                       // );
+                       Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    RateCalc()), // Replace 'TargetScreen' with your screen
+                          );
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
-                    title: Text('Orders'),
+                    // leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Free AI Quality Analysis'),
                     onTap: () {
                       /// Close Navigation drawer before
                       // Navigator.pop(context);
@@ -367,13 +384,19 @@ class _FarmHomeState extends State<FarmHome> {
                       //   MaterialPageRoute(
                       //       builder: (context) => MyOrdersScreen()),
                       // );
+                       Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Uploadpage()), // Replace 'TargetScreen' with your screen
+                          );
                     },
                   ),
                   const Divider(
                     color: Colors.black45,
                   ),
                   ListTile(
-                    leading: Icon(Icons.update),
+                    // leading: Icon(Icons.update),
                     title: Text('Logout'),
                     onTap: _checkTokenAndNavigate,
                     // onTap: () async {

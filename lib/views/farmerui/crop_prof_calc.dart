@@ -296,10 +296,14 @@ class _RateCalcState extends State<CropProfCalc> {
         ),
         leading: Builder(
           builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Image.asset('assets/krishi-logo.png'),
-            );
+            return IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        );
+            // return Padding(
+            //   padding: const EdgeInsets.only(left: 10),
+            //   child: Image.asset('assets/krishi-logo.png'),
+            // );
           },
         ),
       ),
@@ -356,31 +360,7 @@ class _RateCalcState extends State<CropProfCalc> {
                           _formKey, // Associating the Form widget with _formKey
                       child: Column(
                         children: [
-                          buildRowWithTextFormField("Expected Yield in Kg.",
-                              _expectedYieldController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField(
-                              "Market Price in Rs.", _marketPriceController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField(
-                              "Seed Cost in Rs.", _seedCostController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField("Fertilizer Cost in Rs.",
-                              _fertilizerCostController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField("Pesticide Cost in Rs.",
-                              _pesticideCostController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField(
-                              "Labor Cost in Rs.", _laborCostController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField("Irrigation Cost in Rs.",
-                              _irrigationCostController),
-                          SizedBox(height: 10),
-                          buildRowWithTextFormField("Other Input Cost in Rs.",
-                              _otherInputCostController),
-                          SizedBox(height: 10),
-                          Row(
+                           Row(
                             children: [
                               Container(
                                 width:
@@ -426,7 +406,7 @@ class _RateCalcState extends State<CropProfCalc> {
                                             .none, // Removes the underline
                                         hintText: 'Crop Used',
                                       ),
-                                      keyboardType: TextInputType.number,
+                                      // keyboardType: TextInputType.number,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Please enter Crop Used';
@@ -486,7 +466,7 @@ class _RateCalcState extends State<CropProfCalc> {
                                             .none, // Removes the underline
                                         hintText: 'Area',
                                       ),
-                                      keyboardType: TextInputType.number,
+                                      // keyboardType: TextInputType.number,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Please enter Crop Used';
@@ -570,7 +550,32 @@ class _RateCalcState extends State<CropProfCalc> {
                               // ),
                             ],
                           ),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Expected Yield in Kg.",
+                              _expectedYieldController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField(
+                              "Market Price in Rs.", _marketPriceController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField(
+                              "Seed Cost in Rs.", _seedCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Fertilizer Cost in Rs.",
+                              _fertilizerCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Pesticide Cost in Rs.",
+                              _pesticideCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField(
+                              "Labor Cost in Rs.", _laborCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Irrigation Cost in Rs.",
+                              _irrigationCostController),
+                          SizedBox(height: 10),
+                          buildRowWithTextFormField("Other Input Cost in Rs.",
+                              _otherInputCostController),
                           SizedBox(height: 20),
+                         
                           ElevatedButton(
                             onPressed: _submitForm,
                             style: ElevatedButton.styleFrom(
