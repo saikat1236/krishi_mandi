@@ -81,7 +81,7 @@ class _RateCalcState extends State<RateCalc> {
         );
             // return Padding(
             //   padding: const EdgeInsets.only(left: 10),
-            //   child: Image.asset('assets/krishi-logo.png'),
+            //   child: Image.asset('assets/krishi_logo.png'),
             // );
           },
         ),

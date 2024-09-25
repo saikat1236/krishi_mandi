@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: Image.asset(
-            'assets/krishi-logo.png',
+            'assets/krishi_logo.png',
             height: 50,
           ),
           // title: const Text('Dashboard',

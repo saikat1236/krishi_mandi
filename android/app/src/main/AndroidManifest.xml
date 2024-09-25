@@ -11,7 +11,7 @@
     <application
         android:label="Krishi Mandi"
         android:name="${applicationName}"
-        android:icon="@mipmap/krishi-logo">
+        android:icon="@mipmap/krishi_logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"
