@@ -43,6 +43,7 @@ dependencies:
   dropdown_model_list: ^2.1.2
   path_provider: ^2.0.11
   geolocator: ^10.1.0
+  geocoding: ^2.0.5
   smooth_page_indicator: ^1.0.0
 
 dev_dependencies:
