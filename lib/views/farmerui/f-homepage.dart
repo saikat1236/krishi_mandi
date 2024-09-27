@@ -23,6 +23,7 @@ import '../../constants/AppConstants.dart';
 import '../../controller/farmer_apis/farmer_controller.dart';
 import '../../controller/farmer_apis/profile_controller.dart';
 import '../consumer ui/homescreen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FarmHome extends StatefulWidget {
   const FarmHome();
@@ -214,7 +215,8 @@ class _FarmHomeState extends State<FarmHome> {
       return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            // backgroundColor: Colors.transparent,
+            backgroundColor: Color(0xFF2E2E2E),
             // elevation: 0,
             automaticallyImplyLeading: false,
             centerTitle: true,
@@ -242,7 +244,7 @@ class _FarmHomeState extends State<FarmHome> {
             leading: Builder(
               builder: (BuildContext context) {
                 return IconButton(
-                  icon: const Icon(Icons.menu),
+                  icon: const Icon(Icons.menu,color: Colors.white,),
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
@@ -281,7 +283,8 @@ class _FarmHomeState extends State<FarmHome> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 Material(
-                  color: Color.fromARGB(255, 9, 223, 120),
+                  // color: Color.fromARGB(255, 9, 223, 120),
+                  color: Color(0xFF2E2E2E),
                   child: InkWell(
                     onTap: () {
                       /// Close Navigation drawer before
@@ -419,6 +422,96 @@ class _FarmHomeState extends State<FarmHome> {
                         );
                       },
                     ),
+                     ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Contact Us'),
+                    onTap: () async {
+                      const url =
+                          'https://krishimandi.in/'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('About Us'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/about-us'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Privacy Policy'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/privacy-policy'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Terms and Conditions'),
+                        onTap: () async {
+                      const url =
+                          'https://krishimandi.in/terms'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Refund and Cancellation Policy'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/refund-and-cancellation-policy'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                   ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Shipping and Delivery Policy'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/shipping-and-delivery-policy'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
                     const Divider(
                       color: Colors.black45,
                     ),
@@ -510,7 +603,7 @@ class _FarmHomeState extends State<FarmHome> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  "H: $htemp° L: $ltemp° Lon: $long Lat: $lati",
+                                                  "H: $htemp° L: $ltemp°",
                                                   style: TextStyle(
                                                     color: Colors
                                                         .white, // Text color
@@ -527,7 +620,7 @@ class _FarmHomeState extends State<FarmHome> {
                                                         color: Colors
                                                             .white, // Text color
                                                         fontSize:
-                                                            16, // Font size
+                                                            15, // Font size
                                                         fontWeight: FontWeight
                                                             .w500, // Regular weight
                                                       ),

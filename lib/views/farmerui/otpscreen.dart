@@ -158,24 +158,23 @@ class _OtpScreen2State extends State<OtpScreenfarm> {
                           horizontal: 100, vertical: 15), // Button size
                     ),
                     onPressed: () async {
-                      // verify OTP
+                      // Verify OTP
                       String otp = _otpControllers
                           .map((controller) => controller.text)
                           .join('');
                       print("number " + widget.mobileNumber + ", otp: " + otp);
-                      // await controller.verifyOtp("12213123222432", otp);
+
                       await controller.verifyOtp(widget.mobileNumber, otp);
 
-                      // Store the auth token globally
-                      // Get.find<GlobalController>().setAuthToken(auth_token);
-
-                      // Navigate to the OtpScreen2 and pass the mobile number
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => FarmHome()),
-                        (Route<dynamic> route) =>
-                            false, // This removes all the previous routes
-                      );
+                      // If OTP is verified successfully, navigate to HomePage
+                      if (controller.isOtpVerified()) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                          (Route<dynamic> route) =>
+                              false, // This removes all the previous routes
+                        );
+                      }
                     },
                     child: Container(
                       width: 350,

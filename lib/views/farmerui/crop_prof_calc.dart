@@ -125,10 +125,19 @@ class _RateCalcState extends State<CropProfCalc> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Profit: ₹$a",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),), 
-                Text("Profit Percentage: $b%",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),), 
-                Text("Advice: $c",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),)
-                ],
+                Text(
+                  "Profit: ₹$a",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "Profit Percentage: $b%",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "Advice: $c",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                )
+              ],
             ),
           ),
           actions: <Widget>[
@@ -297,9 +306,9 @@ class _RateCalcState extends State<CropProfCalc> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        );
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
+            );
             // return Padding(
             //   padding: const EdgeInsets.only(left: 10),
             //   child: Image.asset('assets/krishi_logo.png'),
@@ -309,7 +318,7 @@ class _RateCalcState extends State<CropProfCalc> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: 900,
+          height: 1000,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter, // 180 degrees equivalent
@@ -360,7 +369,7 @@ class _RateCalcState extends State<CropProfCalc> {
                           _formKey, // Associating the Form widget with _formKey
                       child: Column(
                         children: [
-                           Row(
+                          Row(
                             children: [
                               Container(
                                 width:
@@ -574,8 +583,16 @@ class _RateCalcState extends State<CropProfCalc> {
                           SizedBox(height: 10),
                           buildRowWithTextFormField("Other Input Cost in Rs.",
                               _otherInputCostController),
+                          SizedBox(height: 10),
+                          Container(
+                            width: 600, // Line thickness
+                            height: 1, // Line height
+                            color: Colors.black, // Line color
+                          ),
+                                 SizedBox(height: 10),
+                          buildRowWithTextFormField("Crop sold rate in Rs.",
+                              _otherInputCostController),
                           SizedBox(height: 20),
-                         
                           ElevatedButton(
                             onPressed: _submitForm,
                             style: ElevatedButton.styleFrom(

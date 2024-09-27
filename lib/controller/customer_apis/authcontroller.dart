@@ -108,6 +108,7 @@ class AuthController extends GetxController {
         // Update state
         isOtpVerified(true);
         Get.snackbar("OTP Verified Successfully", "");
+        // return true;
 
     // Get.to(() => HomePage());
       } else {
@@ -117,10 +118,12 @@ class AuthController extends GetxController {
         '',
         snackPosition: SnackPosition.TOP,
       );
+        // return false;
       }
     } catch (e) {
       print('Error: $e');
       isOtpVerified(false);
+          // return false;
     } finally {
       isLoading(false);
     }

@@ -26,6 +26,7 @@ import '../../controller/customer_apis/profile_controller.dart';
 import '../../controller/customer_apis/user_controller.dart';
 import '../farmerui/f-homepage.dart';
 import '../farmerui/loginsreen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(const MyApp());
 
@@ -203,7 +204,7 @@ class _HomePageState extends State<HomePage> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          // backgroundColor: Colors.white,
+          backgroundColor: Color(0xFF2E2E2E),
           // elevation : 0,
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -216,7 +217,10 @@ class _HomePageState extends State<HomePage> {
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
-                icon: const Icon(Icons.menu),
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
@@ -226,41 +230,46 @@ class _HomePageState extends State<HomePage> {
           ),
 
           actions: [
-         Stack(
-  children: <Widget>[
-    IconButton(
-      icon: Icon(Icons.shopping_cart),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CartListScreen(),
-          ),
-        );
-      },
-    ),
-    // Conditionally show the red dot if the cart is not empty
-    if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
-      Positioned(
-        right: 10,
-        top: 10,
-        child: Container(
-          padding: EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          constraints: BoxConstraints(
-            minWidth: 10,
-            minHeight: 10,
-          ),
-        ),
-      ),
-  ],
-),
-
+            Stack(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartListScreen(),
+                      ),
+                    );
+                  },
+                ),
+                // Conditionally show the red dot if the cart is not empty
+                if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 10,
+                        minHeight: 10,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             IconButton(
-              icon: Icon(Icons.person),
+              icon: Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -277,7 +286,8 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               Material(
-                color: Color.fromARGB(255, 9, 223, 120),
+                // color: Color.fromARGB(255, 9, 223, 120),
+                color: Color(0xFF2E2E2E),
                 child: InkWell(
                   onTap: () {
                     /// Close Navigation drawer before
@@ -387,6 +397,96 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(
                             builder: (context) => MyOrdersScreen()),
                       );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Contact Us'),
+                    onTap: () async {
+                      const url =
+                          'https://krishimandi.in/'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('About Us'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/about-us'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Privacy Policy'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/privacy-policy'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Terms and Conditions'),
+                        onTap: () async {
+                      const url =
+                          'https://krishimandi.in/terms'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Refund and Cancellation Policy'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/refund-and-cancellation-policy'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                   ListTile(
+                    leading: Icon(Icons.card_giftcard_outlined),
+                    title: Text('Shipping and Delivery Policy'),
+                         onTap: () async {
+                      const url =
+                          'https://krishimandi.in/shipping-and-delivery-policy'; // Replace with the actual URL
+                      Uri uri = Uri.parse(url);
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
                     },
                   ),
                   const Divider(
@@ -657,7 +757,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
         child: GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true, // Important for nested scrollable widgets
-          physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+          physics:
+              NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
           // children: List.generate(products.length, (index) {
           //   final product = products[index];
           //   // OnTap(
@@ -718,20 +819,18 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
-   
             boxShadow: [
               BoxShadow(
                 color: Color(0x66E5E5E5),
-                
                 blurRadius: 5,
                 offset: Offset(1, 1),
                 spreadRadius: 5,
               )
             ],
-              border: Border.all(
-    color: Colors.grey, // Your border color
-    width: 0.5, // Border width
-  ),
+            border: Border.all(
+              color: Colors.grey, // Your border color
+              width: 0.5, // Border width
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -793,7 +892,11 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                           decoration: BoxDecoration(color: Colors.red),
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
-                            child: Text("55% off",style: TextStyle(color:Colors.white,fontSize: 10),),
+                            child: Text(
+                              "55% off",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 10),
+                            ),
                           ),
                         ),
                         Padding(
@@ -820,8 +923,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                             "M.R.P",
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontWeight: FontWeight.w700
-                                ),
+                                fontWeight: FontWeight.w700),
                           ),
                         ),
                         Padding(
@@ -831,17 +933,14 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                             style: TextStyle(
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough,
-                                    fontWeight: FontWeight.w700),
+                                fontWeight: FontWeight.w700),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
                             ' $oldPrice',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 15
-                            ),
+                            style: TextStyle(color: Colors.red, fontSize: 15),
                           ),
                         ),
                       ],
