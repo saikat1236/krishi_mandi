@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final ProductController controller = Get.put(ProductController());
+    final ProductController controller = Get.put(ProductController());
     final UserController userController = Get.put(UserController());
     Future<String> _getToken() async {
       final prefs = await SharedPreferences.getInstance();
@@ -400,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.contact_page),
                     title: Text('Contact Us'),
                     onTap: () async {
                       const url =
@@ -415,9 +415,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.group),
                     title: Text('About Us'),
-                         onTap: () async {
+                    onTap: () async {
                       const url =
                           'https://krishimandi.in/about-us'; // Replace with the actual URL
                       Uri uri = Uri.parse(url);
@@ -430,9 +430,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.privacy_tip),
                     title: Text('Privacy Policy'),
-                         onTap: () async {
+                    onTap: () async {
                       const url =
                           'https://krishimandi.in/privacy-policy'; // Replace with the actual URL
                       Uri uri = Uri.parse(url);
@@ -445,9 +445,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.document_scanner),
                     title: Text('Terms and Conditions'),
-                        onTap: () async {
+                    onTap: () async {
                       const url =
                           'https://krishimandi.in/terms'; // Replace with the actual URL
                       Uri uri = Uri.parse(url);
@@ -460,9 +460,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.money_off),
                     title: Text('Refund and Cancellation Policy'),
-                         onTap: () async {
+                    onTap: () async {
                       const url =
                           'https://krishimandi.in/refund-and-cancellation-policy'; // Replace with the actual URL
                       Uri uri = Uri.parse(url);
@@ -474,10 +474,10 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
-                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                  ListTile(
+                    leading: Icon(Icons.delivery_dining),
                     title: Text('Shipping and Delivery Policy'),
-                         onTap: () async {
+                    onTap: () async {
                       const url =
                           'https://krishimandi.in/shipping-and-delivery-policy'; // Replace with the actual URL
                       Uri uri = Uri.parse(url);
@@ -791,7 +791,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                 child: _offerItemdemo(
                     product['name'] ?? "Product",
                     product['newPrice'] ?? "\0.00",
-                    "₹ ${product['pricePerUnit']}" ?? "\₹0.00",
+                    product['pricePerUnit'] ?? 0.00,
                     product['images'][0],
                     // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
                     product['productId']),
@@ -873,8 +873,23 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                               : Colors.white,
                         ),
                         onPressed: () {
-                          userController
-                              .toggleFavorite(Pid); // Pass the product ID
+                          // Create the favItem map
+                          Map<String, dynamic> favItem = {
+                            "productId": Pid,
+                            "productName": name,
+                            "productImage": imageUrl,
+                            // "pricePerUnit": newPrice,
+                            "pricePerUnit": double.parse(oldPrice),
+                            "productUnitType": "kg"
+                            // "productInfo":""
+                          };
+
+
+                          // controller.addToFavorites(favItem);
+                          controller.toggleFavorite(Pid);
+
+                          // userController
+                          //     .toggleFavorite(Pid); // Pass the product ID
                         },
                       ),
                     ),

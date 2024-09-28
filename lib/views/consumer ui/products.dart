@@ -35,11 +35,12 @@ class ProductsPageState extends State<ProductsPage> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text('Products', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+      backgroundColor: Color(0xFF2E2E2E),
+        title: const Text('Products', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back,color: Colors.white,),
               onPressed: () {
                 Navigator.pop(context);
               },

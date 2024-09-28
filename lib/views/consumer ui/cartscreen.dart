@@ -13,7 +13,8 @@ class CartListScreen extends StatefulWidget {
 }
 
 class _CartListScreenState extends State<CartListScreen> {
-  final UserProfileController userProfileController = Get.put(UserProfileController());
+  final UserProfileController userProfileController =
+      Get.put(UserProfileController());
 
   int? _rad; // The currently selected value
 
@@ -27,7 +28,8 @@ class _CartListScreenState extends State<CartListScreen> {
       // _showLoadingDialog();
       userProfileController.getUserProfile().then((_) {
         setState(() {
-          _isLoadingComplete = true; // Enable the OK button when loading is complete
+          _isLoadingComplete =
+              true; // Enable the OK button when loading is complete
         });
         // Future.delayed(Duration(seconds: 1), () {
         //   if (mounted) {
@@ -81,13 +83,12 @@ class _CartListScreenState extends State<CartListScreen> {
   //   );
   // }
 
-
 // @override
 // void initState() {
 //   super.initState();
 //   // Schedule the loading dialog to show after the first frame is rendered
 //   WidgetsBinding.instance.addPostFrameCallback((_) {
-//     _showLoadingDialog(); 
+//     _showLoadingDialog();
 //     userProfileController.getUserProfile().then((_) {
 //       Get.back(); // Close the loading dialog once the profile is loaded
 //     });
@@ -121,13 +122,10 @@ class _CartListScreenState extends State<CartListScreen> {
 //   );
 // }
 
-
-
-
   void _increaseQuantity(int index) {
     setState(() {
       userProfileController.cartItems[index]['ProductQuantityAddedToCart']++;
-      tot = userProfileController.getCartSubtotal() + vouch; 
+      tot = userProfileController.getCartSubtotal() + vouch;
     });
   }
 
@@ -135,25 +133,28 @@ class _CartListScreenState extends State<CartListScreen> {
     setState(() {
       // if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] > 1) {
       //   userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
-      //   tot = userProfileController.getCartSubtotal() + vouch; 
+      //   tot = userProfileController.getCartSubtotal() + vouch;
       // }
       //  int minQuantity = userProfileController.cartItems[index]['minQuantity'] ?? 1;
-    if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] > userProfileController.cartItems[index]['minQuantity']) {
-      userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
-      tot = userProfileController.getCartSubtotal() + vouch;
-    }
+      if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] >
+          userProfileController.cartItems[index]['minQuantity']) {
+        userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
+        tot = userProfileController.getCartSubtotal() + vouch;
+      }
     });
   }
 
   Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token') ?? ''; // Default to empty string if token is not found
+    return prefs.getString('token') ??
+        ''; // Default to empty string if token is not found
   }
 
   Future<void> _removeItemFromCart(String productId) async {
-    final url = Uri.parse('http://54.159.124.169:3000/users/remove-item-from-cart');
+    final url =
+        Uri.parse('http://54.159.124.169:3000/users/remove-item-from-cart');
     final token = await _getToken();
-    
+
     try {
       final response = await http.post(
         url,
@@ -187,15 +188,16 @@ class _CartListScreenState extends State<CartListScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+                    backgroundColor: Color(0xFF2E2E2E),
         centerTitle: true,
         title: const Text(
           'My Cart',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back,color: Colors.white),
               onPressed: () {
                 Navigator.pop(context); // Navigate back
               },
@@ -249,7 +251,8 @@ class _CartListScreenState extends State<CartListScreen> {
                               child: Image.network(
                                 cartItem['productImages'][0] ?? '',
                                 fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
                                   return Image.asset(
                                     'assets/no_image.jpg', // Path to your fallback asset image
                                     fit: BoxFit.cover,
@@ -263,7 +266,8 @@ class _CartListScreenState extends State<CartListScreen> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -294,7 +298,8 @@ class _CartListScreenState extends State<CartListScreen> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: '${cartItem['ProductQuantityAddedToCart']} ${cartItem['productUnitType']}',
+                                                  text:
+                                                      '${cartItem['ProductQuantityAddedToCart']} ${cartItem['productUnitType']}',
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 13,
@@ -330,7 +335,8 @@ class _CartListScreenState extends State<CartListScreen> {
                                       icon: Icon(Icons.delete),
                                       onPressed: () {
                                         print(cartItem['productId']);
-                                        _removeItemFromCart(cartItem['productId']); // Call the delete API
+                                        _removeItemFromCart(cartItem[
+                                            'productId']); // Call the delete API
                                       },
                                     ),
                                   ),
@@ -341,25 +347,32 @@ class _CartListScreenState extends State<CartListScreen> {
                                       children: [
                                         IconButton(
                                           icon: Icon(Icons.remove),
-                       onPressed: () {
-  setState(() {
-    int minQuantity = cartItem['minQ'] ?? 1;
-    int currentQuantity = userProfileController.cartItems[index]['ProductQuantityAddedToCart'];
+                                          onPressed: () {
+                                            setState(() {
+                                              int minQuantity =
+                                                  cartItem['minQ'] ?? 1;
+                                              int currentQuantity =
+                                                  userProfileController
+                                                          .cartItems[index][
+                                                      'ProductQuantityAddedToCart'];
 
-    if (currentQuantity > minQuantity) {
-      // Decrease the quantity if it's above the minimum
-      userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
-    } else {
-      // Show a pop-up message if the quantity is at or below the minimum
-      Get.snackbar(
-        "Cannot Decrease",
-        "Quantity cannot be less than the minimum quantity of $minQuantity.",
-        snackPosition: SnackPosition.TOP,
-      );
-    }
-  });
-},
-
+                                              if (currentQuantity >
+                                                  minQuantity) {
+                                                // Decrease the quantity if it's above the minimum
+                                                userProfileController
+                                                        .cartItems[index][
+                                                    'ProductQuantityAddedToCart']--;
+                                              } else {
+                                                // Show a pop-up message if the quantity is at or below the minimum
+                                                Get.snackbar(
+                                                  "Cannot Decrease",
+                                                  "Quantity cannot be less than the minimum quantity of $minQuantity.",
+                                                  snackPosition:
+                                                      SnackPosition.TOP,
+                                                );
+                                              }
+                                            });
+                                          },
                                         ),
                                         Text(
                                           '${cartItem['ProductQuantityAddedToCart']}',
@@ -367,7 +380,8 @@ class _CartListScreenState extends State<CartListScreen> {
                                         ),
                                         IconButton(
                                           icon: Icon(Icons.add),
-                                          onPressed: () => _increaseQuantity(index),
+                                          onPressed: () =>
+                                              _increaseQuantity(index),
                                         ),
                                       ],
                                     ),
@@ -393,7 +407,8 @@ class _CartListScreenState extends State<CartListScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Sub-total"),
-                              Obx(() => Text("Rs ${userProfileController.getCartSubtotal().toStringAsFixed(2)}")),
+                              Obx(() => Text(
+                                  "Rs ${userProfileController.getCartSubtotal().toStringAsFixed(2)}")),
                             ],
                           ),
                         ),
@@ -452,14 +467,26 @@ class _CartListScreenState extends State<CartListScreen> {
       }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Get.to(() => FinalOrderScreen(cartItems:  userProfileController.getCartItems(),)); // Navigate to the final order screen
+          if (userProfileController.cartItems.isNotEmpty) {
+
+          Get.to(() => FinalOrderScreen(
+                cartItems: userProfileController.getCartItems(),
+              )); // Navigate to the final order screen
+            
+          } else {
+            Get.snackbar("Cart is empty", "");
+            
+          }
         },
-        label: Text('Place Order',
-        style: TextStyle(color: Colors.white,fontSize: 16 ),),
+        label: Text(
+          'Place Order',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
         // icon: Icon(Icons.shopping_cart_checkout),
         backgroundColor: Colors.black, // Customize button color
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, // Position at the bottom center
+      floatingActionButtonLocation: FloatingActionButtonLocation
+          .centerFloat, // Position at the bottom center
     );
   }
 }

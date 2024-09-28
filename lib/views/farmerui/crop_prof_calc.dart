@@ -55,6 +55,7 @@ class _RateCalcState extends State<CropProfCalc> {
   final TextEditingController _irrigationCostController =
       TextEditingController();
   final TextEditingController _crop = TextEditingController();
+  final TextEditingController sellcont = TextEditingController();
 
   // Function to handle the API call
   Future<void> _submitForm() async {
@@ -72,6 +73,8 @@ class _RateCalcState extends State<CropProfCalc> {
       final double laborCost = double.tryParse(_laborCostController.text) ?? 0;
       final double otherInputCost =
           double.tryParse(_otherInputCostController.text) ?? 0;
+      final double sell =
+          double.tryParse(sellcont.text) ?? 0;
 
       // Call the API to calculate profit
       try {
@@ -84,6 +87,7 @@ class _RateCalcState extends State<CropProfCalc> {
           pesticideCost: pesticideCost,
           labourCost: laborCost,
           otherInputCost: otherInputCost,
+          sell:sell
         );
 
         if (response['status']) {
@@ -169,6 +173,7 @@ class _RateCalcState extends State<CropProfCalc> {
     required double pesticideCost,
     required double labourCost,
     required double otherInputCost,
+    required double sell,
   }) async {
     final url =
         Uri.parse('http://54.159.124.169:3000/farmers/calculate-profits');
@@ -183,6 +188,7 @@ class _RateCalcState extends State<CropProfCalc> {
       "pesticideCost": pesticideCost,
       "labourCost": labourCost,
       "otherInputCost": otherInputCost,
+      "sell": sell
     });
     // final token = await _getToken();
     String token =
@@ -589,7 +595,7 @@ class _RateCalcState extends State<CropProfCalc> {
                             height: 1, // Line height
                             color: Colors.black, // Line color
                           ),
-                                 SizedBox(height: 10),
+                          SizedBox(height: 10),
                           buildRowWithTextFormField("Crop sold rate in Rs.",
                               _otherInputCostController),
                           SizedBox(height: 20),

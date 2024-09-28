@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 class ProductController extends GetxController {
   var isLoading = true.obs;
   var products = [].obs; // Use a List<Map<String, dynamic>> for products
@@ -18,7 +17,7 @@ class ProductController extends GetxController {
     super.onInit();
     getAllProducts(1); // Fetch all products when controller initializes
     getAllCategories();
-    // getFavoriteProducts(); // Fetch favorite products
+    getFavoriteProducts(); // Fetch favorite products
   }
 
   // Retrieve token from SharedPreferences
@@ -126,6 +125,65 @@ class ProductController extends GetxController {
     }
   }
 
+  // Store filtered products in SharedPreferences
+Future<void> _storeFilteredProducts() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('filteredProducts', jsonEncode(filteredProducts.value));
+}
+
+// Load filtered products from SharedPreferences
+Future<void> _loadFilteredProducts() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? storedProducts = prefs.getString('filteredProducts');
+  if (storedProducts != null) {
+    final List<dynamic> decodedProducts = jsonDecode(storedProducts);
+    filteredProducts.value = List<Map<String, dynamic>>.from(decodedProducts);
+  }
+}
+Future<void> getFavoriteProductsOnly(int page) async {
+  final url = Uri.parse('$baseUrl/filtered');
+
+  try {
+    final token = await _getToken(); // Get token from SharedPreferences
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token // Use token from SharedPreferences
+      },
+      body: jsonEncode({
+        'categories': [], // Fetch all products without filtering
+        'page': page,
+        'limit': 100, // Increase limit to fetch more products
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var decodedResponse = jsonDecode(response.body)["payload"];
+      if (decodedResponse is List) {
+        // Filter products that are marked as favorites (isAvailableInFav is true)
+        var favoriteProductList = decodedResponse
+            .where((product) => product['isAvailableInFav'] == true)
+            .toList();
+
+        // Update filteredProducts with favorite products only
+        filteredProducts.value = favoriteProductList;
+      } else {
+        filteredProducts.value = [];
+        print('No products found');
+      }
+    } else {
+      filteredProducts.value = [];
+      print('Failed to load products');
+    }
+  } catch (e) {
+    print('Error: $e');
+    filteredProducts.value = [];
+  } finally {
+    isLoading(false);
+  }
+}
+
   // Filter products by selected categories
   void filterProductsByCategory(String selectedCategory) {
   if(selectedCategory=='fruits') selectedCategory='Fruit';
@@ -149,31 +207,54 @@ class ProductController extends GetxController {
   }
 
   // Add item to favorites
-  Future<void> addToFavorites(Map<String, dynamic> favItem) async {
-    final url = Uri.parse('$baseUrl/add-item-in-favs');
+Future<void> addToFavorites(Map<String, dynamic> favItem) async {
+  final url = Uri.parse('$baseUrl/add-item-in-favs');
 
-    try {
-      final token = await _getToken(); // Get token from SharedPreferences
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token // Use token from SharedPreferences
-        },
-        body: jsonEncode({'favItem': favItem}),
-      );
+  try {
+    final token = await _getToken(); // Get token from SharedPreferences
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token // Use token from SharedPreferences
+      },
+      body: jsonEncode({'favItem': favItem}),
+    );
 
-      if (response.statusCode == 200) {
-        favoriteProducts.add(favItem['_id']);
-        Get.snackbar('Favorites', 'Product added to favorites!',
-            snackPosition: SnackPosition.TOP);
+    if (response.statusCode == 200) {
+      // Parse the response body
+      final responseData = jsonDecode(response.body);
+
+      // Check if the response contains 'productId'
+      if (responseData['status'] == true && responseData['payload'] != null) {
+        final productId = responseData['payload']['productId'];
+
+        if (productId != null) {
+          // Assign the productId to the favItem for tracking
+          favItem['productId'] = productId;
+
+          // Add productId to the favoriteProducts list
+          favoriteProducts.add(productId);
+
+          // Show snackbar confirmation
+          Get.snackbar('Favorites', 'Product added to favorites!',
+              snackPosition: SnackPosition.TOP);
+
+          print(favoriteProducts); // Print the updated favorite products list
+        } else {
+          print('Failed: productId not found in response');
+        }
       } else {
         print('Failed to add item to favorites: ${response.body}');
       }
-    } catch (e) {
-      print('Error: $e');
+    } else {
+      print('Failed to add item to favorites: ${response.body}');
     }
+  } catch (e) {
+    print('Error: $e');
   }
+}
+
 
   // Remove item from favorites
   Future<void> removeFromFavorites(String productId) async {
@@ -209,6 +290,7 @@ class ProductController extends GetxController {
 
   // Fetch favorite products
   Future<void> getFavoriteProducts() async {
+    // isLoading(true);
         // selectedCategory="Fruit";
 
         favoriteProducts.value = products
@@ -218,9 +300,41 @@ class ProductController extends GetxController {
            
             // .where((product) => product['category'] == "Vegetable")
             // .toList(); // Filter products based on selected category
-    print(favoriteProducts);
+    print("fav products: $favoriteProducts");
+    isLoading(false);
     // Implement fetching favorite products if needed
   }
+
+
+  // Toggle favorite status locally
+void toggleFavorite(String productId) {
+  // Find the product in the products list
+  final productIndex = products.indexWhere((product) => product['productId'] == productId);
+
+  if (productIndex != -1) {
+    // Toggle the isAvailableInFav field
+    products[productIndex]['isAvailableInFav'] = !products[productIndex]['isAvailableInFav'];
+
+    // Update the favoriteProducts list based on the new isAvailableInFav value
+    if (products[productIndex]['isAvailableInFav']) {
+      // Add to favorite products if it's now true
+      favoriteProducts.add(productId);
+      Get.snackbar('Favorites', 'Product added to favorites!',
+          snackPosition: SnackPosition.TOP);
+    } else {
+      // Remove from favorite products if it's now false
+      favoriteProducts.remove(productId);
+      Get.snackbar('Favorites', 'Product removed from favorites!',
+          snackPosition: SnackPosition.TOP);
+    }
+        getFavoriteProductsOnly(1);
+    print(favoriteProducts);
+
+    // Notify listeners or UI if needed
+    products.refresh();
+  }
+}
+
 
   // Add item to cart
   Future<bool> addToCart(Map<String, dynamic> cartItem) async {

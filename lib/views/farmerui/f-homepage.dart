@@ -227,7 +227,7 @@ class _FarmHomeState extends State<FarmHome> {
                   TextSpan(
                     text: 'Krishi ',
                     style: TextStyle(
-                        color: Colors.black, // Color for 'Krishi'
+                        color: Colors.white, // Color for 'Krishi'
                         fontWeight: FontWeight.bold,
                         fontSize: 28),
                   ),
@@ -423,7 +423,7 @@ class _FarmHomeState extends State<FarmHome> {
                       },
                     ),
                      ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.contact_page),
                     title: Text('Contact Us'),
                     onTap: () async {
                       const url =
@@ -438,7 +438,7 @@ class _FarmHomeState extends State<FarmHome> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.group),
                     title: Text('About Us'),
                          onTap: () async {
                       const url =
@@ -453,7 +453,7 @@ class _FarmHomeState extends State<FarmHome> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.privacy_tip),
                     title: Text('Privacy Policy'),
                          onTap: () async {
                       const url =
@@ -468,7 +468,7 @@ class _FarmHomeState extends State<FarmHome> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.document_scanner),
                     title: Text('Terms and Conditions'),
                         onTap: () async {
                       const url =
@@ -483,7 +483,7 @@ class _FarmHomeState extends State<FarmHome> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.money_off),
                     title: Text('Refund and Cancellation Policy'),
                          onTap: () async {
                       const url =
@@ -498,7 +498,7 @@ class _FarmHomeState extends State<FarmHome> {
                     },
                   ),
                    ListTile(
-                    leading: Icon(Icons.card_giftcard_outlined),
+                    leading: Icon(Icons.delivery_dining),
                     title: Text('Shipping and Delivery Policy'),
                          onTap: () async {
                       const url =

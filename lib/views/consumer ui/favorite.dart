@@ -4,6 +4,8 @@ import 'package:krishi_customer_app/controller/customer_apis/product_controller.
 import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 
+import '../../controller/customer_apis/profile_controller.dart';
+
 class FavPage extends StatefulWidget {
   const FavPage({super.key});
 
@@ -18,10 +20,11 @@ class _FavPageState extends State<FavPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
+              backgroundColor: Color(0xFF2E2E2E),
         centerTitle: true,
-        title: const Text('Favorite', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text('Favourite', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,color: Colors.white,),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -57,12 +60,14 @@ class FavoriteProductListView extends StatefulWidget {
 
 class _FavoriteProductListViewState extends State<FavoriteProductListView> {
   final ProductController controller = Get.put(ProductController());
-  final UserController userController = Get.put(UserController());
+  final UserProfileController userController = Get.put(UserProfileController());
 
   @override
   void initState() {
     super.initState();
     controller.getFavoriteProducts(); // Fetch favorite products when the widget is initialized
+    userController.getFavorites();
+    controller.getFavoriteProductsOnly(1);
   }
 
   @override
@@ -71,44 +76,70 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
-      if (controller.favoriteProducts.isEmpty) {
-        return Center(child: Text('No favorite products available.'));
+      // if (controller.favoriteProducts.isEmpty) {
+      //   return Center(child: Text('No favorite products available.'));
+      // }
+      if(controller.favoriteProducts.isEmpty){
+     return Center(child: Text('No favorite products available.'));
       }
-      return GridView.count(
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
-        children: List.generate(controller.favoriteProducts.length, (index) {
-          final product = controller.favoriteProducts[index];
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailsPage(product: product),
-                ),
-              );
-            },
-            child: _offerItemdemo(
-              product['name'],
-              product['pricePerUnit'],
-              "₹ ${product['pricePerUnit']}",
-              product['images'][0],
-              product['_id'],
-              product
-            ),
-          );
-        }),
+      return SingleChildScrollView(
+        child: GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+          children: List.generate(controller.favoriteProducts.length, (index) {
+            final product = controller.favoriteProducts[index];
+                print("fav---products $product");
+                   // Convert double to string for display
+             // Convert values to String
+            String productId = product['productId'].toString();
+            String productName = product['name'].toString();
+            String productImage = product['images'][0].toString();
+              // Handle price conversion for both int and double types
+            double pricePerUnit;
+            if (product['pricePerUnit'] is int) {
+              pricePerUnit = (product['pricePerUnit'] as int).toDouble();
+            } else if (product['pricePerUnit'] is double) {
+              pricePerUnit = product['pricePerUnit'];
+            } else {
+              pricePerUnit = double.tryParse(product['pricePerUnit'].toString()) ?? 0.0;
+            }
+            return InkWell(
+              onTap: () {
+        
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ProductDetailsPage(product: product),
+                //   ),
+                // );
+              },
+              child: _offerItemdemo(
+                productName,
+                pricePerUnit,
+                productImage,
+                productId,
+                // product['productName'],
+                // pricePerUnit,
+                // // double.parse(product['pricePerUnit']),
+                // // "₹ ${product['pricePerUnit']}",
+                // product['productImage'],
+                // product['productId']
+                // product
+              ),
+            );
+          }),
+        ),
       );
     });
   }
 
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl, String Pid, Map<String, dynamic> product) {
+      String name, double newPrice, String imageUrl, String Pid) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
-        double containerHeight = screenWidth * 0.9;
+        double containerHeight = screenWidth * 0.8;
         double containerWidth = screenWidth * 0.9;
 
         return Container(
@@ -119,11 +150,25 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Image.network(
-                    imageUrl,
-                    width: containerWidth,
-                    height: containerHeight * 0.8,
-                    fit: BoxFit.cover,
+                   Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Image.network(
+                      imageUrl,
+                      width: containerWidth,
+                      height: containerHeight *
+                          0.8, // Adjust image height ratio as needed
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/no_image.jpg', // Path to your asset image
+                          width: containerWidth,
+                          height: containerHeight *
+                              0.8, // Adjust image height ratio as needed
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
                   ),
                   Positioned(
                     right: 0,
@@ -132,15 +177,16 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
                       width: 40,
                       child: IconButton(
                         icon: Icon(
-                          userController.isFavorite.value
+                          controller.isProductFavorite(Pid)
                               ? Icons.favorite
                               : Icons.favorite_rounded,
-                          color: userController.isFavorite.value
+                           color: controller.isProductFavorite(Pid)
                               ? Colors.red
-                              : Colors.white,
+                              : Colors.red,
                         ),
                         onPressed: () {
-                          userController.toggleFavorite(Pid);
+                              controller.toggleFavorite(Pid);
+                          // controller.isProductFavorite(Pid);
                           // Map<String, dynamic> favItem = {
                           //   'productId': product['productId'],
                           //   'productName': product['name'],
@@ -171,21 +217,21 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            newPrice,
+                            "$newPrice",
                             style: TextStyle(
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            ' $oldPrice',
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(horizontal: 8),
+                        //   child: Text(
+                        //     ' $oldPrice',
+                        //     style: TextStyle(
+                        //       color: Colors.red,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

@@ -36,19 +36,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+                    backgroundColor: Color(0xFF2E2E2E),
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text('Category',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,color: Colors.white,),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: Icon(Icons.shopping_cart,color: Colors.white,),
             onPressed: () {
               Navigator.push(
                 context,
@@ -59,7 +60,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person,color: Colors.white,),
             onPressed: () {
               Navigator.push(
                 context,

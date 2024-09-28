@@ -8,6 +8,14 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+const List<String> fertilizerList = <String>[
+  'Organic',
+  'Chemical',
+  'Vermicompost',
+  'Others'
+];
+
+
 class RateCalc extends StatefulWidget {
   const RateCalc();
 
@@ -18,6 +26,9 @@ class RateCalc extends StatefulWidget {
 class _RateCalcState extends State<RateCalc> {
   File? _image;
   String? _response;
+
+    String selectedFertilizer = fertilizerList.first;
+    // String selectedFertilizer = "Choose Your District";
 
   @override
   void initState() {
@@ -41,6 +52,46 @@ class _RateCalcState extends State<RateCalc> {
   OptionItem optionItemSelected2 = OptionItem(title: "Choose Your Location");
 
   TextEditingController controller = TextEditingController();
+
+    void _showDialog(String title, String a, String b, String c) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          // content: Text(content),
+          content: Container(
+            height: 120,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Profit: ₹$a",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "Profit Percentage: $b%",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "Advice: $c",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     var qty = 1;
@@ -111,10 +162,20 @@ class _RateCalcState extends State<RateCalc> {
                   height: 30,
                 ),
                 Center(
-                    child: Text(
-                  "Mandi Rate Calculator",
+                  child: Column(
+                    children: [
+                     Text(
+                  "Mandi Rate Fetcher",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-                )),
+                ),
+                 Text(
+                  "(works for only Uttar Preadesh)",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,color: Colors.red),
+                )
+                    
+                  ],),
+                    
+                ),
 
                 SizedBox(
                   height: 30,
@@ -199,6 +260,63 @@ class _RateCalcState extends State<RateCalc> {
                   height: 40,
                 ),
 
+                 Center(
+                   child: Expanded(
+                                  child: Container(
+                                    height: 70.0,
+                                    width: 350,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white, // Background color
+                                      borderRadius: BorderRadius.circular(
+                                          15.0), // Rounded corners
+                                      border: Border.all(
+                                        color: Color.fromARGB(
+                                            200, 131, 221, 93), // Border color
+                                        width: 2.0, // Border width
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey
+                                              .withOpacity(0.5), // Shadow color
+                                          spreadRadius: 1, // Shadow spread
+                                          blurRadius: 6, // Shadow blur
+                                          offset: Offset(0, 1), // Shadow position
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: DropdownButton<String>(
+                                        value: selectedFertilizer,
+                                        
+                                        icon: const Icon(
+                                            Icons.arrow_drop_down_sharp),
+                                        elevation: 20,
+                                        style:
+                                            const TextStyle(color: Colors.black,fontSize: 18),
+                                        underline: Container(
+                                          height: 0, // Removes default underline
+                                        ),
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            selectedFertilizer = value!;
+                                          });
+                                        },
+                                        items: fertilizerList
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                 ),
+                              SizedBox(height: 40,),
+
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
@@ -261,20 +379,20 @@ class _RateCalcState extends State<RateCalc> {
                   height: 30,
                 ),
 
-                Center(
-                  child: Container(
-                      height: 150,
-                      width: 250,
-                      decoration: BoxDecoration(
-                          // color:Colors.green[100],
-                          borderRadius: BorderRadius.circular(30.0),
-                          border: Border.all(color: Colors.white)),
-                      child: Center(
-                          child: Text(
-                        '$_response',
-                        style: TextStyle(fontSize: 40),
-                      ))),
-                )
+                // Center(
+                //   child: Container(
+                //       height: 150,
+                //       width: 250,
+                //       decoration: BoxDecoration(
+                //           // color:Colors.green[100],
+                //           borderRadius: BorderRadius.circular(30.0),
+                //           border: Border.all(color: Colors.white)),
+                //       child: Center(
+                //           child: Text(
+                //         '$_response',
+                //         style: TextStyle(fontSize: 40),
+                //       ))),
+                // )
               ],
             ),
           ),

@@ -116,6 +116,7 @@ final order = {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.transparent,
+              backgroundColor: Color(0xFF2E2E2E),
         // elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -126,7 +127,7 @@ final order = {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back,color: Colors.white,),
               onPressed: () {
                 Navigator.pop(context); // Navigate back
               },

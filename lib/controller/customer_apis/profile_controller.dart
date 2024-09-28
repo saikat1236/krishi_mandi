@@ -26,7 +26,7 @@ class UserProfileController extends GetxController {
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
   }
 
-    bool isProductInCart(String productId) {
+  bool isProductInCart(String productId) {
     return cartItems.any((item) => item['productId'] == productId);
   }
 
