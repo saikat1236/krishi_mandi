@@ -65,7 +65,7 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
   @override
   void initState() {
     super.initState();
-    controller.getFavoriteProducts(); // Fetch favorite products when the widget is initialized
+    // controller.getFavoriteProducts(); // Fetch favorite products when the widget is initialized
     userController.getFavorites();
     controller.getFavoriteProductsOnly(1);
     print(controller.favoriteProducts);
@@ -89,8 +89,8 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
           crossAxisCount: 2,
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
-          children: List.generate(controller.favoriteProducts.length, (index) {
-            final product = controller.favoriteProducts[index];
+          children: List.generate(controller.favprods.length, (index) {
+            final product = controller.favprods[index];
                 print("fav---products $product");
                    // Convert double to string for display
              // Convert values to String
@@ -198,7 +198,7 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
                           //   'productUnitType': product['unit'],
                           // };
                           controller.getFavoriteProductsOnly(1);
-                            controller.getFavoriteProducts();
+                            // controller.getFavoriteProducts();
                           setState(() {}); 
 
                           // controller.addToFavorites(favItem);

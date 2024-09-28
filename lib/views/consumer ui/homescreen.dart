@@ -72,7 +72,10 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchAllProducts();
       // _showLoadingDialog();
-      controller.favoriteProducts();
+          // userController.getFavorites();
+    controller.getFavoriteProductsOnly(1);
+    print(controller.favoriteProducts);
+    controller.loadFavoriteProducts();
 
       // Fetch user profile and close the dialog after a 2-second delay
       // userProfileController.getUserProfile().then((_) {
@@ -864,7 +867,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                       height: 40,
                       width: 40,
                       // color: Colors.white,
-                      child: IconButton(
+                         child: Obx(() =>IconButton(
                         icon: Icon(
                           controller.isProductFavorite(Pid)
                               ? Icons.favorite_rounded
@@ -884,21 +887,11 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                             "productUnitType": "kg"
                             // "productInfo":""
                           };
-
-
-                          // controller.addToFavorites(favItem);
                           controller.toggleFavorite(Pid);
-
-
-                          //   controller.getFavoriteProductsOnly(1);
-                          //   controller.getFavoriteProducts();
                           setState(() {}); 
-
-
-                          // userController
-                          //     .toggleFavorite(Pid); // Pass the product ID
                         },
                       ),
+                         )
                     ),
                   ),
                 ],
@@ -923,7 +916,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(5.0),
-                          child: Text("$name+${controller.isProductFavorite(Pid)}",
+                          child: Text("$name",
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ],

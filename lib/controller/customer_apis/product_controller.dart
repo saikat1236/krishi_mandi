@@ -19,8 +19,10 @@ class ProductController extends GetxController {
     super.onInit();
     getAllProducts(1); // Fetch all products when controller initializes
     getAllCategories();
-    getFavoriteProducts(); // Fetch favorite products
+    getFavoriteProductsOnly(1);
+    // getFavoriteProducts(); // Fetch favorite products
     loadFavoriteProducts(); 
+
   }
 
   // Retrieve token from SharedPreferences
@@ -167,29 +169,30 @@ Future<void> getFavoriteProductsOnly(int page) async {
 
     if (response.statusCode == 200) {
       var decodedResponse = jsonDecode(response.body)["payload"];
+      
       if (decodedResponse is List) {
-        // Assuming favoriteProducts stores the list of favorite product objects or IDs
-        var favoriteProductIds = favoriteProducts.map((fav) => fav['productId']).toList();
+        // Assuming favoriteProducts is a list of product IDs
+        var favoriteProductIds = favoriteProducts; // List of product IDs directly
 
-        // Filter products from decodedResponse that match the favoriteProductIds
+        // Filter products from decodedResponse that match the IDs in favoriteProducts
         var favoriteProductList = decodedResponse
             .where((product) => favoriteProductIds.contains(product['productId']))
             .toList();
 
-        // Update filteredProducts with the filtered favorite products
+        // Update favprods with the filtered favorite products
         favprods.value = favoriteProductList;
-        print(favprods);
+        print("favprods $favprods");
       } else {
-        filteredProducts.value = [];
+        favprods.value = [];
         print('No products found');
       }
     } else {
-      filteredProducts.value = [];
+      favprods.value = [];
       print('Failed to load products');
     }
   } catch (e) {
     print('Error: $e');
-    filteredProducts.value = [];
+    favprods.value = [];
   } finally {
     isLoading(false);
   }
@@ -301,22 +304,22 @@ Future<void> addToFavorites(Map<String, dynamic> favItem) async {
     return favoriteProducts.contains(productId);
   }
 
-  // Fetch favorite products
-  Future<void> getFavoriteProducts() async {
-    // isLoading(true);
-        // selectedCategory="Fruit";
+  // // Fetch favorite products
+  // Future<void> getFavoriteProducts() async {
+  //   // isLoading(true);
+  //       // selectedCategory="Fruit";
 
-        favoriteProducts.value = products
-            .where((product) => product['isAvailableInFav'] == true)
-            .toList(); // Filter products based on selected category
-            // filteredProducts.value = products
+  //       favoriteProducts.value = products
+  //           .where((product) => product['isAvailableInFav'] == true)
+  //           .toList(); // Filter products based on selected category
+  //           // filteredProducts.value = products
            
-            // .where((product) => product['category'] == "Vegetable")
-            // .toList(); // Filter products based on selected category
-    print("fav products: $favoriteProducts");
-    // isLoading(false);
-    // Implement fetching favorite products if needed
-  }
+  //           // .where((product) => product['category'] == "Vegetable")
+  //           // .toList(); // Filter products based on selected category
+  //   print("fav products: $favoriteProducts");
+  //   // isLoading(false);
+  //   // Implement fetching favorite products if needed
+  // }
 
 Future<void> toggleFavorite(String productId) async {
   // Check if the productId is already in favoriteProducts
@@ -331,6 +334,8 @@ Future<void> toggleFavorite(String productId) async {
     Get.snackbar('Favorites', 'Product added to favorites!',
         snackPosition: SnackPosition.TOP, backgroundColor: Colors.white);
   }
+  getFavoriteProductsOnly(1);
+  // loadFavoriteProducts();
 
   // Store updated favorite products in SharedPreferences
   await _storeFavoriteProducts();
@@ -338,6 +343,7 @@ Future<void> toggleFavorite(String productId) async {
   // Optional: You can refresh any UI state if necessary
   favoriteProducts.refresh();
   print("Updated favorite products: $favoriteProducts");
+  update();
 }
 
 
