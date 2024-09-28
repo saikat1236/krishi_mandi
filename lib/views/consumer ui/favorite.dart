@@ -68,6 +68,8 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
     controller.getFavoriteProducts(); // Fetch favorite products when the widget is initialized
     userController.getFavorites();
     controller.getFavoriteProductsOnly(1);
+    print(controller.favoriteProducts);
+    controller.loadFavoriteProducts();
   }
 
   @override
@@ -79,7 +81,7 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
       // if (controller.favoriteProducts.isEmpty) {
       //   return Center(child: Text('No favorite products available.'));
       // }
-      if(controller.favoriteProducts.isEmpty){
+      if(controller.favprods.isEmpty){
      return Center(child: Text('No favorite products available.'));
       }
       return SingleChildScrollView(
@@ -107,12 +109,12 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
             return InkWell(
               onTap: () {
         
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ProductDetailsPage(product: product),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetailsPage(product: product),
+                  ),
+                );
               },
               child: _offerItemdemo(
                 productName,
@@ -195,6 +197,9 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
                           //   'pricePerUnit': product['pricePerUnit'],
                           //   'productUnitType': product['unit'],
                           // };
+                          controller.getFavoriteProductsOnly(1);
+                            controller.getFavoriteProducts();
+                          setState(() {}); 
 
                           // controller.addToFavorites(favItem);
                         },

@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchAllProducts();
       // _showLoadingDialog();
+      controller.favoriteProducts();
 
       // Fetch user profile and close the dialog after a 2-second delay
       // userProfileController.getUserProfile().then((_) {
@@ -865,10 +866,10 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                       // color: Colors.white,
                       child: IconButton(
                         icon: Icon(
-                          userController.isFavorite.value
-                              ? Icons.favorite_border
+                          controller.isProductFavorite(Pid)
+                              ? Icons.favorite_rounded
                               : Icons.favorite_rounded,
-                          color: userController.isFavorite.value
+                          color: controller.isProductFavorite(Pid)
                               ? Colors.red
                               : Colors.white,
                         ),
@@ -887,6 +888,12 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
 
                           // controller.addToFavorites(favItem);
                           controller.toggleFavorite(Pid);
+
+
+                          //   controller.getFavoriteProductsOnly(1);
+                          //   controller.getFavoriteProducts();
+                          setState(() {}); 
+
 
                           // userController
                           //     .toggleFavorite(Pid); // Pass the product ID
@@ -916,7 +923,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(5.0),
-                          child: Text(name,
+                          child: Text("$name+${controller.isProductFavorite(Pid)}",
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ],
@@ -944,7 +951,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 3),
                           child: Text(
-                            newPrice,
+                            "₹ $newPrice",
                             style: TextStyle(
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough,
@@ -954,7 +961,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            ' $oldPrice',
+                            '₹ $oldPrice',
                             style: TextStyle(color: Colors.red, fontSize: 15),
                           ),
                         ),

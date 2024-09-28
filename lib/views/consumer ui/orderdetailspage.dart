@@ -15,7 +15,9 @@ class OrderDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+                      backgroundColor: Color(0xFF2E2E2E),
         elevation: 0,
+                centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -24,7 +26,7 @@ class OrderDetailsScreen extends StatelessWidget {
         ),
         title: const Text(
           'Order Details',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
       ),
       body: SingleChildScrollView(

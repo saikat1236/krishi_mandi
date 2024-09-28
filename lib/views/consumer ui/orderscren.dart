@@ -42,16 +42,17 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+                     backgroundColor: Color(0xFF2E2E2E),
         elevation: 0,
+                centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Get.back();
           },
         ),
         title: const Text('Orders',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
       ),
       body: Obx(() {
         if (userProfileController.isLoading.value) {
@@ -71,6 +72,15 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   }
 
   Widget _buildOrderList() {
+      //       if (userProfileController.orders.isEmpty) {
+      //   return Center(child: CircularProgressIndicator());
+      // }
+      // if (controller.favoriteProducts.isEmpty) {
+      //   return Center(child: Text('No favorite products available.'));
+      // }
+      if(userProfileController.orders.isEmpty){
+     return Center(child: Text('No Orders available.'));
+      }
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemCount: userProfileController.orders.length,
@@ -81,6 +91,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
   }
 
   Widget _buildOrderCard(Map<String, dynamic> order) {
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(

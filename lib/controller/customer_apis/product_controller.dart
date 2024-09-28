@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,7 @@ class ProductController extends GetxController {
   var categories = [].obs; // List of categories
   var favoriteProducts = [].obs; // List of favorite product IDs
     var searchResults = [].obs;
+  var favprods = [].obs;
 
   final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
 
@@ -18,6 +20,7 @@ class ProductController extends GetxController {
     getAllProducts(1); // Fetch all products when controller initializes
     getAllCategories();
     getFavoriteProducts(); // Fetch favorite products
+    loadFavoriteProducts(); 
   }
 
   // Retrieve token from SharedPreferences
@@ -125,21 +128,25 @@ class ProductController extends GetxController {
     }
   }
 
-  // Store filtered products in SharedPreferences
-Future<void> _storeFilteredProducts() async {
+// Store favorite products in SharedPreferences
+Future<void> _storeFavoriteProducts() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('filteredProducts', jsonEncode(filteredProducts.value));
+  // Convert favoriteProducts list to JSON string and store it
+  await prefs.setString('favoriteProducts', jsonEncode(favoriteProducts));
 }
 
+
 // Load filtered products from SharedPreferences
-Future<void> _loadFilteredProducts() async {
+// Load favorite products from SharedPreferences
+Future<void> loadFavoriteProducts() async {
   final prefs = await SharedPreferences.getInstance();
-  final String? storedProducts = prefs.getString('filteredProducts');
-  if (storedProducts != null) {
-    final List<dynamic> decodedProducts = jsonDecode(storedProducts);
-    filteredProducts.value = List<Map<String, dynamic>>.from(decodedProducts);
+  final String? storedFavorites = prefs.getString('favoriteProducts');
+  if (storedFavorites != null) {
+    final List<dynamic> decodedFavorites = jsonDecode(storedFavorites);
+    favoriteProducts.value = List<String>.from(decodedFavorites);
   }
 }
+
 Future<void> getFavoriteProductsOnly(int page) async {
   final url = Uri.parse('$baseUrl/filtered');
 
@@ -161,13 +168,17 @@ Future<void> getFavoriteProductsOnly(int page) async {
     if (response.statusCode == 200) {
       var decodedResponse = jsonDecode(response.body)["payload"];
       if (decodedResponse is List) {
-        // Filter products that are marked as favorites (isAvailableInFav is true)
+        // Assuming favoriteProducts stores the list of favorite product objects or IDs
+        var favoriteProductIds = favoriteProducts.map((fav) => fav['productId']).toList();
+
+        // Filter products from decodedResponse that match the favoriteProductIds
         var favoriteProductList = decodedResponse
-            .where((product) => product['isAvailableInFav'] == true)
+            .where((product) => favoriteProductIds.contains(product['productId']))
             .toList();
 
-        // Update filteredProducts with favorite products only
-        filteredProducts.value = favoriteProductList;
+        // Update filteredProducts with the filtered favorite products
+        favprods.value = favoriteProductList;
+        print(favprods);
       } else {
         filteredProducts.value = [];
         print('No products found');
@@ -183,6 +194,7 @@ Future<void> getFavoriteProductsOnly(int page) async {
     isLoading(false);
   }
 }
+
 
   // Filter products by selected categories
   void filterProductsByCategory(String selectedCategory) {
@@ -285,6 +297,7 @@ Future<void> addToFavorites(Map<String, dynamic> favItem) async {
 
   // Check if product is in favorites
   bool isProductFavorite(String productId) {
+    print(favoriteProducts.contains(productId));
     return favoriteProducts.contains(productId);
   }
 
@@ -301,39 +314,32 @@ Future<void> addToFavorites(Map<String, dynamic> favItem) async {
             // .where((product) => product['category'] == "Vegetable")
             // .toList(); // Filter products based on selected category
     print("fav products: $favoriteProducts");
-    isLoading(false);
+    // isLoading(false);
     // Implement fetching favorite products if needed
   }
 
-
-  // Toggle favorite status locally
-void toggleFavorite(String productId) {
-  // Find the product in the products list
-  final productIndex = products.indexWhere((product) => product['productId'] == productId);
-
-  if (productIndex != -1) {
-    // Toggle the isAvailableInFav field
-    products[productIndex]['isAvailableInFav'] = !products[productIndex]['isAvailableInFav'];
-
-    // Update the favoriteProducts list based on the new isAvailableInFav value
-    if (products[productIndex]['isAvailableInFav']) {
-      // Add to favorite products if it's now true
-      favoriteProducts.add(productId);
-      Get.snackbar('Favorites', 'Product added to favorites!',
-          snackPosition: SnackPosition.TOP);
-    } else {
-      // Remove from favorite products if it's now false
-      favoriteProducts.remove(productId);
-      Get.snackbar('Favorites', 'Product removed from favorites!',
-          snackPosition: SnackPosition.TOP);
-    }
-        getFavoriteProductsOnly(1);
-    print(favoriteProducts);
-
-    // Notify listeners or UI if needed
-    products.refresh();
+Future<void> toggleFavorite(String productId) async {
+  // Check if the productId is already in favoriteProducts
+  if (favoriteProducts.contains(productId)) {
+    // If it is, remove it from favorites
+    favoriteProducts.remove(productId);
+    Get.snackbar('Favorites', 'Product removed from favorites!',
+        snackPosition: SnackPosition.TOP, backgroundColor: Colors.white);
+  } else {
+    // If it's not, add it to favorites
+    favoriteProducts.add(productId);
+    Get.snackbar('Favorites', 'Product added to favorites!',
+        snackPosition: SnackPosition.TOP, backgroundColor: Colors.white);
   }
+
+  // Store updated favorite products in SharedPreferences
+  await _storeFavoriteProducts();
+
+  // Optional: You can refresh any UI state if necessary
+  favoriteProducts.refresh();
+  print("Updated favorite products: $favoriteProducts");
 }
+
 
 
   // Add item to cart
