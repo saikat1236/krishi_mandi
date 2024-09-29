@@ -73,6 +73,8 @@ class _RateCalcState extends State<CropProfCalc> {
       final double laborCost = double.tryParse(_laborCostController.text) ?? 0;
       final double otherInputCost =
           double.tryParse(_otherInputCostController.text) ?? 0;
+              final double irriCost =
+          double.tryParse(_irrigationCostController.text) ?? 0;
       final double sell =
           double.tryParse(sellcont.text) ?? 0;
 
@@ -87,12 +89,16 @@ class _RateCalcState extends State<CropProfCalc> {
           pesticideCost: pesticideCost,
           labourCost: laborCost,
           otherInputCost: otherInputCost,
-          sell:sell
+          sell:sell,
+          irriCost:irriCost
         );
 
         if (response['status']) {
-          final profit = response['payload']['profit'];
-          final profitPercentage = response['payload']['profitPercentage'];
+          // final profit = response['payload']['profit'];
+          final cost = otherInputCost+laborCost+pesticideCost+fertilizerCost+seedCost+marketPrice+expectedYield+irriCost;
+          final profit = sell-cost;
+          // final profitPercentage = response['payload']['profitPercentage'];
+          final profitPercentage = (sell-cost)/cost;
           final advice = response['payload']['advice'];
 
           // Show the result in a dialog box
@@ -174,6 +180,7 @@ class _RateCalcState extends State<CropProfCalc> {
     required double labourCost,
     required double otherInputCost,
     required double sell,
+    required double irriCost
   }) async {
     final url =
         Uri.parse('http://54.159.124.169:3000/farmers/calculate-profits');
@@ -188,7 +195,8 @@ class _RateCalcState extends State<CropProfCalc> {
       "pesticideCost": pesticideCost,
       "labourCost": labourCost,
       "otherInputCost": otherInputCost,
-      "sell": sell
+      "sell": sell,
+      "irriCost":irriCost
     });
     // final token = await _getToken();
     String token =
@@ -282,7 +290,7 @@ class _RateCalcState extends State<CropProfCalc> {
     var qty = 1;
     String? _selectedValue; // Variable to hold the selected value
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF2E2E2E),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         // elevation: 0,
@@ -295,7 +303,7 @@ class _RateCalcState extends State<CropProfCalc> {
               TextSpan(
                 text: 'Krishi ',
                 style: TextStyle(
-                    color: Colors.black, // Color for 'Krishi'
+                    color: Colors.white, // Color for 'Krishi'
                     fontWeight: FontWeight.bold,
                     fontSize: 28),
               ),
@@ -312,7 +320,7 @@ class _RateCalcState extends State<CropProfCalc> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.pop(context),
             );
             // return Padding(
@@ -597,7 +605,7 @@ class _RateCalcState extends State<CropProfCalc> {
                           ),
                           SizedBox(height: 10),
                           buildRowWithTextFormField("Crop sold rate in Rs.",
-                              _otherInputCostController),
+                              sellcont),
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: _submitForm,

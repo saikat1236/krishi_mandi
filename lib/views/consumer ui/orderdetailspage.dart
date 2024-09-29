@@ -15,11 +15,11 @@ class OrderDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-                      backgroundColor: Color(0xFF2E2E2E),
+        backgroundColor: Color(0xFF2E2E2E),
         elevation: 0,
                 centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Get.back();
           },

@@ -185,10 +185,11 @@ class _CartListScreenState extends State<CartListScreen> {
 
   @override
   Widget build(BuildContext context) {
+      final UserProfileController userProfileController = Get.put(UserProfileController());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-                    backgroundColor: Color(0xFF2E2E2E),
+        backgroundColor: Color(0xFF2E2E2E),
         centerTitle: true,
         title: const Text(
           'My Cart',
@@ -197,7 +198,7 @@ class _CartListScreenState extends State<CartListScreen> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back,color: Colors.white),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
                 Navigator.pop(context); // Navigate back
               },
@@ -466,18 +467,25 @@ class _CartListScreenState extends State<CartListScreen> {
         );
       }),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (userProfileController.cartItems.isNotEmpty) {
-
-          Get.to(() => FinalOrderScreen(
-                cartItems: userProfileController.getCartItems(),
-              )); // Navigate to the final order screen
-            
-          } else {
-            Get.snackbar("Cart is empty", "");
-            
-          }
-        },
+onPressed: () {
+  print(userProfileController.userProfile["Address"]);
+  
+  // Check if the cart is empty
+  if (userProfileController.cartItems.isEmpty) {
+    Get.snackbar("Cart is empty", "",backgroundColor: Colors.white);
+  } else {
+    // Check if the user has any addresses
+    var addresses = userProfileController.userProfile["Address"];
+    if (addresses != null && addresses.isNotEmpty) {
+      // Navigate to the final order screen if the cart has items
+      Get.to(() => FinalOrderScreen(
+        cartItems: userProfileController.getCartItems(),
+      ));
+    } else {
+      Get.snackbar("Address not available", "",backgroundColor: Colors.white);
+    }
+  }
+},
         label: Text(
           'Place Order',
           style: TextStyle(color: Colors.white, fontSize: 16),

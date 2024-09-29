@@ -874,7 +874,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                               : Icons.favorite_rounded,
                           color: controller.isProductFavorite(Pid)
                               ? Colors.red
-                              : Colors.white,
+                              : Colors.grey,
                         ),
                         onPressed: () {
                           // Create the favItem map

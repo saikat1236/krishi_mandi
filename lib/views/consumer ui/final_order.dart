@@ -105,7 +105,7 @@ final order = {
   }).toList(),
   "totalAmount": double.tryParse(userProfileController.getTotalAmount()?.toString() ?? "0.0") ?? 0.0,
   // "totalAmount" : 105.0,
-  "paymentType": "Credit Card", // Adjust if you need to support other payment types
+  "paymentType": "Cash on Delivery", // Adjust if you need to support other payment types
 };
 
 
@@ -171,7 +171,7 @@ final order = {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    height: 220,
+                    height: 250,
                     // height: 180,
                     width: 550,
                     decoration: BoxDecoration(

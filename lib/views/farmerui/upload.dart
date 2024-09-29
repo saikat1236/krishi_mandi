@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_model_list/drop_down/model.dart';
 import 'package:dropdown_model_list/drop_down/select_drop_radio.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +23,19 @@ class _UploadpageState extends State<Uploadpage> {
 
   final ImagePicker _picker = ImagePicker();
   final DropListModel dropListModel1 = DropListModel([
-    OptionItem(id: "1", title: "Crop 1"),
-    OptionItem(id: "2", title: "Crop 2"),
-    OptionItem(id: "3", title: "Crop 3"),
+  OptionItem(id: "1", title: "Potato (आलू)"),
+  OptionItem(id: "2", title: "Tomato (टमाटर)"),
+  OptionItem(id: "3", title: "Onion (प्याज़)"),
+  OptionItem(id: "4", title: "Ginger (अदरक)"),
+  OptionItem(id: "5", title: "Chilli (मिर्च)"), // Assuming you still want to keep this item
   ]);
 
   final DropListModel dropListModel2 = DropListModel([
-    OptionItem(id: "1", title: "Fertilizer 1"),
-    OptionItem(id: "2", title: "Fertilizer 2"),
-    OptionItem(id: "3", title: "Fertilizer 3"),
+    OptionItem(id: "1", title: "Organic fertilizer"),
+    OptionItem(id: "2", title: "Vermi compost"),
+    OptionItem(id: "3", title: "Compost"),
+    OptionItem(id: "4", title: "Chemical fertilizer"),
+    OptionItem(id: "5", title: "Others"),
   ]);
 
   OptionItem optionItemSelected = OptionItem(title: "Select Crop");
@@ -40,6 +46,63 @@ class _UploadpageState extends State<Uploadpage> {
     super.initState();
     _loadImageFromAssets();
   }
+
+// Modify your showResultDialog to accept the parsed response
+void showResultDialog(Map<String, dynamic> innerResponse) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Container(
+          height: 300,
+          width: 300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Text(
+                  "Result",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              _buildResultSection(
+                label: "Quality Grade:",
+                result: innerResponse['grade'] ?? 'N/A', // Extract grade from inner response
+              ),
+              const SizedBox(height: 30),
+              _buildResultSection(
+                label: "Type:",
+                result: innerResponse['type'] ?? 'N/A', // Extract type from inner response
+              ),
+              const SizedBox(height: 30),
+              _buildResultSection(
+                label: "Freshness:",
+                result: innerResponse['freshness'] ?? 'N/A', // Extract freshness from inner response
+              ),
+            ],
+          ),
+        ),
+           actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+      );
+    },
+  );
+}
+// Example of how to call the dialog
+// showResultDialog(context);
+
+
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -66,48 +129,63 @@ class _UploadpageState extends State<Uploadpage> {
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_image == null) return;
+ Future<void> _uploadImage() async {
+  if (_image == null) return;
 
-    try {
-      final uri = Uri.parse('http://54.159.124.169:3000/common/predict-product');
-      final request = http.MultipartRequest('POST', uri);
-      request.files.add(await http.MultipartFile.fromPath('files', _image!.path));
+  try {
+    final uri = Uri.parse('http://54.159.124.169:3000/common/predict-product');
+    final request = http.MultipartRequest('POST', uri);
+    request.files.add(await http.MultipartFile.fromPath('files', _image!.path));
 
-      final response = await request.send();
+    final response = await request.send();
 
-      if (response.statusCode == 200) {
-        final responseData = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseData); // Decode the JSON response
+      
+      if (jsonResponse['status'] == true) {
+        // Extract the payload and parse the inner response
+        final payload = jsonResponse['payload'];
+        final innerResponse = jsonDecode(payload['response']); // Decode the inner response
+
+        // Show the dialog with the result
+        showResultDialog(innerResponse); // Pass the inner response to the dialog
+
         setState(() {
-          _response = responseData;
+          _response = innerResponse.toString(); // Store the inner response as a string for state
           print(_response);
         });
       } else {
-        final responseData = await response.stream.bytesToString();
         setState(() {
-          _response = 'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
+          _response = 'Failed to upload image. Response: $responseData';
         });
       }
-    } catch (e) {
+    } else {
+      final responseData = await response.stream.bytesToString();
       setState(() {
-        _response = 'Failed to upload image. Error: $e';
+        _response = 'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
       });
     }
+  } catch (e) {
+    setState(() {
+      _response = 'Failed to upload image. Error: $e';
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xFF2E2E2E),
         elevation: 0,
         centerTitle: true,
         title: const Text(
           'AI Quality Grading',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -117,187 +195,222 @@ class _UploadpageState extends State<Uploadpage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _image != null
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 300,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),),
-                      child: Image.file(_image!, fit: BoxFit.cover,),
+                ? InkWell(
+                    onTap: () {
+                      // Handle tap event here
+                      print('Container tapped!');
+                      _pickImage();
+                      // Add your action for tap, e.g., showing image details or navigating to another screen
+                    },
+// Your existing long press handler to pick an image
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: _image != null // Check if _image is not null
+                            ? Image.file(
+                                _image!,
+                                fit: BoxFit.cover,
+                              )
+                            : Center(
+                                child: Text(
+                                  'No image selected', // Placeholder when no image is selected
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey),
+                                ),
+                              ),
+                      ),
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 300,
-                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),),
-                      child: Center(
-                        child: Image.asset(
-                          "assets/fileupload.png",
-                          height: 300,
-                          width: 600,
+                : InkWell(
+                    onTap: () {
+                      // Handle tap event here
+                      print('Container tapped 2!');
+                      _pickImage();
+                      // You can add your action for tap here, like navigating to another screen or showing a dialog
+                    },
+                    // Your existing long press handler
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          // Add additional styling if needed
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            "assets/fileupload.png",
+                            height: 300,
+                            width: 600,
+                          ),
                         ),
                       ),
                     ),
                   ),
+
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(30.0),
-                  //       side: const BorderSide(
-                  //           color: Color.fromRGBO(74, 230, 50, 0.961),
-                  //           width: 2.0),
-                  //     ),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 30, vertical: 15),
-                  //   ),
-                  //   onPressed: _pickImage,
-                  //   child: const Text(
-                  //     "Pick Image",
-                  //     style: TextStyle(color: Colors.black),
-                  //   ),
-                  // ),
-                   ElevatedButton(
-                            onPressed: _pickImage,
-                            style: ElevatedButton.styleFrom(
-                              minimumSize:
-                                  Size(150, 50), // Same size as the Container
-                              padding: EdgeInsets
-                                  .zero, // Remove padding to match exact size
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // Rounded corners
-                              ),
-                              // Use a gradient as background using a decoration box with Ink
-                              backgroundColor: Colors
-                                  .transparent, // Set transparent background color
-                              shadowColor: Colors
-                                  .transparent, // Remove button's default shadow
-                            ),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment
-                                      .centerRight, // Start from the right (270deg equivalent)
-                                  end: Alignment
-                                      .centerLeft, // End towards the left
-                                  colors: [
-                                    Color(0xFF362A84), // Hex color #362A84
-                                    Color(0xFF84D761), // Hex color #84D761
-                                  ],
-                                  stops: [
-                                    0.0023,
-                                    0.942,
-                                  ], // Percentage stops 0.23% and 94.2%
-                                ),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Container(
-                                width: 150,
-                                height: 50,
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Pick Image",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    maxLines: 2,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                  const Spacer(),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(30.0),
-                  //       side: const BorderSide(
-                  //           color: Color.fromRGBO(74, 230, 50, 0.961),
-                  //           width: 2.0),
-                  //     ),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 30, vertical: 15),
-                  //   ),
-                  //   onPressed: _uploadImage,
-                  //   child: const Text(
-                  //     "Upload Image",
-                  //     style: TextStyle(color: Colors.black),
-                  //   ),
-                  // ),
-                   ElevatedButton(
-                            onPressed: _uploadImage,
-                            style: ElevatedButton.styleFrom(
-                              minimumSize:
-                                  Size(150, 50), // Same size as the Container
-                              padding: EdgeInsets
-                                  .zero, // Remove padding to match exact size
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // Rounded corners
-                              ),
-                              // Use a gradient as background using a decoration box with Ink
-                              backgroundColor: Colors
-                                  .transparent, // Set transparent background color
-                              shadowColor: Colors
-                                  .transparent, // Remove button's default shadow
-                            ),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment
-                                      .centerRight, // Start from the right (270deg equivalent)
-                                  end: Alignment
-                                      .centerLeft, // End towards the left
-                                  colors: [
-                                    Color(0xFF362A84), // Hex color #362A84
-                                    Color(0xFF84D761), // Hex color #84D761
-                                  ],
-                                  stops: [
-                                    0.0023,
-                                    0.942,
-                                  ], // Percentage stops 0.23% and 94.2%
-                                ),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Container(
-                                width: 150,
-                                height: 50,
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Upload Image",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    maxLines: 2,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       // ElevatedButton(
+            //       //   style: ElevatedButton.styleFrom(
+            //       //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
+            //       //     shape: RoundedRectangleBorder(
+            //       //       borderRadius: BorderRadius.circular(30.0),
+            //       //       side: const BorderSide(
+            //       //           color: Color.fromRGBO(74, 230, 50, 0.961),
+            //       //           width: 2.0),
+            //       //     ),
+            //       //     padding: const EdgeInsets.symmetric(
+            //       //         horizontal: 30, vertical: 15),
+            //       //   ),
+            //       //   onPressed: _pickImage,
+            //       //   child: const Text(
+            //       //     "Pick Image",
+            //       //     style: TextStyle(color: Colors.black),
+            //       //   ),
+            //       // ),
+            //        ElevatedButton(
+            //                 onPressed: _pickImage,
+            //                 style: ElevatedButton.styleFrom(
+            //                   minimumSize:
+            //                       Size(150, 50), // Same size as the Container
+            //                   padding: EdgeInsets
+            //                       .zero, // Remove padding to match exact size
+            //                   shape: RoundedRectangleBorder(
+            //                     borderRadius: BorderRadius.circular(
+            //                         15.0), // Rounded corners
+            //                   ),
+            //                   // Use a gradient as background using a decoration box with Ink
+            //                   backgroundColor: Colors
+            //                       .transparent, // Set transparent background color
+            //                   shadowColor: Colors
+            //                       .transparent, // Remove button's default shadow
+            //                 ),
+            //                 child: Ink(
+            //                   decoration: BoxDecoration(
+            //                     gradient: LinearGradient(
+            //                       begin: Alignment
+            //                           .centerRight, // Start from the right (270deg equivalent)
+            //                       end: Alignment
+            //                           .centerLeft, // End towards the left
+            //                       colors: [
+            //                         Color(0xFF362A84), // Hex color #362A84
+            //                         Color(0xFF84D761), // Hex color #84D761
+            //                       ],
+            //                       stops: [
+            //                         0.0023,
+            //                         0.942,
+            //                       ], // Percentage stops 0.23% and 94.2%
+            //                     ),
+            //                     borderRadius: BorderRadius.circular(15.0),
+            //                   ),
+            //                   child: Container(
+            //                     width: 150,
+            //                     height: 50,
+            //                     alignment: Alignment.center,
+            //                     child: Padding(
+            //                       padding: const EdgeInsets.all(8.0),
+            //                       child: Text(
+            //                         "Pick Image",
+            //                         style: TextStyle(
+            //                           fontSize: 20,
+            //                           color: Colors.white,
+            //                           fontWeight: FontWeight.w700,
+            //                         ),
+            //                         maxLines: 2,
+            //                         textAlign: TextAlign.left,
+            //                       ),
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //       const Spacer(),
+            //       // ElevatedButton(
+            //       //   style: ElevatedButton.styleFrom(
+            //       //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
+            //       //     shape: RoundedRectangleBorder(
+            //       //       borderRadius: BorderRadius.circular(30.0),
+            //       //       side: const BorderSide(
+            //       //           color: Color.fromRGBO(74, 230, 50, 0.961),
+            //       //           width: 2.0),
+            //       //     ),
+            //       //     padding: const EdgeInsets.symmetric(
+            //       //         horizontal: 30, vertical: 15),
+            //       //   ),
+            //       //   onPressed: _uploadImage,
+            //       //   child: const Text(
+            //       //     "Upload Image",
+            //       //     style: TextStyle(color: Colors.black),
+            //       //   ),
+            //       // ),
+            //  ElevatedButton(
+            //           onPressed: _uploadImage,
+            //           style: ElevatedButton.styleFrom(
+            //             minimumSize:
+            //                 Size(150, 50), // Same size as the Container
+            //             padding: EdgeInsets
+            //                 .zero, // Remove padding to match exact size
+            //             shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(
+            //                   15.0), // Rounded corners
+            //             ),
+            //             // Use a gradient as background using a decoration box with Ink
+            //             backgroundColor: Colors
+            //                 .transparent, // Set transparent background color
+            //             shadowColor: Colors
+            //                 .transparent, // Remove button's default shadow
+            //           ),
+            //           child: Ink(
+            //             decoration: BoxDecoration(
+            //               gradient: LinearGradient(
+            //                 begin: Alignment
+            //                     .centerRight, // Start from the right (270deg equivalent)
+            //                 end: Alignment
+            //                     .centerLeft, // End towards the left
+            //                 colors: [
+            //                   Color(0xFF362A84), // Hex color #362A84
+            //                   Color(0xFF84D761), // Hex color #84D761
+            //                 ],
+            //                 stops: [
+            //                   0.0023,
+            //                   0.942,
+            //                 ], // Percentage stops 0.23% and 94.2%
+            //               ),
+            //               borderRadius: BorderRadius.circular(15.0),
+            //             ),
+            //             child: Container(
+            //               width: 150,
+            //               height: 50,
+            //               alignment: Alignment.center,
+            //               child: Padding(
+            //                 padding: const EdgeInsets.all(8.0),
+            //                 child: Text(
+            //                   "Upload Image",
+            //                   style: TextStyle(
+            //                     fontSize: 20,
+            //                     color: Colors.white,
+            //                     fontWeight: FontWeight.w700,
+            //                   ),
+            //                   maxLines: 2,
+            //                   textAlign: TextAlign.left,
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 10),
             _buildDropdownSection(
               title: "Select A Crop:",
               dropListModel: dropListModel1,
@@ -308,7 +421,7 @@ class _UploadpageState extends State<Uploadpage> {
                 });
               },
             ),
-            const SizedBox(height: 30),
+            // const SizedBox(height: 10),
             _buildDropdownSection(
               title: "Select A Fertilizer:",
               dropListModel: dropListModel2,
@@ -319,50 +432,62 @@ class _UploadpageState extends State<Uploadpage> {
                 });
               },
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             Center(
-              child: Text(
-                "Result",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
+              child: ElevatedButton(
+                onPressed: _uploadImage,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(150, 50), // Same size as the Container
+                  padding:
+                      EdgeInsets.zero, // Remove padding to match exact size
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(15.0), // Rounded corners
+                  ),
+                  // Use a gradient as background using a decoration box with Ink
+                  backgroundColor:
+                      Colors.transparent, // Set transparent background color
+                  shadowColor:
+                      Colors.transparent, // Remove button's default shadow
+                ),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment
+                          .centerRight, // Start from the right (270deg equivalent)
+                      end: Alignment.centerLeft, // End towards the left
+                      colors: [
+                        Color(0xFF362A84), // Hex color #362A84
+                        Color(0xFF84D761), // Hex color #84D761
+                      ],
+                      stops: [
+                        0.0023,
+                        0.942,
+                      ], // Percentage stops 0.23% and 94.2%
+                    ),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                    width: 150,
+                    height: 50,
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Upload Image",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 2,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-            _buildResultSection(
-              label: "Quality Grade:",
-              result: _response ?? 'N/A',
-            ),
-            const SizedBox(height: 30),
-            _buildResultSection(
-              label: "Variety:",
-              result: "Kurfi Chandramukhi Potatoes",
-            ),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("About",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight:FontWeight.w500
-              
-                  ),
-                  ),
-                  SizedBox(height: 20,),
-                  Text(
-                    "The Chandramukhi potato is a prominent variety of potato known for its excellent quality and adaptability. It is widely cultivated in India, particularly in the northern regions, due to its high yield and resistance to various diseases. The tubers of the Chandramukhi potato are medium to large in size, with a smooth, light brown skin and a creamy white flesh that is perfect for a variety of culinary uses. This variety is particularly favored for its good storage properties, making it a reliable choice for both farmers and consumers. Its versatility in cooking, from boiling and frying to baking, makes the Chandramukhi potato a staple in many households and an essential ingredient in numerous traditional Indian dishes."
-                 , style: TextStyle(
-                  
-                  ),
-                  )
-                ],
-              ),
-            )
           ],
         ),
       ),
@@ -417,10 +542,10 @@ class _UploadpageState extends State<Uploadpage> {
           ),
         ),
         Container(
-          height: 60,
-          width: 200,
+          height: 40,
+          width: 150,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
+            // border: Border.all(color: Colors.black),
           ),
           child: Center(
             child: Padding(
