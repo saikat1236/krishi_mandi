@@ -170,7 +170,7 @@ class _OtpScreen2State extends State<OtpScreenfarm> {
                       if (controller.isOtpVerified()) {
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                          MaterialPageRoute(builder: (context) => FarmHome()),
                           (Route<dynamic> route) =>
                               false, // This removes all the previous routes
                         );
