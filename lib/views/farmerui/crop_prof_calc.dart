@@ -489,7 +489,7 @@ class _RateCalcState extends State<CropProfCalc> {
                                             .none, // Removes the underline
                                         hintText: 'Area',
                                       ),
-                                      // keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType.number,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Please enter Crop Used';

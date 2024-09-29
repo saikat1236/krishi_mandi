@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controller/customer_apis/addresscontroller.dart';
 
 class AddShippingAddressScreen extends StatelessWidget {
@@ -21,7 +20,6 @@ class AddShippingAddressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.green,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -41,14 +39,13 @@ class AddShippingAddressScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTextField(label: 'Name', controller: _nameController),
-                _buildTextField(label: 'Mobile', controller: _mobileController),
+                _buildMobileField(), // Use the new method for the mobile field
                 _buildTextField(label: 'Email', controller: _emailController),
                 _buildTextField(label: 'Address Line 1', controller: _addressLine1Controller),
-                 _buildTextField(label: 'Address Line 2', controller: _addressLine2Controller),
+                _buildOptionalTextField(label: 'Address Line 2', controller: _addressLine2Controller),
                 _buildTextField(label: 'City', controller: _cityController),
-                _buildTextField(label: 'Pin', controller: _pinController),
+                _buildPinField(), // Use the method for the pin field
                 const SizedBox(height: 16),
-                // Container with a fixed height and width
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 20.0),
@@ -64,8 +61,8 @@ class AddShippingAddressScreen extends StatelessWidget {
                           city: _cityController.text,
                           pin: int.tryParse(_pinController.text) ?? 0,
                         );
+                        Get.back(); // Move this to inside the validation
                       }
-                      Get.back();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -89,7 +86,6 @@ class AddShippingAddressScreen extends StatelessWidget {
     );
   }
 
-
   Widget _buildTextField(
       {required String label, required TextEditingController controller}) {
     return Padding(
@@ -97,13 +93,81 @@ class AddShippingAddressScreen extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: (value) {
-          if (value == null || value.isEmpty) {
+          // Check if the field is empty, but skip validation for Address Line 2
+          if (label != 'Address Line 2' && (value == null || value.isEmpty)) {
             return 'Please enter $label';
           }
           return null;
         },
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: const TextStyle(color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionalTextField(
+      {required String label, required TextEditingController controller}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // New method for the mobile field
+  Widget _buildMobileField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: TextFormField(
+        controller: _mobileController,
+        validator: (value) {
+          // Validate the mobile field
+          if (value == null || value.isEmpty) {
+            return 'Please enter Mobile Number';
+          }
+          return null;
+        },
+        keyboardType: TextInputType.phone, // Open numeric keypad
+        decoration: InputDecoration(
+          labelText: 'Mobile',
+          labelStyle: const TextStyle(color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Method for the pin field
+  Widget _buildPinField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: TextFormField(
+        controller: _pinController,
+        validator: (value) {
+          // Validate the pin field
+          if (value == null || value.isEmpty) {
+            return 'Please enter Pin';
+          }
+          return null;
+        },
+        keyboardType: TextInputType.number, // Open numeric keypad
+        decoration: InputDecoration(
+          labelText: 'Pin',
           labelStyle: const TextStyle(color: Colors.grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),

@@ -125,6 +125,8 @@ class _RateCalcState extends State<RateCalc> {
   String? maxPrice;
   String? modalPrice;
 
+
+
   Future<void> _showDialog(String dist, String commu, String vari) async {
     // Print for debugging
     print("here");
@@ -185,17 +187,17 @@ class _RateCalcState extends State<RateCalc> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Min Price: ₹$minPrice",
+                    "Min Price: ₹$minPrice per Kg",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Max Price: ₹$maxPrice",
+                    "Max Price: ₹$maxPrice per Kg",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Modal Price: ₹$modalPrice",
+                    "Modal Price: ₹$modalPrice per Kg",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ],

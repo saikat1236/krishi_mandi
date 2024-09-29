@@ -181,6 +181,17 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+    void _launchURL(BuildContext context, String url) async {
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      // Show a SnackBar or some indication of failure
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch $url')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -418,105 +429,41 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
-                  ListTile(
-                    leading: Icon(Icons.group),
-                    title: Text('About Us'),
-                    onTap: () async {
-                      const url =
-                          'https://krishimandi.in/about-us'; // Replace with the actual URL
-                      Uri uri = Uri.parse(url);
-
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.privacy_tip),
-                    title: Text('Privacy Policy'),
-                    onTap: () async {
-                      const url =
-                          'https://krishimandi.in/privacy-policy'; // Replace with the actual URL
-                      Uri uri = Uri.parse(url);
-
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.document_scanner),
-                    title: Text('Terms and Conditions'),
-                    onTap: () async {
-                      const url =
-                          'https://krishimandi.in/terms'; // Replace with the actual URL
-                      Uri uri = Uri.parse(url);
-
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.money_off),
-                    title: Text('Refund and Cancellation Policy'),
-                    onTap: () async {
-                      const url =
-                          'https://krishimandi.in/refund-and-cancellation-policy'; // Replace with the actual URL
-                      Uri uri = Uri.parse(url);
-
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.delivery_dining),
-                    title: Text('Shipping and Delivery Policy'),
-                    onTap: () async {
-                      const url =
-                          'https://krishimandi.in/shipping-and-delivery-policy'; // Replace with the actual URL
-                      Uri uri = Uri.parse(url);
-
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                  ),
-                  const Divider(
-                    color: Colors.black45,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.update),
-                    title: Text('Logout'),
-                    onTap: _checkTokenAndNavigate,
-                    // onTap: () async {
-                    //   // Get the SharedPreferences instance
-                    //   final prefs = await SharedPreferences.getInstance();
-
-                    //   // Clear the token from SharedPreferences
-                    //   await prefs.remove('token');
-
-                    //   // Navigate to SplashScreen
-                    //   Get.offAll(() => SplashScreen(
-                    //         initialScreen:
-                    //             LoginScreen(), // Redirect to login screen or any other screen as needed
-                    //         farmerscreen:
-                    //             farmerscreen, // This can be adjusted based on your requirements
-                    //       ));
-                    // },
-                  ),
-
+                 ListTile(
+          leading: Icon(Icons.contact_page),
+          title: Text('Contact Us'),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/'),
+        ),
+        ListTile(
+          leading: Icon(Icons.group),
+          title: Text('About Us'),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/about-us'),
+        ),
+        ListTile(
+          leading: Icon(Icons.privacy_tip),
+          title: Text('Privacy Policy'),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/privacy-policy'),
+        ),
+        ListTile(
+          leading: Icon(Icons.document_scanner),
+          title: Text('Terms and Conditions'),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/terms'),
+        ),
+        ListTile(
+          leading: Icon(Icons.money_off),
+          title: Text('Refund and Cancellation Policy'),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/refund-and-cancellation-policy'),
+        ),
+        ListTile(
+          leading: Icon(Icons.delivery_dining),
+          title: Text('Shipping and Delivery Policy'),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/shipping-and-delivery-policy'),
+        ),
+        const Divider(color: Colors.black45),
+        ListTile(
+          title: Text('Logout'),
+          onTap: _checkTokenAndNavigate, // Assuming this method is defined elsewhere
+        ),
                   // ListTile(
                   //   leading: Icon(Icons.account_tree_outlined),
                   //   title: Text('Plugins'),
