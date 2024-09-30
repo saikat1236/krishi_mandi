@@ -20,14 +20,18 @@ class Uploadpage extends StatefulWidget {
 class _UploadpageState extends State<Uploadpage> {
   File? _image;
   String? _response;
+   bool _isLoading = false; // Add loading flag
+
 
   final ImagePicker _picker = ImagePicker();
   final DropListModel dropListModel1 = DropListModel([
-  OptionItem(id: "1", title: "Potato (आलू)"),
-  OptionItem(id: "2", title: "Tomato (टमाटर)"),
-  OptionItem(id: "3", title: "Onion (प्याज़)"),
-  OptionItem(id: "4", title: "Ginger (अदरक)"),
-  OptionItem(id: "5", title: "Chilli (मिर्च)"), // Assuming you still want to keep this item
+    OptionItem(id: "1", title: "Potato (आलू)"),
+    OptionItem(id: "2", title: "Tomato (टमाटर)"),
+    OptionItem(id: "3", title: "Onion (प्याज़)"),
+    OptionItem(id: "4", title: "Ginger (अदरक)"),
+    OptionItem(
+        id: "5",
+        title: "Chilli (मिर्च)"), // Assuming you still want to keep this item
   ]);
 
   final DropListModel dropListModel2 = DropListModel([
@@ -48,46 +52,49 @@ class _UploadpageState extends State<Uploadpage> {
   }
 
 // Modify your showResultDialog to accept the parsed response
-void showResultDialog(Map<String, dynamic> innerResponse) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        content: Container(
-          height: 300,
-          width: 300,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Text(
-                  "Result",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+  void showResultDialog(Map<String, dynamic> innerResponse) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            height: 300,
+            width: 300,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Text(
+                    "Result",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              _buildResultSection(
-                label: "Quality Grade:",
-                result: innerResponse['grade'] ?? 'N/A', // Extract grade from inner response
-              ),
-              const SizedBox(height: 30),
-              _buildResultSection(
-                label: "Type:",
-                result: innerResponse['type'] ?? 'N/A', // Extract type from inner response
-              ),
-              const SizedBox(height: 30),
-              _buildResultSection(
-                label: "Freshness:",
-                result: innerResponse['freshness'] ?? 'N/A', // Extract freshness from inner response
-              ),
-            ],
+                const SizedBox(height: 30),
+                _buildResultSection(
+                  label: "Quality Grade:",
+                  result: innerResponse['grade'] ??
+                      'N/A', // Extract grade from inner response
+                ),
+                const SizedBox(height: 30),
+                _buildResultSection(
+                  label: "Type:",
+                  result: innerResponse['type'] ??
+                      'N/A', // Extract type from inner response
+                ),
+                const SizedBox(height: 30),
+                _buildResultSection(
+                  label: "Freshness:",
+                  result: innerResponse['freshness'] ??
+                      'N/A', // Extract freshness from inner response
+                ),
+              ],
+            ),
           ),
-        ),
-           actions: <Widget>[
+          actions: <Widget>[
             TextButton(
               child: Text("OK"),
               onPressed: () {
@@ -95,14 +102,12 @@ void showResultDialog(Map<String, dynamic> innerResponse) {
               },
             ),
           ],
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 // Example of how to call the dialog
 // showResultDialog(context);
-
-
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -129,49 +134,65 @@ void showResultDialog(Map<String, dynamic> innerResponse) {
     }
   }
 
- Future<void> _uploadImage() async {
-  if (_image == null) return;
+  Future<void> _uploadImage() async {
+    if (_image == null) return;
 
-  try {
-    final uri = Uri.parse('http://54.159.124.169:3000/common/predict-product');
-    final request = http.MultipartRequest('POST', uri);
-    request.files.add(await http.MultipartFile.fromPath('files', _image!.path));
+    setState(() {
+      _isLoading = true; // Start loading
+    });
 
-    final response = await request.send();
+    try {
+      final uri =
+          Uri.parse('http://54.159.124.169:3000/common/predict-product');
+      final request = http.MultipartRequest('POST', uri);
+      request.files
+          .add(await http.MultipartFile.fromPath('files', _image!.path));
 
-    if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseData); // Decode the JSON response
-      
-      if (jsonResponse['status'] == true) {
-        // Extract the payload and parse the inner response
-        final payload = jsonResponse['payload'];
-        final innerResponse = jsonDecode(payload['response']); // Decode the inner response
+      final response = await request.send();
 
-        // Show the dialog with the result
-        showResultDialog(innerResponse); // Pass the inner response to the dialog
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final Map<String, dynamic> jsonResponse =
+            jsonDecode(responseData); // Decode the JSON response
 
-        setState(() {
-          _response = innerResponse.toString(); // Store the inner response as a string for state
-          print(_response);
-        });
+        if (jsonResponse['status'] == true) {
+          // Extract the payload and parse the inner response
+          final payload = jsonResponse['payload'];
+          final innerResponse =
+              jsonDecode(payload['response']); // Decode the inner response
+
+          // Show the dialog with the result
+          showResultDialog(
+              innerResponse); // Pass the inner response to the dialog
+
+          setState(() {
+            _response = innerResponse
+                .toString(); // Store the inner response as a string for state
+            print(_response);
+          });
+        } else {
+          setState(() {
+            _response = 'Failed to upload image. Response: $responseData';
+          });
+        }
       } else {
+        final responseData = await response.stream.bytesToString();
         setState(() {
-          _response = 'Failed to upload image. Response: $responseData';
+          _response =
+              'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
         });
       }
-    } else {
-      final responseData = await response.stream.bytesToString();
+    } catch (e) {
       setState(() {
-        _response = 'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
+        _response = 'Failed to upload image. Error: $e';
       });
     }
-  } catch (e) {
-    setState(() {
-      _response = 'Failed to upload image. Error: $e';
-    });
+    finally {
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -255,162 +276,6 @@ void showResultDialog(Map<String, dynamic> innerResponse) {
                   ),
 
             const SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       // ElevatedButton(
-            //       //   style: ElevatedButton.styleFrom(
-            //       //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
-            //       //     shape: RoundedRectangleBorder(
-            //       //       borderRadius: BorderRadius.circular(30.0),
-            //       //       side: const BorderSide(
-            //       //           color: Color.fromRGBO(74, 230, 50, 0.961),
-            //       //           width: 2.0),
-            //       //     ),
-            //       //     padding: const EdgeInsets.symmetric(
-            //       //         horizontal: 30, vertical: 15),
-            //       //   ),
-            //       //   onPressed: _pickImage,
-            //       //   child: const Text(
-            //       //     "Pick Image",
-            //       //     style: TextStyle(color: Colors.black),
-            //       //   ),
-            //       // ),
-            //        ElevatedButton(
-            //                 onPressed: _pickImage,
-            //                 style: ElevatedButton.styleFrom(
-            //                   minimumSize:
-            //                       Size(150, 50), // Same size as the Container
-            //                   padding: EdgeInsets
-            //                       .zero, // Remove padding to match exact size
-            //                   shape: RoundedRectangleBorder(
-            //                     borderRadius: BorderRadius.circular(
-            //                         15.0), // Rounded corners
-            //                   ),
-            //                   // Use a gradient as background using a decoration box with Ink
-            //                   backgroundColor: Colors
-            //                       .transparent, // Set transparent background color
-            //                   shadowColor: Colors
-            //                       .transparent, // Remove button's default shadow
-            //                 ),
-            //                 child: Ink(
-            //                   decoration: BoxDecoration(
-            //                     gradient: LinearGradient(
-            //                       begin: Alignment
-            //                           .centerRight, // Start from the right (270deg equivalent)
-            //                       end: Alignment
-            //                           .centerLeft, // End towards the left
-            //                       colors: [
-            //                         Color(0xFF362A84), // Hex color #362A84
-            //                         Color(0xFF84D761), // Hex color #84D761
-            //                       ],
-            //                       stops: [
-            //                         0.0023,
-            //                         0.942,
-            //                       ], // Percentage stops 0.23% and 94.2%
-            //                     ),
-            //                     borderRadius: BorderRadius.circular(15.0),
-            //                   ),
-            //                   child: Container(
-            //                     width: 150,
-            //                     height: 50,
-            //                     alignment: Alignment.center,
-            //                     child: Padding(
-            //                       padding: const EdgeInsets.all(8.0),
-            //                       child: Text(
-            //                         "Pick Image",
-            //                         style: TextStyle(
-            //                           fontSize: 20,
-            //                           color: Colors.white,
-            //                           fontWeight: FontWeight.w700,
-            //                         ),
-            //                         maxLines: 2,
-            //                         textAlign: TextAlign.left,
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //       const Spacer(),
-            //       // ElevatedButton(
-            //       //   style: ElevatedButton.styleFrom(
-            //       //     backgroundColor: const Color.fromRGBO(74, 230, 50, 0.961),
-            //       //     shape: RoundedRectangleBorder(
-            //       //       borderRadius: BorderRadius.circular(30.0),
-            //       //       side: const BorderSide(
-            //       //           color: Color.fromRGBO(74, 230, 50, 0.961),
-            //       //           width: 2.0),
-            //       //     ),
-            //       //     padding: const EdgeInsets.symmetric(
-            //       //         horizontal: 30, vertical: 15),
-            //       //   ),
-            //       //   onPressed: _uploadImage,
-            //       //   child: const Text(
-            //       //     "Upload Image",
-            //       //     style: TextStyle(color: Colors.black),
-            //       //   ),
-            //       // ),
-            //  ElevatedButton(
-            //           onPressed: _uploadImage,
-            //           style: ElevatedButton.styleFrom(
-            //             minimumSize:
-            //                 Size(150, 50), // Same size as the Container
-            //             padding: EdgeInsets
-            //                 .zero, // Remove padding to match exact size
-            //             shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(
-            //                   15.0), // Rounded corners
-            //             ),
-            //             // Use a gradient as background using a decoration box with Ink
-            //             backgroundColor: Colors
-            //                 .transparent, // Set transparent background color
-            //             shadowColor: Colors
-            //                 .transparent, // Remove button's default shadow
-            //           ),
-            //           child: Ink(
-            //             decoration: BoxDecoration(
-            //               gradient: LinearGradient(
-            //                 begin: Alignment
-            //                     .centerRight, // Start from the right (270deg equivalent)
-            //                 end: Alignment
-            //                     .centerLeft, // End towards the left
-            //                 colors: [
-            //                   Color(0xFF362A84), // Hex color #362A84
-            //                   Color(0xFF84D761), // Hex color #84D761
-            //                 ],
-            //                 stops: [
-            //                   0.0023,
-            //                   0.942,
-            //                 ], // Percentage stops 0.23% and 94.2%
-            //               ),
-            //               borderRadius: BorderRadius.circular(15.0),
-            //             ),
-            //             child: Container(
-            //               width: 150,
-            //               height: 50,
-            //               alignment: Alignment.center,
-            //               child: Padding(
-            //                 padding: const EdgeInsets.all(8.0),
-            //                 child: Text(
-            //                   "Upload Image",
-            //                   style: TextStyle(
-            //                     fontSize: 20,
-            //                     color: Colors.white,
-            //                     fontWeight: FontWeight.w700,
-            //                   ),
-            //                   maxLines: 2,
-            //                   textAlign: TextAlign.left,
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
             _buildDropdownSection(
               title: "Select A Crop:",
               dropListModel: dropListModel1,
@@ -435,7 +300,7 @@ void showResultDialog(Map<String, dynamic> innerResponse) {
             const SizedBox(height: 10),
             Center(
               child: ElevatedButton(
-                onPressed: _uploadImage,
+               onPressed: _isLoading ? null : _uploadImage,
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(150, 50), // Same size as the Container
                   padding:
@@ -471,7 +336,11 @@ void showResultDialog(Map<String, dynamic> innerResponse) {
                     width: 150,
                     height: 50,
                     alignment: Alignment.center,
-                    child: Padding(
+                    child:  _isLoading
+                        ? CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "Upload Image",
@@ -545,8 +414,8 @@ void showResultDialog(Map<String, dynamic> innerResponse) {
           height: 40,
           width: 150,
           decoration: BoxDecoration(
-            // border: Border.all(color: Colors.black),
-          ),
+              // border: Border.all(color: Colors.black),
+              ),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
