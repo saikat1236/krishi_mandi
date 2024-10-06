@@ -6,7 +6,7 @@ import 'package:krishi_customer_app/controller/customer_apis/user_controller.dar
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShippingAddressController extends GetxController {
-  final String apiUrl = "http://54.159.124.169:3000/users";
+  final String apiUrl = "https://backend.krishimandi.in/users";
   final UserController userController = Get.find<UserController>();
 
   bool _isDialogVisible = false;

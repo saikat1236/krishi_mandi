@@ -464,6 +464,11 @@ class _HomePageState extends State<HomePage> {
           title: Text('Logout'),
           onTap: _checkTokenAndNavigate, // Assuming this method is defined elsewhere
         ),
+        ListTile(
+          leading: Icon(Icons.delete),
+          title: Text('Delete User',style: TextStyle(color: Colors.red),),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/delete-user'),
+        ),
                   // ListTile(
                   //   leading: Icon(Icons.account_tree_outlined),
                   //   title: Text('Plugins'),

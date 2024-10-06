@@ -183,7 +183,7 @@ class _RateCalcState extends State<CropProfCalc> {
     required double irriCost
   }) async {
     final url =
-        Uri.parse('http://54.159.124.169:3000/farmers/calculate-profits');
+        Uri.parse('https://backend.krishimandi.in/farmers/calculate-profits');
 
     // Request body
     final body = jsonEncode({

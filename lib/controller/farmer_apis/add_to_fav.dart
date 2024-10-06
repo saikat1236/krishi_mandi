@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class AddToFavoritesController extends GetxController {
   Future<void> addToFavorites(String productId) async {
-    final url = Uri.parse('http://54.159.124.169:3000/users/add-to-favorites');
+    final url = Uri.parse('https://backend.krishimandi.in/users/add-to-favorites');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

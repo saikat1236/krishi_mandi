@@ -80,7 +80,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     final String? token = prefs.getString('token');
 
     final url = Uri.parse(
-        'http://54.159.124.169:3000/users/add-item-in-cart'); // Replace with your API endpoint
+        'https://backend.krishimandi.in/users/add-item-in-cart'); // Replace with your API endpoint
 
     final cartItem = {
       "orderType": 1,

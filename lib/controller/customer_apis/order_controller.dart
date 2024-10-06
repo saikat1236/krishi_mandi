@@ -10,7 +10,7 @@ class OrderController extends GetxController {
   var orders = [].obs;
    var errorMessage = ''.obs;
 
-  final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
+  final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
     Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
@@ -38,7 +38,7 @@ class OrderController extends GetxController {
   // Add a new order
 
   Future<void> createOrder(Map<String, dynamic> order) async {
-    final url = 'http://54.159.124.169:3000/users/create-order';
+    final url = 'https://backend.krishimandi.in/users/create-order';
     isLoading.value = true;
       final token = await _getToken();
 

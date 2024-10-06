@@ -10,7 +10,7 @@ class UserProfileController extends GetxController {
   var orders = [].obs;
   var favorites = [].obs;
 
-  final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
+  final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
   final double vouch = 0.0; // Your voucher value
 
   @override

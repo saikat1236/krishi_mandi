@@ -324,7 +324,7 @@ class AuthController extends GetxController {
   var isSignedIn = false.obs;
   var isOtpVerified = false.obs;
 
-  final String baseUrl = 'http://54.159.124.169:3000/auth'; // Replace with your base URL
+  final String baseUrl = 'https://backend.krishimandi.in/auth'; // Replace with your base URL
 
   // Sign in a user
   Future<void> signIn(String mobileNumber, BuildContext context) async {

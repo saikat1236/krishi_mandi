@@ -10,7 +10,7 @@ class FarmProfileController extends GetxController {
   var orders = [].obs;
   var favorites = [].obs;
 
-  final String baseUrl = 'http://54.159.124.169:3000/farmers'; // Replace with your base URL
+  final String baseUrl = 'https://backend.krishimandi.in/farmers'; // Replace with your base URL
   final double vouch = 0.0; // Your voucher value
 
   @override

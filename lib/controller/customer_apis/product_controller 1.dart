@@ -8,7 +8,7 @@ class ProductController extends GetxController {
   var isLoading = false.obs;
   var products = [].obs;
 
-  final String baseUrl = 'http://54.159.124.169:3000/users'; // Replace with your base URL
+  final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
 
   @override
   void onInit() {

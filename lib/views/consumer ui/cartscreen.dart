@@ -152,7 +152,7 @@ class _CartListScreenState extends State<CartListScreen> {
 
   Future<void> _removeItemFromCart(String productId) async {
     final url =
-        Uri.parse('http://54.159.124.169:3000/users/remove-item-from-cart');
+        Uri.parse('https://backend.krishimandi.in/users/remove-item-from-cart');
     final token = await _getToken();
 
     try {

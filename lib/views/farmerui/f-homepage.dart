@@ -77,7 +77,7 @@ class _FarmHomeState extends State<FarmHome> {
   }
 
   // Replace with your API endpoint
-  final String apiUrl = 'http://54.159.124.169:3000/common/forecast-weather';
+  final String apiUrl = 'https://backend.krishimandi.in/common/forecast-weather';
 
   Future<void> fetchWeatherData(double lat, double lon) async {
     try {
@@ -467,6 +467,11 @@ class _FarmHomeState extends State<FarmHome> {
         ListTile(
           title: Text('Logout'),
           onTap: _checkTokenAndNavigate, // Assuming this method is defined elsewhere
+        ),
+         ListTile(
+          leading: Icon(Icons.delete),
+          title: Text('Delete User',style: TextStyle(color: Colors.red),),
+          onTap: () => _launchURL(context, 'https://krishimandi.in/delete-user'),
         ),
       
                     // ListTile(

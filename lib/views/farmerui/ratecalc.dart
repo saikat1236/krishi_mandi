@@ -36,7 +36,7 @@ class _RateCalcState extends State<RateCalc> {
       isLoadingDistricts = true;
     });
     final response = await http
-        .post(Uri.parse('http://54.159.124.169:3000/common/get-districts'));
+        .post(Uri.parse('https://backend.krishimandi.in/common/get-districts'));
     if (response.statusCode == 200) {
       // print("ajkdbwifuer");
       var data = jsonDecode(response.body);
@@ -62,7 +62,7 @@ class _RateCalcState extends State<RateCalc> {
       selectedCommodity = null;
     });
     final response = await http
-        .post(Uri.parse('http://54.159.124.169:3000/common/get-comodities'));
+        .post(Uri.parse('https://backend.krishimandi.in/common/get-comodities'));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       setState(() {
@@ -92,7 +92,7 @@ class _RateCalcState extends State<RateCalc> {
     });
 
     final response = await http.post(
-      Uri.parse('http://54.159.124.169:3000/common/get-varieties'),
+      Uri.parse('https://backend.krishimandi.in/common/get-varieties'),
       headers: {
         'Content-Type': 'application/json', // Ensure you're sending JSON
       },
@@ -232,7 +232,7 @@ class _RateCalcState extends State<RateCalc> {
     });
 
     final response = await http.post(
-      Uri.parse('http://54.159.124.169:3000/common/get-current-rates'),
+      Uri.parse('https://backend.krishimandi.in/common/get-current-rates'),
           headers: {
         'Content-Type': 'application/json', // Ensure you're sending JSON
       },

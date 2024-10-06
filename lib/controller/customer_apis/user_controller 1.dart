@@ -6,7 +6,7 @@ class UserController extends GetxController {
   var isLoading = false.obs;
   var user = {}.obs;
 
-  final String baseUrl = 'http://54.159.124.169:3000/user'; // Replace with your base URL
+  final String baseUrl = 'https://backend.krishimandi.in/user'; // Replace with your base URL
 
   // Add a new user
   Future<void> addUser(String name, String email, String phone) async {
