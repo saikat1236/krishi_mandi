@@ -1,4 +1,4 @@
-package com.app.krishi_mandi
+package com.app.krishimandibyEkarigari
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -50,8 +50,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
+                      "Thank you for choosing Krishi Mandi for your agricultural needs. We appreciate your business and look forward to serving you again in the future.",
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14),
                     ),
                   ],
                 ),

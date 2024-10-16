@@ -72,10 +72,10 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchAllProducts();
       // _showLoadingDialog();
-          // userController.getFavorites();
-    controller.getFavoriteProductsOnly(1);
-    print(controller.favoriteProducts);
-    controller.loadFavoriteProducts();
+      // userController.getFavorites();
+      controller.getFavoriteProductsOnly(1);
+      print(controller.favoriteProducts);
+      controller.loadFavoriteProducts();
 
       // Fetch user profile and close the dialog after a 2-second delay
       // userProfileController.getUserProfile().then((_) {
@@ -85,6 +85,14 @@ class _HomePageState extends State<HomePage> {
       //     }
       //   });
       // });
+          // Add listener to call searchProducts when text changes
+    _searchController.addListener(() {
+      if (_searchController.text.isNotEmpty) {
+        controller.searchProducts(_searchController.text); // Call search API
+      } else {
+        _clearSearch; // Clear search results if input is empty
+      }
+    });
     });
   }
 
@@ -125,8 +133,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _hasFocus = false;
     });
-    controller
-        .clearSearchResults(); // Assuming this method clears the search results
+    controller.clearSearchResults(); // Assuming this method clears the search results
   }
 
   void fetchAllProducts() {
@@ -181,7 +188,8 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-    void _launchURL(BuildContext context, String url) async {
+
+  void _launchURL(BuildContext context, String url) async {
     Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -429,46 +437,56 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
-                 ListTile(
-          leading: Icon(Icons.contact_page),
-          title: Text('Contact Us'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/'),
-        ),
-        ListTile(
-          leading: Icon(Icons.group),
-          title: Text('About Us'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/about-us'),
-        ),
-        ListTile(
-          leading: Icon(Icons.privacy_tip),
-          title: Text('Privacy Policy'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/privacy-policy'),
-        ),
-        ListTile(
-          leading: Icon(Icons.document_scanner),
-          title: Text('Terms and Conditions'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/terms'),
-        ),
-        ListTile(
-          leading: Icon(Icons.money_off),
-          title: Text('Refund and Cancellation Policy'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/refund-and-cancellation-policy'),
-        ),
-        ListTile(
-          leading: Icon(Icons.delivery_dining),
-          title: Text('Shipping and Delivery Policy'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/shipping-and-delivery-policy'),
-        ),
-        const Divider(color: Colors.black45),
-        ListTile(
-          title: Text('Logout'),
-          onTap: _checkTokenAndNavigate, // Assuming this method is defined elsewhere
-        ),
-        ListTile(
-          leading: Icon(Icons.delete),
-          title: Text('Delete User',style: TextStyle(color: Colors.red),),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/delete-user'),
-        ),
+                  ListTile(
+                    leading: Icon(Icons.contact_page),
+                    title: Text('Contact Us'),
+                    onTap: () => _launchURL(context, 'https://krishimandi.in/'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.group),
+                    title: Text('About Us'),
+                    onTap: () =>
+                        _launchURL(context, 'https://krishimandi.in/about-us'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.privacy_tip),
+                    title: Text('Privacy Policy'),
+                    onTap: () => _launchURL(
+                        context, 'https://krishimandi.in/privacy-policy'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.document_scanner),
+                    title: Text('Terms and Conditions'),
+                    onTap: () =>
+                        _launchURL(context, 'https://krishimandi.in/terms'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.money_off),
+                    title: Text('Refund and Cancellation Policy'),
+                    onTap: () => _launchURL(context,
+                        'https://krishimandi.in/refund-and-cancellation-policy'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.delivery_dining),
+                    title: Text('Shipping and Delivery Policy'),
+                    onTap: () => _launchURL(context,
+                        'https://krishimandi.in/shipping-and-delivery-policy'),
+                  ),
+                  const Divider(color: Colors.black45),
+                  ListTile(
+                    title: Text('Logout'),
+                    onTap:
+                        _checkTokenAndNavigate, // Assuming this method is defined elsewhere
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.delete),
+                    title: Text(
+                      'Delete User',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    onTap: () => _launchURL(
+                        context, 'https://krishimandi.in/delete-user'),
+                  ),
                   // ListTile(
                   //   leading: Icon(Icons.account_tree_outlined),
                   //   title: Text('Plugins'),
@@ -816,35 +834,35 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   Positioned(
                     right: 0,
                     child: Container(
-                      height: 40,
-                      width: 40,
-                      // color: Colors.white,
-                         child: Obx(() =>IconButton(
-                        icon: Icon(
-                          controller.isProductFavorite(Pid)
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_rounded,
-                          color: controller.isProductFavorite(Pid)
-                              ? Colors.red
-                              : Colors.grey,
-                        ),
-                        onPressed: () {
-                          // Create the favItem map
-                          Map<String, dynamic> favItem = {
-                            "productId": Pid,
-                            "productName": name,
-                            "productImage": imageUrl,
-                            // "pricePerUnit": newPrice,
-                            "pricePerUnit": double.parse(oldPrice),
-                            "productUnitType": "kg"
-                            // "productInfo":""
-                          };
-                          controller.toggleFavorite(Pid);
-                          setState(() {}); 
-                        },
-                      ),
-                         )
-                    ),
+                        height: 40,
+                        width: 40,
+                        // color: Colors.white,
+                        child: Obx(
+                          () => IconButton(
+                            icon: Icon(
+                              controller.isProductFavorite(Pid)
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_rounded,
+                              color: controller.isProductFavorite(Pid)
+                                  ? Colors.red
+                                  : Colors.grey,
+                            ),
+                            onPressed: () {
+                              // Create the favItem map
+                              Map<String, dynamic> favItem = {
+                                "productId": Pid,
+                                "productName": name,
+                                "productImage": imageUrl,
+                                // "pricePerUnit": newPrice,
+                                "pricePerUnit": double.parse(oldPrice),
+                                "productUnitType": "kg"
+                                // "productInfo":""
+                              };
+                              controller.toggleFavorite(Pid);
+                              setState(() {});
+                            },
+                          ),
+                        )),
                   ),
                 ],
               ),
@@ -868,8 +886,12 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(5.0),
-                          child: Text("$name",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: Text(
+                            name.length > 15
+                                ? '${name.substring(0, 15)}...'
+                                : name, // Trim to 10 characters and add '...'
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),

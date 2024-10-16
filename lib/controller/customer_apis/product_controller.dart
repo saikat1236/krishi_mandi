@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../constants/AppConstants.dart';
+
 class ProductController extends GetxController {
   var isLoading = true.obs;
   var products = [].obs; // Use a List<Map<String, dynamic>> for products
@@ -12,7 +14,9 @@ class ProductController extends GetxController {
     var searchResults = [].obs;
   var favprods = [].obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
+
+  final String baseUrl2 = '${AppContants.baseUrl}users'; // Replace with your base URL
+
 
   @override
   void onInit() {
@@ -27,13 +31,15 @@ class ProductController extends GetxController {
 
   // Retrieve token from SharedPreferences
   Future<String> _getToken() async {
+      print(baseUrl2);
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
   }
   void searchProducts(String query) async {
+    print("in search");
         final token = await _getToken();
     final response = await http.post(
-      Uri.parse('$baseUrl/search'),
+      Uri.parse('$baseUrl2/search'),
       
       body: jsonEncode({
         "page": 1,
@@ -47,6 +53,7 @@ class ProductController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      print('Search results: ${response.body}');
       searchResults.value = jsonDecode(response.body)['payload'];
     } else {
       searchResults.value = [];
@@ -59,7 +66,7 @@ class ProductController extends GetxController {
   // Get all categories
   Future<void> getAllCategories() async {
     // isLoading(true);
-    final url = Uri.parse('$baseUrl/get-available-categories');
+    final url = Uri.parse('$baseUrl2/get-available-categories');
     final token = await _getToken();
 
     final headers = {
@@ -90,7 +97,7 @@ class ProductController extends GetxController {
   // Get all products
   Future<void> getAllProducts(int page) async {
     // isLoading(true);
-    final url = Uri.parse('$baseUrl/filtered');
+    final url = Uri.parse('$baseUrl2/filtered');
 
     try {
       final token = await _getToken(); // Get token from SharedPreferences
@@ -150,7 +157,7 @@ Future<void> loadFavoriteProducts() async {
 }
 
 Future<void> getFavoriteProductsOnly(int page) async {
-  final url = Uri.parse('$baseUrl/filtered');
+  final url = Uri.parse('$baseUrl2/filtered');
 
   try {
     final token = await _getToken(); // Get token from SharedPreferences
@@ -223,7 +230,7 @@ Future<void> getFavoriteProductsOnly(int page) async {
 
   // Add item to favorites
 Future<void> addToFavorites(Map<String, dynamic> favItem) async {
-  final url = Uri.parse('$baseUrl/add-item-in-favs');
+  final url = Uri.parse('$baseUrl2/add-item-in-favs');
 
   try {
     final token = await _getToken(); // Get token from SharedPreferences
@@ -273,7 +280,7 @@ Future<void> addToFavorites(Map<String, dynamic> favItem) async {
 
   // Remove item from favorites
   Future<void> removeFromFavorites(String productId) async {
-    final url = Uri.parse('$baseUrl/remove-item-from-favs');
+    final url = Uri.parse('$baseUrl2/remove-item-from-favs');
 
     try {
       final token = await _getToken(); // Get token from SharedPreferences
@@ -350,7 +357,7 @@ Future<void> toggleFavorite(String productId) async {
 
   // Add item to cart
   Future<bool> addToCart(Map<String, dynamic> cartItem) async {
-    final url = Uri.parse('$baseUrl/add-item-in-cart');
+    final url = Uri.parse('$baseUrl2/add-item-in-cart');
 
     try {
       final token = await _getToken(); // Get token from SharedPreferences

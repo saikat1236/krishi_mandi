@@ -182,7 +182,6 @@ class _ProductListViewState extends State<ProductListView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.selectedCategory != widget.selectedCategory) {
       fetchProductsForCategory(widget.selectedCategory);
-
     }
   }
 
@@ -196,8 +195,8 @@ class _ProductListViewState extends State<ProductListView> {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
-      if (controller.products.isEmpty) {
-        return Center(child: Text('No Products available.'));
+      else if (controller.filteredProducts.isEmpty) {
+        return Center(child: Text('No ${widget.selectedCategory} available.'));
       }
       return GridView.count(
         crossAxisCount: 2,

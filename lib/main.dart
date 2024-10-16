@@ -9,6 +9,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/favorite.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderdetailspage%201.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/orderscren.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/otpscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/products.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
@@ -22,11 +23,12 @@ import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Uncomment this if HomeScreen is available
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
-
+import 'package:flutter/foundation.dart';
 import 'controller/customer_apis/profile_controller.dart';
 import 'views/farmerui/crop_prof_calc.dart';
 import 'views/farmerui/f-homepage.dart';
 import 'views/farmerui/loginsreen.dart';
+import 'package:dotenv/dotenv.dart';
 
 // import 'views/consumer ui/signupscreen.dart';
 
@@ -81,8 +83,6 @@ void main() async {
       farmerscreen: LoginScreenfarm(),
     );
   }
-
-
   // Get.put(GlobalController());
     Get.put(UserProfileController()); 
 
@@ -136,6 +136,7 @@ class MyApp extends StatelessWidget {
       // home: CropProfCalc(),
       // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
       home: initialScreen,
+      // home: OtpScreen2(mobileNumber: "7085959167")
     );
   }
 }

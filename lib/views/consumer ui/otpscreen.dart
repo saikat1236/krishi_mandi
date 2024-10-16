@@ -1,15 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
 import 'package:krishi_customer_app/global_auth.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen.dart';
-import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; 
+import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 import 'package:krishi_customer_app/controller/customer_apis/authcontroller.dart';
 
 class OtpScreen2 extends StatefulWidget {
-    final String mobileNumber;
-  const OtpScreen2({Key? key,required this.mobileNumber}) : super(key: key);
+  final String mobileNumber;
+  const OtpScreen2({Key? key, required this.mobileNumber}) : super(key: key);
 
   @override
   State<OtpScreen2> createState() => _OtpScreen2State();
@@ -21,15 +23,64 @@ class _OtpScreen2State extends State<OtpScreen2> {
   TextEditingController _phoneController = TextEditingController();
   final AuthController controller = Get.put(AuthController());
   bool _isChecked = false;
-   final _otpControllers = List.generate(4, (_) => TextEditingController());
+  final _otpControllers = List.generate(4, (_) => TextEditingController());
+
+  bool _isResendButtonDisabled = false;
+  int _start = 10;
+  Timer? _timer;
+
+  // Function to call the signIn API and start the countdown
+  void _resendCode() {
+    setState(() {
+      _isResendButtonDisabled = true;
+      _start = 59; // Reset the timer
+    });
+
+    // Call your signIn or OTP resend function here
+    signIn();
+
+    // Start the countdown timer
+    _startTimer();
+  }
+
+  // Countdown timer function
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        setState(() {
+          _isResendButtonDisabled = false;
+          _timer!.cancel(); // Cancel the timer when it reaches 0
+        });
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
+    });
+  }
+
+  // Mock function to simulate signIn API call
+  void signIn() {
+    print("Resending OTP...");
+    // Simulate a sign-in or OTP resend function
+  }
+
+  // @override
+  // void dispose() {
+  //   _timer?.cancel(); // Ensure timer is cancelled when widget is disposed
+  //   super.dispose();
+  // }
 
   @override
   void dispose() {
+    _timer?.cancel(); // Ensure timer is cancelled when widget is disposed
+    super.dispose();
     for (var controller in _otpControllers) {
       controller.dispose();
     }
     super.dispose();
   }
+
   void _onChanged(String value, int index) {
     // If value length is 1, move to the next field or unfocus if it's the last field
     if (value.length == 1) {
@@ -72,19 +123,21 @@ class _OtpScreen2State extends State<OtpScreen2> {
                     "Verify Account",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     width: 350,
                     child: Text(
                       "Code has been send to your phone number. Enter the code to verify your account.",
                       style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   SizedBox(
                     height: 40,
                   ),
-  
+
                   // Mobile Number TextField
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -100,43 +153,52 @@ class _OtpScreen2State extends State<OtpScreen2> {
                     ),
                   ),
                   Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(4, (index) {
-              return Container(
-                // width: 60,
-                width: (MediaQuery.of(context).size.width-140) / 4,
-                margin: EdgeInsets.symmetric(horizontal: 10.0),
-                child: TextField(
-                  controller: _otpControllers[index],
-                  onChanged: (value) => _onChanged(value, index),
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  maxLength: 1,
-                  decoration: InputDecoration(
-                    counterText: '', // Hide counter text
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10),
-                  ),
-                ),
-              );
-            }),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(4, (index) {
+                      return Container(
+                        // width: 60,
+                        width: (MediaQuery.of(context).size.width - 140) / 4,
+                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: TextField(
+                          controller: _otpControllers[index],
+                          onChanged: (value) => _onChanged(value, index),
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          decoration: InputDecoration(
+                            counterText: '', // Hide counter text
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                   // SizedBox(height: 30),
                   Padding(
-                    padding: const EdgeInsets.only(top: 150,bottom: 150),
+                    padding: const EdgeInsets.only(top: 150, bottom: 150),
                     child: Column(
-                        children: [
-                        //   Text(
-                        //     "Didn’t Receive Code? Resend Code",
-                        //     style: TextStyle(color: Colors.grey), // Text color
-                        //   ),
-                        //   SizedBox(height: 10,),
-                        // Text(
-                        //   "Resend code in 00:59",
-                        //   style: TextStyle(color: Colors.grey), // Text color
-                        // ),
-                         ],
-                      ),
+                      children: [
+                        Text(
+                          "Didn’t Receive Code?",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(height: 10),
+                        _isResendButtonDisabled
+                            ? Text(
+                                "Resend code in 00:${_start.toString().padLeft(2, '0')}",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            : GestureDetector(
+                                onTap: _resendCode,
+                                child: Text(
+                                  "Resend Code",
+                                  style: TextStyle(
+                                      color: Colors.blue), // Active color
+                                ),
+                              ),
+                      ],
+                    ),
                   ),
 
                   ElevatedButton(
@@ -151,24 +213,25 @@ class _OtpScreen2State extends State<OtpScreen2> {
                       padding: EdgeInsets.symmetric(
                           horizontal: 100, vertical: 15), // Button size
                     ),
-onPressed: () async {
-  // Verify OTP
-  String otp = _otpControllers.map((controller) => controller.text).join('');
-  print("number "+widget.mobileNumber+", otp: "+otp);
+                    onPressed: () async {
+                      // Verify OTP
+                      String otp = _otpControllers
+                          .map((controller) => controller.text)
+                          .join('');
+                      print("number " + widget.mobileNumber + ", otp: " + otp);
 
- await controller.verifyOtp(widget.mobileNumber, otp);
-  
-  // If OTP is verified successfully, navigate to HomePage
-  if (controller.isOtpVerified()) {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-      (Route<dynamic> route) => false,  // This removes all the previous routes
-    );
-  }
-},
+                      await controller.verifyOtp(widget.mobileNumber, otp);
 
-    
+                      // If OTP is verified successfully, navigate to HomePage
+                      if (controller.isOtpVerified()) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                          (Route<dynamic> route) =>
+                              false, // This removes all the previous routes
+                        );
+                      }
+                    },
                     child: Container(
                       width: 350,
                       child: Center(
