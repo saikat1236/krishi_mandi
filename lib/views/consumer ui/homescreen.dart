@@ -422,21 +422,21 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
-                  ListTile(
-                    leading: Icon(Icons.contact_page),
-                    title: Text('Contact Us'),
-                    onTap: () async {
-                      const url =
-                          'https://krishimandi.in/'; // Replace with the actual URL
-                      Uri uri = Uri.parse(url);
+                  // ListTile(
+                  //   leading: Icon(Icons.contact_page),
+                  //   title: Text('Contact Us'),
+                  //   onTap: () async {
+                  //     const url =
+                  //         'https://krishimandi.in/'; // Replace with the actual URL
+                  //     Uri uri = Uri.parse(url);
 
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                  ),
+                  //     if (await canLaunchUrl(uri)) {
+                  //       await launchUrl(uri);
+                  //     } else {
+                  //       throw 'Could not launch $url';
+                  //     }
+                  //   },
+                  // ),
                   ListTile(
                     leading: Icon(Icons.contact_page),
                     title: Text('Contact Us'),
@@ -479,10 +479,10 @@ class _HomePageState extends State<HomePage> {
                         _checkTokenAndNavigate, // Assuming this method is defined elsewhere
                   ),
                   ListTile(
-                    leading: Icon(Icons.delete),
+                    leading: Icon(Icons.delete,color: Colors.transparent,),
                     title: Text(
                       'Delete User',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.transparent),
                     ),
                     onTap: () => _launchURL(
                         context, 'https://krishimandi.in/delete-user'),

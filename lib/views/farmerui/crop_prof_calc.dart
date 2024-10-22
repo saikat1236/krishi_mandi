@@ -449,7 +449,7 @@ class _RateCalcState extends State<CropProfCalc> {
                                 width:
                                     150, // Fixed width for the label to ensure alignment
                                 child: Text(
-                                  "Area",
+                                  "Area in sq meter",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,

@@ -77,7 +77,8 @@ class _FarmHomeState extends State<FarmHome> {
   }
 
   // Replace with your API endpoint
-  final String apiUrl = 'https://backend.krishimandi.in/common/forecast-weather';
+  final String apiUrl =
+      'https://backend.krishimandi.in/common/forecast-weather';
 
   Future<void> fetchWeatherData(double lat, double lon) async {
     try {
@@ -136,6 +137,7 @@ class _FarmHomeState extends State<FarmHome> {
       print('Error fetching weather data: $e');
     }
   }
+
   void _launchURL(BuildContext context, String url) async {
     Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
@@ -147,6 +149,7 @@ class _FarmHomeState extends State<FarmHome> {
       );
     }
   }
+
   Future<String?> _getCityName(Position position) async {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
@@ -180,11 +183,11 @@ class _FarmHomeState extends State<FarmHome> {
       print('Position: ${position.latitude}, ${position.longitude}');
 
       // Get the city name from the coordinates
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          position.latitude, position.longitude);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
 
       Placemark place = placemarks[0];
-      loc=place.locality;
+      loc = place.locality;
       // print(place.locality);
 
       // Fetch weather data with current location
@@ -254,7 +257,10 @@ class _FarmHomeState extends State<FarmHome> {
             leading: Builder(
               builder: (BuildContext context) {
                 return IconButton(
-                  icon: const Icon(Icons.menu,color: Colors.white,),
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
@@ -432,48 +438,62 @@ class _FarmHomeState extends State<FarmHome> {
                         );
                       },
                     ),
-      
-        ListTile(
-          leading: Icon(Icons.contact_page),
-          title: Text('Contact Us'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/'),
-        ),
-        ListTile(
-          leading: Icon(Icons.group),
-          title: Text('About Us'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/about-us'),
-        ),
-        ListTile(
-          leading: Icon(Icons.privacy_tip),
-          title: Text('Privacy Policy'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/privacy-policy'),
-        ),
-        ListTile(
-          leading: Icon(Icons.document_scanner),
-          title: Text('Terms and Conditions'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/terms'),
-        ),
-        ListTile(
-          leading: Icon(Icons.money_off),
-          title: Text('Refund and Cancellation Policy'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/refund-and-cancellation-policy'),
-        ),
-        ListTile(
-          leading: Icon(Icons.delivery_dining),
-          title: Text('Shipping and Delivery Policy'),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/shipping-and-delivery-policy'),
-        ),
-        const Divider(color: Colors.black45),
-        ListTile(
-          title: Text('Logout'),
-          onTap: _checkTokenAndNavigate, // Assuming this method is defined elsewhere
-        ),
-         ListTile(
-          leading: Icon(Icons.delete),
-          title: Text('Delete User',style: TextStyle(color: Colors.red),),
-          onTap: () => _launchURL(context, 'https://krishimandi.in/delete-user'),
-        ),
-      
+
+                    ListTile(
+                      leading: Icon(Icons.contact_page),
+                      title: Text('Contact Us'),
+                      onTap: () =>
+                          _launchURL(context, 'https://krishimandi.in/'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.group),
+                      title: Text('About Us'),
+                      onTap: () => _launchURL(
+                          context, 'https://krishimandi.in/about-us'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.privacy_tip),
+                      title: Text('Privacy Policy'),
+                      onTap: () => _launchURL(
+                          context, 'https://krishimandi.in/privacy-policy'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.document_scanner),
+                      title: Text('Terms and Conditions'),
+                      onTap: () =>
+                          _launchURL(context, 'https://krishimandi.in/terms'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.money_off),
+                      title: Text('Refund and Cancellation Policy'),
+                      onTap: () => _launchURL(context,
+                          'https://krishimandi.in/refund-and-cancellation-policy'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.delivery_dining),
+                      title: Text('Shipping and Delivery Policy'),
+                      onTap: () => _launchURL(context,
+                          'https://krishimandi.in/shipping-and-delivery-policy'),
+                    ),
+                    const Divider(color: Colors.black45),
+                    ListTile(
+                      title: Text('Logout'),
+                      onTap:
+                          _checkTokenAndNavigate, // Assuming this method is defined elsewhere
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.delete,
+                        color: Colors.transparent,
+                      ),
+                      title: Text(
+                        'Delete User',
+                        style: TextStyle(color: Colors.transparent),
+                      ),
+                      onTap: () => _launchURL(
+                          context, 'https://krishimandi.in/delete-user'),
+                    ),
+
                     // ListTile(
                     //   leading: Icon(Icons.account_tree_outlined),
                     //   title: Text('Plugins'),

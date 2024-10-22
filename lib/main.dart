@@ -25,6 +25,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart'; // Unc
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
 import 'package:flutter/foundation.dart';
 import 'controller/customer_apis/profile_controller.dart';
+import 'views/consumer ui/order_success.dart';
 import 'views/farmerui/crop_prof_calc.dart';
 import 'views/farmerui/f-homepage.dart';
 import 'views/farmerui/loginsreen.dart';
@@ -135,8 +136,8 @@ class MyApp extends StatelessWidget {
       // home: FarmHome()
       // home: CropProfCalc(),
       // home: SplashScreen(initialScreen: initialScreen, farmerscreen: farmerscreen,), // Use the initialScreen determined in main()
-      home: initialScreen,
       // home: OtpScreen2(mobileNumber: "7085959167")
+      home: initialScreen,
     );
   }
 }

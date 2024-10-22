@@ -25,16 +25,16 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context); // Navigate back
-              },
-            );
-          },
-        ),
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return IconButton(
+        //       icon: const Icon(Icons.arrow_back),
+        //       onPressed: () {
+        //         Navigator.pop(context); // Navigate back
+        //       },
+        //     );
+        //   },
+        // ),
       ),
       body: SingleChildScrollView(
         child: Padding(

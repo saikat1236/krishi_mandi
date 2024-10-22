@@ -185,7 +185,8 @@ class _CartListScreenState extends State<CartListScreen> {
 
   @override
   Widget build(BuildContext context) {
-      final UserProfileController userProfileController = Get.put(UserProfileController());
+    final UserProfileController userProfileController =
+        Get.put(UserProfileController());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -467,25 +468,26 @@ class _CartListScreenState extends State<CartListScreen> {
         );
       }),
       floatingActionButton: FloatingActionButton.extended(
-onPressed: () {
-  print(userProfileController.userProfile["Address"]);
-  
-  // Check if the cart is empty
-  if (userProfileController.cartItems.isEmpty) {
-    Get.snackbar("Cart is empty", "",backgroundColor: Colors.white);
-  } else {
-    // Check if the user has any addresses
-    var addresses = userProfileController.userProfile["Address"];
-    if (addresses != null && addresses.isNotEmpty) {
-      // Navigate to the final order screen if the cart has items
-      Get.to(() => FinalOrderScreen(
-        cartItems: userProfileController.getCartItems(),
-      ));
-    } else {
-      Get.snackbar("Address not available", "",backgroundColor: Colors.white);
-    }
-  }
-},
+        onPressed: () {
+          print(userProfileController.userProfile["Address"]);
+
+          // Check if the cart is empty
+          if (userProfileController.cartItems.isEmpty) {
+            Get.snackbar("Cart is empty", "", backgroundColor: Colors.white);
+          } else {
+            // Check if the user has any addresses
+            var addresses = userProfileController.userProfile["Address"];
+            if (addresses != null && addresses.isNotEmpty) {
+              // Navigate to the final order screen if the cart has items
+              Get.to(() => FinalOrderScreen(
+                    cartItems: userProfileController.getCartItems(),
+                  ));
+            } else {
+              Get.snackbar("Address not available", "",
+                  backgroundColor: Colors.white);
+            }
+          }
+        },
         label: Text(
           'Place Order',
           style: TextStyle(color: Colors.white, fontSize: 16),
