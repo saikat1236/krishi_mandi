@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/AppConstants.dart';
 import '../../controller/customer_apis/profile_controller.dart';
@@ -152,8 +153,7 @@ class _CartListScreenState extends State<CartListScreen> {
   }
 
   Future<void> _removeItemFromCart(String productId) async {
-    final url =
-        Uri.parse('${AppContants.baseUrl}/users/remove-item-from-cart');
+    final url = Uri.parse('${AppContants.baseUrl}/users/remove-item-from-cart');
     final token = await _getToken();
 
     try {
@@ -484,8 +484,54 @@ class _CartListScreenState extends State<CartListScreen> {
                     cartItems: userProfileController.getCartItems(),
                   ));
             } else {
-              Get.snackbar("Address not available", "",
-                  backgroundColor: Colors.white);
+              // Get.snackbar("Address not available", "",
+              //     backgroundColor: Colors.white);
+              Get.defaultDialog(
+                titlePadding: EdgeInsets.all(20),
+                title: "Address Not Available",
+                middleText: "Please add a new address to proceed.",
+                backgroundColor: Colors.white,
+                titleStyle: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                middleTextStyle: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+                radius: 8,
+                content: Container(
+                  width: 300, // Set the desired width
+                  height: 100, // Set the desired height
+                  child: Column(
+                    children: [
+                      Text(
+                        "Please add a new address to proceed.",
+                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Define what happens when the button is clicked
+                          // For example, navigate to the address page
+                          Get.to(() => ProfileScreenmain());
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(74, 230, 50, 0.7),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          "Add Address",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
           }
         },

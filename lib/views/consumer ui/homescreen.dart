@@ -775,7 +775,9 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                     int.tryParse(product['pricePerUnit'].toString()) ?? 0,
                     product['images'][0],
                     // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
-                    product['productId']),
+                    product['productId'],
+                    product['discount'] ?? 0
+                    ),
               ),
             );
           }),
@@ -785,7 +787,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
   }
 
   Widget _offerItemdemo(
-      String name, int newPrice, int oldPrice, String imageUrl, String Pid) {
+      String name, int newPrice, int oldPrice, String imageUrl, String Pid, int discount) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
@@ -885,7 +887,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Text(
-                              "55% off",
+                              " $discount % off ",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 10),
                             ),

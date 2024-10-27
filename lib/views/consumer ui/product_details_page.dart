@@ -47,7 +47,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     await cartController.getUserProfile();
     final cartItems = cartController.userProfile['cartItems'] ?? [];
     setState(() {
-      _isInCart = cartItems.any((item) => item['productId'] == widget.product['productId']);
+      _isInCart = cartItems
+          .any((item) => item['productId'] == widget.product['productId']);
     });
   }
 
@@ -83,13 +84,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
     final cartItem = {
       "orderType": 1,
-      "productId": widget.product['productId'], // Assuming 'id' is the key for productId
+      "productId":
+          widget.product['productId'], // Assuming 'id' is the key for productId
       "productName": widget.product['name'],
       "ProductQuantityAddedToCart": qty,
-      "productInfo": widget.product['about'], // Assuming 'about' holds product info
-      "productImages": widget.product['images'], // Assuming 'images' is a list of image URLs
-      "pricePerUnit": widget.product['pricePerUnit'],
-      "productUnitType": widget.product['unit'], // Assuming 'unitType' is the key for product unit type
+      "productInfo":
+          widget.product['about'], // Assuming 'about' holds product info
+      "productImages":
+          widget.product['images'], // Assuming 'images' is a list of image URLs
+      // "pricePerUnit": widget.product['pricePerUnit'],
+      "pricePerUnit": widget.product['pricePerUnit'].toString(),
+      "productUnitType": widget.product[
+          'unit'], // Assuming 'unitType' is the key for product unit type
       "minQ": widget.product['minQuantity']
     };
 
@@ -128,10 +134,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     final product = widget.product;
 
     return Scaffold(
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        // backgroundColor: Colors.transparent,
-        // elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
 
@@ -397,16 +403,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      
                       children: [
-                       
                         Text(
                           "Save up to 10%",
-                          style: TextStyle(fontWeight: FontWeight.w700,fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 14),
                         ),
                         Text(
                           " with business pricing and GST input tax credit.",
-                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 14),
                         ),
                       ],
                     ),
@@ -504,6 +510,134 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   ],
                 ),
                 // SizedBox(height: 10,),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Text(
+                //     "Labels:",
+                //     style: TextStyle(
+                //       fontSize: 20,
+                //       color: Colors.black,
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //     maxLines: 2,
+                //     textAlign: TextAlign.left,
+                //   ),
+                // ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                     scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: product["labels"].map<Widget>((label) {
+                        return Container(
+                          width: 100,
+                          child: Column(children: [
+                            Image.network(
+                              label["imageUrl"],
+                              height: 50,
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              label["name"],
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                         ) );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Product Details:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Brand:",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Model:",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Color:",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Brand Value", // Change this to the actual brand value
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Model Value", // Change this to the actual model value
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Color Value", // Change this to the actual color value
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -533,7 +667,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                )
+                ),
               ],
             )),
       ),
