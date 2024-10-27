@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../constants/AppConstants.dart';
+
 class UserController extends GetxController {
   var isLoading = false.obs;
   var user = {}.obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/user'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/user'; // Replace with your base URL
 
   // Add a new user
   Future<void> addUser(String name, String email, String phone) async {

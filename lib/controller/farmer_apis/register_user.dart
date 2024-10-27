@@ -2,10 +2,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
+
 class RegisterUserController extends GetxController {
   Future<void> registerUser(String email, String mobileNumber) async {
     final url =
-        Uri.parse('https://backend.krishimandi.in/auth-farmer/register-user');
+        Uri.parse('${AppContants.baseUrl}/auth-farmer/register-user');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({'email': email, 'mobileNumber': mobileNumber});
 

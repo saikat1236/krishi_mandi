@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
+
 class AddProductController extends GetxController {
   Future<void> addProduct(
       String productName,
@@ -9,7 +11,7 @@ class AddProductController extends GetxController {
       List<String> productImages,
       double pricePerUnit,
       String productUnitType) async {
-    final url = Uri.parse('https://backend.krishimandi.in/farmers/add-product');
+    final url = Uri.parse('${AppContants.baseUrl}/farmers/add-product');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

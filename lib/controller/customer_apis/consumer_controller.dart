@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../constants/AppConstants.dart';
+
 class ConsumerController extends GetxController {
   var isLoading = false.obs;
   var consumers = [].obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/consumer'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/consumer'; // Replace with your base URL
+  // final String baseUrl = 'https://backend.krishimandi.in/consumer'; // Replace with your base URL
 
   // Get all consumers
   Future<void> getAllConsumers() async {

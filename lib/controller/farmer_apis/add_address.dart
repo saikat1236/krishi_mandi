@@ -2,10 +2,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
+
 class AddAddressController extends GetxController {
   Future<void> addAddress(String name, String mobile, String email,
       String addressLine1, String addressLine2, String city, int pin) async {
-    final url = Uri.parse('https://backend.krishimandi.in/farmers/add-address');
+    final url = Uri.parse('${AppContants.baseUrl}/farmers/add-address');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

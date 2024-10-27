@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
 import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/AppConstants.dart';
+
 class ShippingAddressController extends GetxController {
-  final String apiUrl = "https://backend.krishimandi.in/users";
+  final String apiUrl = '${AppContants.baseUrl}/users';
+  // final String apiUrl = "https://backend.krishimandi.in/users";
   final UserController userController = Get.find<UserController>();
 
   bool _isDialogVisible = false;

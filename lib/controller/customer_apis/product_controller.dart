@@ -14,8 +14,9 @@ class ProductController extends GetxController {
     var searchResults = [].obs;
   var favprods = [].obs;
 
+  // final String baseUrl2 = '${AppContants.baseUrl}/products'; // Replace with your base URL
 
-  final String baseUrl2 = '${AppContants.baseUrl}users'; // Replace with your base URL
+  final String baseUrl2 = '${AppContants.baseUrl}/users'; // Replace with your base URL
 
 
   @override

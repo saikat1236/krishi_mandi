@@ -85,14 +85,14 @@ class _HomePageState extends State<HomePage> {
       //     }
       //   });
       // });
-          // Add listener to call searchProducts when text changes
-    _searchController.addListener(() {
-      if (_searchController.text.isNotEmpty) {
-        controller.searchProducts(_searchController.text); // Call search API
-      } else {
-        _clearSearch; // Clear search results if input is empty
-      }
-    });
+      // Add listener to call searchProducts when text changes
+      _searchController.addListener(() {
+        if (_searchController.text.isNotEmpty) {
+          controller.searchProducts(_searchController.text); // Call search API
+        } else {
+          _clearSearch; // Clear search results if input is empty
+        }
+      });
     });
   }
 
@@ -133,7 +133,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _hasFocus = false;
     });
-    controller.clearSearchResults(); // Assuming this method clears the search results
+    controller
+        .clearSearchResults(); // Assuming this method clears the search results
   }
 
   void fetchAllProducts() {
@@ -479,7 +480,10 @@ class _HomePageState extends State<HomePage> {
                         _checkTokenAndNavigate, // Assuming this method is defined elsewhere
                   ),
                   ListTile(
-                    leading: Icon(Icons.delete,color: Colors.transparent,),
+                    leading: Icon(
+                      Icons.delete,
+                      color: Colors.transparent,
+                    ),
                     title: Text(
                       'Delete User',
                       style: TextStyle(color: Colors.transparent),
@@ -748,6 +752,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
           // ),
           children: List.generate(controller.products.length, (index) {
             final product = controller.products[index] as Map<String, dynamic>;
+            print(product);
 
             return InkWell(
               onTap: () {
@@ -764,8 +769,10 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                 padding: const EdgeInsets.all(5.0),
                 child: _offerItemdemo(
                     product['name'] ?? "Product",
-                    product['newPrice'] ?? "\0.00",
-                    product['pricePerUnit'] ?? 0.00,
+                    // product['newPrice'] ?? 0,
+                    // product['pricePerUnit'] ?? 0,
+                    int.tryParse(product['newPrice'].toString()) ?? 0,
+                    int.tryParse(product['pricePerUnit'].toString()) ?? 0,
                     product['images'][0],
                     // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
                     product['productId']),
@@ -777,8 +784,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
     });
   }
 
-  Widget _offerItemdemo(String name, String newPrice, String oldPrice,
-      String imageUrl, String Pid) {
+  Widget _offerItemdemo(
+      String name, int newPrice, int oldPrice, String imageUrl, String Pid) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
@@ -854,7 +861,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                                 "productName": name,
                                 "productImage": imageUrl,
                                 // "pricePerUnit": newPrice,
-                                "pricePerUnit": double.parse(oldPrice),
+                                "pricePerUnit": oldPrice,
                                 "productUnitType": "kg"
                                 // "productInfo":""
                               };

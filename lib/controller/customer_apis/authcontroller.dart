@@ -14,7 +14,8 @@ class AuthController extends GetxController {
   var isOtpVerified = false.obs;
   RxString token = "".obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/auth'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/auth';
+  // final String baseUrl = 'https://backend.krishimandi.in/auth'; // Replace with your base URL
 
   // Register a new user
   Future<void> registerUser(

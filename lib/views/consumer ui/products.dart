@@ -35,12 +35,16 @@ class ProductsPageState extends State<ProductsPage> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-      backgroundColor: Color(0xFF2E2E2E),
-        title: const Text('Products', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: Color(0xFF2E2E2E),
+        title: const Text('Products',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back,color: Colors.white,),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -117,8 +121,10 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
             },
             child: _offerItemdemo(
               product['name'] ?? "Product",
-              product['newPrice'] ?? "\$0.00",
-              product['pricePerUnit'] ?? "\$0.00",
+              int.tryParse(product['newPrice'].toString()) ?? 0,
+              int.tryParse(product['pricePerUnit'].toString()) ?? 0,
+              // product['newPrice'] ?? "\$0.00",
+              // product['pricePerUnit'] ?? "\$0.00",
               product['images'][0] ?? 'assets/photo.png',
               product['_id'],
               product,
@@ -132,8 +138,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
 
   Widget _offerItemdemo(
       String name,
-      String newPrice,
-      String oldPrice,
+      int newPrice,
+      int oldPrice,
       String imageUrl,
       String Pid,
       Map<String, dynamic> product,
@@ -189,14 +195,15 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(5.0),
-                      child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(name,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            newPrice,
+                            "$newPrice",
                             style: TextStyle(
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,
@@ -206,7 +213,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            oldPrice,
+                            "$oldPrice",
                             style: TextStyle(
                               color: Colors.red,
                             ),

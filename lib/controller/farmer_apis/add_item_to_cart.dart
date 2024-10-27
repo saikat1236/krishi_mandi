@@ -2,9 +2,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
+
 class AddItemInCartController extends GetxController {
   Future<void> addItemInCart(String productId) async {
-    final url = Uri.parse('https://backend.krishimandi.in/users/add-item-in-cart');
+    final url = Uri.parse('${AppContants.baseUrl}/users/add-item-in-cart');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

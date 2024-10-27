@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/AppConstants.dart';
+
 class UserController extends GetxController {
   var isLoading = false.obs;
   var user = {}.obs;
@@ -13,7 +15,7 @@ class UserController extends GetxController {
     getUserById();
   }
 
-  final String baseUrl = 'https://backend.krishimandi.in/user';
+  final String baseUrl = '${AppContants.baseUrl}/user';
 
   // Retrieve token from SharedPreferences
   Future<String> _getToken() async {
@@ -51,7 +53,7 @@ class UserController extends GetxController {
   // Get user by ID
   Future<void> getUserById() async {
     isLoading(true);
-    final url = Uri.parse('https://backend.krishimandi.in/users/get-user-profile');
+    final url = Uri.parse('${AppContants.baseUrl}/users/get-user-profile');
       // Fetch the token from SharedPreferences
   final token = await _getToken();
   print('Token fetched from SharedPreferences: $token');
@@ -87,7 +89,7 @@ class UserController extends GetxController {
   var isFavorite = false.obs;
 
   Future<void> addFavorite(String productId,) async {
-    final url = Uri.parse('https://backend.krishimandi.in/users/add-item-in-favs');
+    final url = Uri.parse('${AppContants.baseUrl}/users/add-item-in-favs');
       final token = await _getToken();
     final headers = {
       'Content-Type': 'application/json',
@@ -108,7 +110,7 @@ class UserController extends GetxController {
   }
 
   Future<void> removeFavorite(String productId) async {
-    final url = Uri.parse('https://backend.krishimandi.in/users/remove-item-from-favs');
+    final url = Uri.parse('${AppContants.baseUrl}/users/remove-item-from-favs');
       final token = await _getToken();
     final headers = {
       'Content-Type': 'application/json',

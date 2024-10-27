@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:krishi_customer_app/views/consumer%20ui/final_order.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../constants/AppConstants.dart';
 import '../../controller/customer_apis/profile_controller.dart';
 
 class CartListScreen extends StatefulWidget {
@@ -152,7 +153,7 @@ class _CartListScreenState extends State<CartListScreen> {
 
   Future<void> _removeItemFromCart(String productId) async {
     final url =
-        Uri.parse('https://backend.krishimandi.in/users/remove-item-from-cart');
+        Uri.parse('${AppContants.baseUrl}/users/remove-item-from-cart');
     final token = await _getToken();
 
     try {

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/AppConstants.dart';
+
 class FarmProfileController extends GetxController {
   var isLoading = false.obs;
   var userProfile = {}.obs;
@@ -10,7 +12,7 @@ class FarmProfileController extends GetxController {
   var orders = [].obs;
   var favorites = [].obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/farmers'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/farmers'; // Replace with your base URL
   final double vouch = 0.0; // Your voucher value
 
   @override

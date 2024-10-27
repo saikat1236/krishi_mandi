@@ -14,7 +14,7 @@ class FarmAuthController extends GetxController {
   var isOtpVerified = false.obs;
   RxString farmertoken = "".obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/auth-farmer'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/auth-farmer'; // Replace with your base URL
 
   // Register a new user
   Future<void> registerUser(

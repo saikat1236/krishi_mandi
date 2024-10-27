@@ -47,8 +47,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     await cartController.getUserProfile();
     final cartItems = cartController.userProfile['cartItems'] ?? [];
     setState(() {
-      _isInCart = cartItems
-          .any((item) => item['productId'] == widget.product['productId']);
+      _isInCart = cartItems.any((item) => item['productId'] == widget.product['productId']);
     });
   }
 
@@ -80,22 +79,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     final String? token = prefs.getString('token');
 
     final url = Uri.parse(
-        'https://backend.krishimandi.in/users/add-item-in-cart'); // Replace with your API endpoint
+        '${AppContants.baseUrl}/users/add-item-in-cart'); // Replace with your API endpoint
 
     final cartItem = {
       "orderType": 1,
-      "productId":
-          widget.product['productId'], // Assuming 'id' is the key for productId
+      "productId": widget.product['productId'], // Assuming 'id' is the key for productId
       "productName": widget.product['name'],
       "ProductQuantityAddedToCart": qty,
-      "productInfo":
-          widget.product['about'], // Assuming 'about' holds product info
-
-      "productImages":
-          widget.product['images'], // Assuming 'images' is a list of image URLs
+      "productInfo": widget.product['about'], // Assuming 'about' holds product info
+      "productImages": widget.product['images'], // Assuming 'images' is a list of image URLs
       "pricePerUnit": widget.product['pricePerUnit'],
-      "productUnitType": widget.product[
-          'unit'], // Assuming 'unitType' is the key for product unit type
+      "productUnitType": widget.product['unit'], // Assuming 'unitType' is the key for product unit type
       "minQ": widget.product['minQuantity']
     };
 
@@ -272,7 +266,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Rs " + product['pricePerUnit'] + " " + product['unit'],
+                    "Rs ${product['pricePerUnit'].toString()} ${product['unit']}",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.green,

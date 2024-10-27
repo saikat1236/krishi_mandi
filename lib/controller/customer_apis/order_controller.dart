@@ -4,13 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:krishi_customer_app/controller/customer_apis/profile_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/AppConstants.dart';
+
 class OrderController extends GetxController {
     final UserProfileController userProfileController = Get.put(UserProfileController());
   var isLoading = false.obs;
   var orders = [].obs;
    var errorMessage = ''.obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/orders'; // Replace with your base URL
+  // final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
+
     Future<String> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') ?? ''; // Default to empty string if token is not found
@@ -38,7 +42,7 @@ class OrderController extends GetxController {
   // Add a new order
 
   Future<void> createOrder(Map<String, dynamic> order) async {
-    final url = 'https://backend.krishimandi.in/users/create-order';
+    final url = '$baseUrl/create-order';
     isLoading.value = true;
       final token = await _getToken();
 

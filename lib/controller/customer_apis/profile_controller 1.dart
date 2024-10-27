@@ -9,7 +9,7 @@ class UserProfileController extends GetxController {
   var isLoading = false.obs;
   var userProfile = {}.obs;
 
-  final String baseUrl = 'https://backend.krishimandi.in/users'; // Replace with your base URL
+  final String baseUrl = '${AppContants.baseUrl}/users'; // Replace with your base URL
 
   @override
   void onInit() {
