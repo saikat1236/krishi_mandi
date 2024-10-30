@@ -31,6 +31,71 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool _isInCart = false;
   int activeIndex = 0; // Tracks the active image index for the dots indicator
 
+  int _rating = 0; // Initial rating
+
+  void _setRating(int rating) {
+    setState(() {
+      _rating = rating;
+    });
+  }
+
+// double _rating = 3.5; // Default rating
+// void _setRating(int rating) {
+//   setState(() {
+//     _rating = rating.toDouble();
+//   });
+//   _ratingshow();
+// }
+
+void _ratingshow() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Center(child: Text("Rating")),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Generate star icons based on _rating value
+                for (int i = 1; i <= 5; i++)
+                  GestureDetector(
+                    onTap: () {
+                      _setRating(i);
+                      Navigator.of(context).pop(); // Close dialog after rating
+                    },
+                    child: Icon(
+                      Icons.star,
+                      color: i <= _rating ? Colors.orange : Colors.grey,
+                    ),
+                  ),
+                // SizedBox(width: 10),
+                // Text(
+                //   _rating.toStringAsFixed(1),
+                //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                // ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Text("Thank you for rating us."),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   void initState() {
     super.initState();
@@ -140,7 +205,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-
         title: const Text('',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         leading: Builder(
@@ -234,28 +298,51 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 //         );
                 //       },)
                 //     ),
-                // SizedBox(height: 80),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(Icons.star), Icon(Icons.star), Icon(Icons.star),
-                      Icon(Icons.star), Icon(Icons.star),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "4.7",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                      // SizedBox(width: 10,),
-                      // Text(
-                      //   "(324) Reviews"
-                      // )
-                    ],
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        // Generate star icons based on _rating value
+                        for (int i = 1; i <= 5; i++)
+                          GestureDetector(
+                            onTap: () => _setRating(i),
+                            child: Icon(
+                              Icons.star,
+                              color: i <= _rating ? Colors.orange : Colors.grey,
+                            ),
+                          ),
+                        SizedBox(width: 10),
+                        Text(
+                          _rating.toStringAsFixed(1),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(width: 10),
+                        // Text(
+                        //   "(${(_rating * 100).toInt()}) Reviews", // Example count based on rating
+                        //   style: TextStyle(fontSize: 16),
+                        // ),
+                      ],
+                    ),
                   ),
-                ),
+                    Spacer(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(74, 230, 50, 0.961),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: () => _ratingshow(),
+                    child: const Text(
+                      'Rate product',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ]),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -526,28 +613,29 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: SingleChildScrollView(
-                     scrollDirection: Axis.horizontal,
+                    scrollDirection: Axis.horizontal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: product["labels"].map<Widget>((label) {
                         return Container(
-                          width: 100,
-                          child: Column(children: [
-                            Image.network(
-                              label["imageUrl"],
-                              height: 50,
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              label["name"],
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                         ) );
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Image.network(
+                                  label["imageUrl"],
+                                  height: 50,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  label["name"],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ));
                       }).toList(),
                     ),
                   ),
