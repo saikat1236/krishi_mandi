@@ -141,7 +141,7 @@ class _CartListScreenState extends State<CartListScreen> {
       if (userProfileController.cartItems[index]['ProductQuantityAddedToCart'] >
           userProfileController.cartItems[index]['minQuantity']) {
         userProfileController.cartItems[index]['ProductQuantityAddedToCart']--;
-        tot = userProfileController.getCartSubtotal() + vouch;
+        tot = userProfileController.getCartSubtotal() + vouch.toInt();
       }
     });
   }

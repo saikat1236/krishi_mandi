@@ -109,6 +109,35 @@ class UserController extends GetxController {
     }
   }
 
+Future<void> rateProduct(String userId, String productId, int rating, {String? review}) async {
+  final url = Uri.parse('${AppContants.baseUrl}/users/rate-product');
+  final token = await _getToken();
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token,
+  };
+  final body = jsonEncode({
+    'userId': userId,
+    'productId': productId,
+    'rating': rating,
+    if (review != null) 'review': review, // Adds review if provided
+  });
+
+  try {
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print('Rating submitted successfully '+body);
+      // Update any relevant state if needed
+    } else {
+      print('Failed to submit rating: ${response.body}');
+    }
+  } catch (e) {
+    print('Exception while submitting rating: $e');
+  }
+}
+
+
+
   Future<void> removeFavorite(String productId) async {
     final url = Uri.parse('${AppContants.baseUrl}/users/remove-item-from-favs');
       final token = await _getToken();

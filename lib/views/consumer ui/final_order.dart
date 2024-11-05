@@ -73,40 +73,53 @@ class _CartListScreenState extends State<FinalOrderScreen> {
 // }
 
     // Create the order object
+// final order = {
+//   "orderType": 1, // Static value; adjust as needed
+//   "userName": userProfileController.userProfile['userName'] ?? "Unknown User",
+//   "email": userProfileController.userProfile['email'] ?? "example@example.com",
+//   "mobileNumber": userProfileController.userProfile['mobileNumber'] ?? "0000000000",
+//   "address": {
+//     "addressId": address['addressId'] ?? "No Address ID",
+//     "name": address['name'] ?? "No Name",
+//     "mobile": address['mobile'] ?? "0000000000",
+//     "email": address['email'] ?? "example@example.com",
+//     "addressLine1": address['addressLine1'] ?? "No Address Line 1",
+//     "addressLine2": address['addressLine2'] ?? "No Address Line 2",
+//     "city": address['city'] ?? "No City",
+//     "pin": 799155, // Ensure pin is an integer
+//     // "default":address['default']
+//   },
+//   "image": userProfileController.userProfile['images']??"", // Provide a valid image URL if available
+//   "productsOrdered": widget.cartItems.map((item) {
+//     return {
+//       "productName": item['productName'] ?? "No Product Name",
+//       "productId": item['productId'] ?? "No Product ID",
+//       // "quantity": 10,
+//       // "pricePerUnit":3.5,
+//       // "totalAmount": 35
+//       "quantity": int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0,
+//       "pricePerUnit": double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0,
+//       "totalAmount": (double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0) *
+//                      (int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0),
+//     };
+//   }).toList(),
+//   "totalAmount": double.tryParse(userProfileController.getTotalAmount()?.toString() ?? "0.0") ?? 0.0,
+//   // "totalAmount" : 105.0,
+//   "paymentType": "Cash on Delivery", // Adjust if you need to support other payment types
+// };
+
+
 final order = {
-  "orderType": 1, // Static value; adjust as needed
-  "userName": userProfileController.userProfile['userName'] ?? "Unknown User",
-  "email": userProfileController.userProfile['email'] ?? "example@example.com",
-  "mobileNumber": userProfileController.userProfile['mobileNumber'] ?? "0000000000",
-  "address": {
-    "addressId": address['addressId'] ?? "No Address ID",
-    "name": address['name'] ?? "No Name",
-    "mobile": address['mobile'] ?? "0000000000",
-    "email": address['email'] ?? "example@example.com",
-    "addressLine1": address['addressLine1'] ?? "No Address Line 1",
-    "addressLine2": address['addressLine2'] ?? "No Address Line 2",
-    "city": address['city'] ?? "No City",
-    "pin": 799155, // Ensure pin is an integer
-    // "default":address['default']
-  },
-  "image": userProfileController.userProfile['images']??"", // Provide a valid image URL if available
   "productsOrdered": widget.cartItems.map((item) {
     return {
-      "productName": item['productName'] ?? "No Product Name",
       "productId": item['productId'] ?? "No Product ID",
-      // "quantity": 10,
-      // "pricePerUnit":3.5,
-      // "totalAmount": 35
-      "quantity": int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0,
-      "pricePerUnit": double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0,
-      "totalAmount": (double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0) *
-                     (int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0),
+      "quantity": item['ProductQuantityAddedToCart'].toInt() ?? 0,
     };
   }).toList(),
-  "totalAmount": double.tryParse(userProfileController.getTotalAmount()?.toString() ?? "0.0") ?? 0.0,
-  // "totalAmount" : 105.0,
-  "paymentType": "Cash on Delivery", // Adjust if you need to support other payment types
-};
+  "addressId": address['addressId'] ?? "No Address ID",
+  "totalAmount": userProfileController.getTotalAmount().toInt() ?? 0,
+  "paymentType": "online"
+  };
 
 
     var delhivery = 0;
@@ -469,6 +482,7 @@ final order = {
                               horizontal: 40, vertical: 10), // Button size
                         ),
                          onPressed: () {
+                          print(order);
                         orderController.createOrder(order).then((_) {
                           Navigator.push(
                             context,

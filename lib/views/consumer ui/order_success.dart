@@ -111,7 +111,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Total"),
-                                  Text("${widget.order['totalAmount']}\ ₹"),
+                                  Text(widget.order['totalAmount'].toString()),
                                 ],
                               ),
                               SizedBox(height: 10),
@@ -129,7 +129,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Payment Method"),
-                                  Text(widget.order['paymentType']),
+                                  Text(widget.order['paymentType'] ?? "Online"),
                                 ],
                               ),
                               SizedBox(height: 10),
@@ -148,7 +148,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Email"),
-                                  Text(widget.order['email']),
+                                  Text(widget.order['email'] ?? "saikat1236@gmail"),
                                 ],
                               ),
                             ],

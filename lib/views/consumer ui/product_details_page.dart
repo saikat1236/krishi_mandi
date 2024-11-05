@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
+import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
 import '../../controller/customer_apis/product_controller.dart';
 import 'package:krishi_customer_app/controller/customer_apis/profile_controller.dart';
 
@@ -31,7 +31,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool _isInCart = false;
   int activeIndex = 0; // Tracks the active image index for the dots indicator
 
-  int _rating = 0; // Initial rating
+  late int _rating ; // Initial rating
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize qty with product['minQuantity']
+    _rating = widget.product['ratings']['averageRating'] ?? 0;
+    qty = widget.product['minQuantity'] ?? 1;
+    _checkIfInCart(); // Check if the product is already in the cart
+  }
 
   void _setRating(int rating) {
     setState(() {
@@ -39,7 +49,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     });
   }
 
-// double _rating = 3.5; // Default rating
+// int _rating = 3; // Default rating
 // void _setRating(int rating) {
 //   setState(() {
 //     _rating = rating.toDouble();
@@ -47,7 +57,55 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 //   _ratingshow();
 // }
 
-void _ratingshow() {
+// void _ratingshow() {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Center(child: Text("Rating")),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 // Generate star icons based on _rating value
+//                 for (int i = 1; i <= 5; i++)
+//                   GestureDetector(
+//                     onTap: () {
+//                       _setRating(i);
+//                       Navigator.of(context).pop(); // Close dialog after rating
+//                     },
+//                     child: Icon(
+//                       Icons.star,
+//                       color: i <= _rating ? Colors.orange : Colors.grey,
+//                     ),
+//                   ),
+//                 // SizedBox(width: 10),
+//                 // Text(
+//                 //   _rating.toStringAsFixed(1),
+//                 //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+//                 // ),
+//               ],
+//             ),
+//             SizedBox(height: 20),
+//             Text("Thank you for rating us."),
+//           ],
+//         ),
+//         actions: <Widget>[
+//           TextButton(
+//             child: Text("OK"),
+//             onPressed: () {
+//               Navigator.of(context).pop(); // Close the dialog
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
+final UserController userController = Get.find<UserController>();
+void _ratingshow(Map<String, dynamic> product) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -59,23 +117,24 @@ void _ratingshow() {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Generate star icons based on _rating value
                 for (int i = 1; i <= 5; i++)
                   GestureDetector(
-                    onTap: () {
-                      _setRating(i);
-                      Navigator.of(context).pop(); // Close dialog after rating
+                    onTap: () async {
+                      _setRating(i); // Update local rating state
+                      Navigator.of(context).pop(); // Close dialog
+                      
+                      // Submit the rating using product and user data
+                      await userController.rateProduct(
+                        product['_id'],      // Assuming `userId` is in product data
+                        product['productId'],   // Assuming `productId` is in product data
+                        _rating,   // Use the selected rating
+                      );
                     },
                     child: Icon(
                       Icons.star,
                       color: i <= _rating ? Colors.orange : Colors.grey,
                     ),
                   ),
-                // SizedBox(width: 10),
-                // Text(
-                //   _rating.toStringAsFixed(1),
-                //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                // ),
               ],
             ),
             SizedBox(height: 20),
@@ -96,13 +155,7 @@ void _ratingshow() {
 }
 
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize qty with product['minQuantity']
-    qty = widget.product['minQuantity'] ?? 1;
-    _checkIfInCart(); // Check if the product is already in the cart
-  }
+
 
   final cartController = Get.find<UserProfileController>();
 
@@ -307,13 +360,13 @@ void _ratingshow() {
                       children: [
                         // Generate star icons based on _rating value
                         for (int i = 1; i <= 5; i++)
-                          GestureDetector(
-                            onTap: () => _setRating(i),
-                            child: Icon(
+                          // GestureDetector(
+                            // onTap: () => _setRating(i),
+                            Icon(
                               Icons.star,
                               color: i <= _rating ? Colors.orange : Colors.grey,
                             ),
-                          ),
+                          // ),
                         SizedBox(width: 10),
                         Text(
                           _rating.toStringAsFixed(1),
@@ -335,7 +388,7 @@ void _ratingshow() {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 12),
                     ),
-                    onPressed: () => _ratingshow(),
+                    onPressed: () => _ratingshow(product),
                     child: const Text(
                       'Rate product',
                       style: TextStyle(color: Colors.black),
