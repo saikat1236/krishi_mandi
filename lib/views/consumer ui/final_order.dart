@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/homescreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/order_success.dart';
+import 'package:krishi_customer_app/views/consumer%20ui/payment_failed.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 import 'package:krishi_customer_app/views/homescreen.dart';
 
@@ -11,22 +12,23 @@ import '../../controller/customer_apis/order_controller.dart';
 import '../../controller/customer_apis/profile_controller.dart';
 
 class FinalOrderScreen extends StatefulWidget {
-    final List<dynamic> cartItems;
-    //  final UserProfileController userProfileController;
+  final List<dynamic> cartItems;
+  //  final UserProfileController userProfileController;
   FinalOrderScreen({required this.cartItems});
   @override
   _CartListScreenState createState() => _CartListScreenState();
 }
 
 class _CartListScreenState extends State<FinalOrderScreen> {
-    // Address should not be final if you need to update it
+  // Address should not be final if you need to update it
   late Map<String, dynamic> address;
 
   @override
   void initState() {
     super.initState();
-    final UserProfileController userProfileController = Get.find<UserProfileController>();
-    
+    final UserProfileController userProfileController =
+        Get.find<UserProfileController>();
+
     // Fetch the default address
     address = userProfileController.userProfile['Address']
         .firstWhere((addr) => addr['default'] == true, orElse: () => {});
@@ -36,6 +38,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
       print('No default address found.');
     }
   }
+
   int? _rad; // The currently selected value
 
   int _quantity = 3; // Initial quantity
@@ -53,11 +56,13 @@ class _CartListScreenState extends State<FinalOrderScreen> {
       });
     }
   }
-    final OrderController orderController = Get.put(OrderController());
+
+  final OrderController orderController = Get.put(OrderController());
 
   @override
   Widget build(BuildContext context) {
-    final UserProfileController userProfileController = Get.find<UserProfileController>();
+    final UserProfileController userProfileController =
+        Get.find<UserProfileController>();
     // final address = userProfileController.userProfile['Address'][0];
     // Fetch the address where default is true
 // final address = userProfileController.userProfile['Address']
@@ -108,19 +113,17 @@ class _CartListScreenState extends State<FinalOrderScreen> {
 //   "paymentType": "Cash on Delivery", // Adjust if you need to support other payment types
 // };
 
-
-final order = {
-  "productsOrdered": widget.cartItems.map((item) {
-    return {
-      "productId": item['productId'] ?? "No Product ID",
-      "quantity": item['ProductQuantityAddedToCart'].toInt() ?? 0,
+    final order = {
+      "productsOrdered": widget.cartItems.map((item) {
+        return {
+          "productId": item['productId'] ?? "No Product ID",
+          "quantity": item['ProductQuantityAddedToCart'].toInt() ?? 0,
+        };
+      }).toList(),
+      "addressId": address['addressId'] ?? "No Address ID",
+      "totalAmount": userProfileController.getTotalAmount().toInt() ?? 0,
+      "paymentType": "online"
     };
-  }).toList(),
-  "addressId": address['addressId'] ?? "No Address ID",
-  "totalAmount": userProfileController.getTotalAmount().toInt() ?? 0,
-  "paymentType": "online"
-  };
-
 
     var delhivery = 0;
     var subtot = order['totalAmount'];
@@ -129,7 +132,7 @@ final order = {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.transparent,
-              backgroundColor: Color(0xFF2E2E2E),
+        backgroundColor: Color(0xFF2E2E2E),
         // elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -140,7 +143,10 @@ final order = {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back,color: Colors.white,),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Navigator.pop(context); // Navigate back
               },
@@ -217,13 +223,14 @@ final order = {
                               ),
                               Padding(
                                 padding: EdgeInsets.all(3.0),
-                                child: Text("${address['addressLine1']}, ${address['addressLine2']}, ${address['city']}, ${address['pin']} "),
+                                child: Text(
+                                    "${address['addressLine1']}, ${address['addressLine2']}, ${address['city']}, ${address['pin']} "),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(3.0),
                                 child: Text("${address['email']}"),
                               ),
-                               Padding(
+                              Padding(
                                 padding: EdgeInsets.all(3.0),
                                 child: Text("${address['mobile']}"),
                               ),
@@ -240,17 +247,19 @@ final order = {
                                         horizontal: 30,
                                         vertical: 10), // Button size
                                   ),
-                       onPressed: () async {
+                                  onPressed: () async {
                                     final updatedAddress = await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ProfileScreenmain(),
+                                        builder: (context) =>
+                                            ProfileScreenmain(),
                                       ),
                                     );
 
                                     if (updatedAddress != null) {
                                       setState(() {
-                                        address = updatedAddress; // Update the address
+                                        address =
+                                            updatedAddress; // Update the address
                                       });
                                     }
                                   },
@@ -447,12 +456,12 @@ final order = {
                           onPressed: () {},
                           child: Text("Add More items to cart",
                               style: TextStyle(
-                                color: Colors.green,
-                                  fontSize: 18, 
-                                  fontWeight: FontWeight.w500
-                                  ))),
+                                  color: Colors.green,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500))),
                       IconButton(
-                        icon: Icon(Icons.arrow_forward_ios_outlined, color: Colors.green),
+                        icon: Icon(Icons.arrow_forward_ios_outlined,
+                            color: Colors.green),
                         onPressed: () {
                           Get.back();
                         },
@@ -460,8 +469,8 @@ final order = {
                     ],
                   ),
                 ),
-              ),//
-               Padding(
+              ), //
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -470,35 +479,30 @@ final order = {
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          // Background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            // side: BorderSide(color: Colors.black, width: 2.0),
-                            // Rounded edges
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 10), // Button size
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        // Background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          // side: BorderSide(color: Colors.black, width: 2.0),
+                          // Rounded edges
                         ),
-                         onPressed: () {
-                          print(order);
-                        orderController.createOrder(order).then((_) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OrderSuccessScreen(order: order),
-                            ),
-                          );
-                        });
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 10), // Button size
+                      ),
+                      onPressed: () {
+                        print(order);
+                        // Example widget code
+                        orderController.createOrder(order);
                       },
-                        child: Center(
-                          child: Text(
-                            "Continue",
-                            style: TextStyle(color: Colors.white,fontSize: 16), // Text color
-                          ),
+                      child: Center(
+                        child: Text(
+                          "Continue",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 16), // Text color
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),

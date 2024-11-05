@@ -8,7 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="Krishi Mandi"
-        android:icon="@mipmap/krishi_logo">
+        android:icon="@mipmap/krishi_logo"
+        android:networkSecurityConfig="@xml/network_security_config"
+        >
+        
 
         <activity
             android:name=".MainActivity"
