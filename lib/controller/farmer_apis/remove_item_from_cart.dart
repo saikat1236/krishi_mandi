@@ -2,10 +2,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
 class RemoveItemFromCartController extends GetxController {
   Future<void> removeItemFromCart(String productId) async {
     final url =
-        Uri.parse('https://backend.krishimandi.in/users/remove-item-from-cart');
+        Uri.parse('${AppContants.baseUrl}/users/remove-item-from-cart');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

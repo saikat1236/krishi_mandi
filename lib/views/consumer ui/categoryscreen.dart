@@ -9,7 +9,7 @@ import '../../controller/customer_apis/user_controller.dart';
 
 class CategoryScreen extends StatefulWidget {
     final String category;
-  CategoryScreen({super.key, this.category='Fruit'}); // Added key for widget tree
+  CategoryScreen({super.key, this.category='Fruits'}); // Added key for widget tree
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
@@ -118,10 +118,10 @@ class CategoriesList extends StatelessWidget {
             final category = controller.categories[index];
             return InkWell(
               onTap: () {
-                onCategorySelected(category['value'] ?? "Fruit");
+                onCategorySelected(category['value'] ?? "Fruits");
               },
               child: _categoryItem(
-                category['value'] ?? "Fruit",
+                category['value'] ?? "Fruits",
                 category['image'] ?? 'assets/fruits.jpg',
               ),
             );
@@ -202,10 +202,12 @@ class _ProductListViewState extends State<ProductListView> {
         crossAxisCount: 2,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
+        childAspectRatio: 0.88, // Adjust this ratio as needed
         children: List.generate(controller.filteredProducts.length, (index) {
           final product = controller.filteredProducts[index] as Map<String, dynamic>;
 
           return InkWell(
+            
             onTap: () {
               Navigator.push(
                 context,
@@ -214,13 +216,19 @@ class _ProductListViewState extends State<ProductListView> {
                 ),
               );
             },
-            child: _offerItemdemo(
-              product['name'] ?? "Product",
-              product['newPrice'] ?? "\$0.00",
-              product['pricePerUnit'] ?? "\$0.00",
-              product['images'][0] ?? 'assets/photo.png',
-              product['_id'],
-              controller.favoriteProducts.contains(product['_id']),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: _offerItemdemo(
+                     product['name'] ?? "Product",
+                      // product['newPrice'] ?? 0,
+                      // product['pricePerUnit'] ?? 0,
+                      int.tryParse(product['newPrice'].toString()) ?? 0,
+                      int.tryParse(product['pricePerUnit'].toString()) ?? 0,
+                      product['images'][0],
+                      // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
+                      product['productId'],
+                      product['discount'] ?? 0
+              ),
             ),
           );
         }),
@@ -228,78 +236,247 @@ class _ProductListViewState extends State<ProductListView> {
     });
   }
 
+  // Widget _offerItemdemo(
+  //     String name, int newPrice, int oldPrice, String imageUrl, String Pid,bool isFavorite) {
+  //   return LayoutBuilder(
+  //     builder: (context, constraints) {
+  //       double screenWidth = constraints.maxWidth;
+  //       double containerHeight = screenWidth * 0.9;
+  //       double containerWidth = screenWidth * 0.9;
+
+  //       return Container(
+  //         height: containerHeight,
+  //         width: containerWidth,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: <Widget>[
+  //             Stack(
+  //               children: <Widget>[
+  //                 Image.network(
+  //                   imageUrl,
+  //                   width: containerWidth,
+  //                   height: containerHeight * 0.8,
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //                  Positioned(
+  //                 right: 0,
+  //                 child: Container(
+  //                   height: 40,
+  //                   width: 40,
+  //                   // color: Colors.white,
+  //                   child: IconButton(
+  //                     icon: Icon(
+  //                         userController.isFavorite.value
+  //                           ? Icons.favorite
+  //                           : Icons.favorite_rounded,
+  //                       color: userController.isFavorite.value
+  //                           ? Colors.red
+  //                           : Colors.white,
+  //                     ),
+  //                     onPressed: () {
+  //                       userController.toggleFavorite(Pid); // Pass the product ID
+  //                     },
+  //                   ),
+  //                 ),
+  //               ),
+  //               ],
+  //             ),
+  //             Container(
+  //               width: containerWidth,
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Padding(
+  //                     padding: EdgeInsets.all(5.0),
+  //                     child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+  //                   ),
+  //                   Row(
+  //                     children: [
+  //                       Padding(
+  //                         padding: EdgeInsets.symmetric(horizontal: 8),
+  //                         child: Text(
+  //                           "₹ $newPrice",
+  //                           style: TextStyle(
+  //                               color: Colors.grey,
+  //                               decoration: TextDecoration.lineThrough),
+  //                         ),
+  //                       ),
+  //                       Padding(
+  //                         padding: EdgeInsets.symmetric(horizontal: 8),
+  //                         child: Text(
+  //                           ' $oldPrice',
+  //                           style: TextStyle(
+  //                             color: Colors.red,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+
+
   Widget _offerItemdemo(
-      String name, String newPrice, String oldPrice, String imageUrl, String Pid,bool isFavorite) {
+      String name, int newPrice, int oldPrice, String imageUrl, String Pid, int discount) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
-        double containerHeight = screenWidth * 0.9;
-        double containerWidth = screenWidth * 0.9;
+        double containerHeight =
+            screenWidth * 0.9; // Adjust height ratio as needed
+        double containerWidth =
+            screenWidth * 0.9; // Adjust width ratio as needed
 
         return Container(
           height: containerHeight,
           width: containerWidth,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x66E5E5E5),
+                blurRadius: 5,
+                offset: Offset(1, 1),
+                spreadRadius: 5,
+              )
+            ],
+            border: Border.all(
+              color: Colors.grey, // Your border color
+              width: 0.5, // Border width
+            ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Image.network(
-                    imageUrl,
-                    width: containerWidth,
-                    height: containerHeight * 0.8,
-                    fit: BoxFit.cover,
-                  ),
-                   Positioned(
-                  right: 0,
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    // color: Colors.white,
-                    child: IconButton(
-                      icon: Icon(
-                          userController.isFavorite.value
-                            ? Icons.favorite
-                            : Icons.favorite_rounded,
-                        color: userController.isFavorite.value
-                            ? Colors.red
-                            : Colors.white,
-                      ),
-                      onPressed: () {
-                        userController.toggleFavorite(Pid); // Pass the product ID
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Image.network(
+                      imageUrl,
+                      width: containerWidth,
+                      height: containerHeight *
+                          0.8, // Adjust image height ratio as needed
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/no_image.jpg', // Path to your asset image
+                          width: containerWidth,
+                          height: containerHeight *
+                              0.8, // Adjust image height ratio as needed
+                          fit: BoxFit.cover,
+                        );
                       },
                     ),
                   ),
-                ),
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                        height: 40,
+                        width: 40,
+                        // color: Colors.white,
+                        child: Obx(
+                          () => IconButton(
+                            icon: Icon(
+                              controller.isProductFavorite(Pid)
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_rounded,
+                              color: controller.isProductFavorite(Pid)
+                                  ? Colors.red
+                                  : Colors.grey,
+                            ),
+                            onPressed: () {
+                              // Create the favItem map
+                              Map<String, dynamic> favItem = {
+                                "productId": Pid,
+                                "productName": name,
+                                "productImage": imageUrl,
+                                // "pricePerUnit": newPrice,
+                                "pricePerUnit": oldPrice,
+                                "productUnitType": "kg"
+                                // "productInfo":""
+                              };
+                              controller.toggleFavorite(Pid);
+                              setState(() {});
+                            },
+                          ),
+                        )),
+                  ),
                 ],
               ),
-              Container(
-                width: containerWidth,
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(color: Colors.red),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              " $discount % off ",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 10),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(
+                            name.length > 15
+                                ? '${name.substring(0, 15)}...'
+                                : name, // Trim to 10 characters and add '...'
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
+                    //  Padding(
+                    //       padding: EdgeInsets.symmetric(horizontal: 8),
+                    //       child: Text(
+                    //         ' $oldPrice',
+                    //         style: TextStyle(
+                    //           color: Colors.red,
+                    //         ),
+                    //       ),
+                    //     ),
                     Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            newPrice,
+                            "M.R.P",
                             style: TextStyle(
                                 color: Colors.grey,
-                                decoration: TextDecoration.lineThrough),
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3),
+                          child: Text(
+                            "₹ $newPrice",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough,
+                                fontWeight: FontWeight.w700),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            ' $oldPrice',
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
+                            '₹ $oldPrice',
+                            style: TextStyle(color: Colors.red, fontSize: 15),
                           ),
                         ),
                       ],

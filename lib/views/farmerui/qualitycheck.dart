@@ -7,6 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants/AppConstants.dart';
 
 class Uploadpage2 extends StatefulWidget {
   const Uploadpage2();
@@ -59,7 +62,7 @@ class _UploadpageState extends State<Uploadpage2> {
 
     try {
       final uri =
-          Uri.parse('https://backend.krishimandi.in/common/predict-product');
+          Uri.parse('${AppContants.baseUrl}/common/predict-product');
       final request = http.MultipartRequest('POST', uri);
       request.files
           .add(await http.MultipartFile.fromPath('files', _image!.path));

@@ -752,7 +752,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
           // ),
           children: List.generate(controller.products.length, (index) {
             final product = controller.products[index] as Map<String, dynamic>;
-            print(product);
+            // print(product);
 
             return InkWell(
               onTap: () {
@@ -976,6 +976,7 @@ class CategoriesList extends StatelessWidget {
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
             final product = controller.categories[index];
+            print(product);
             return
                 // SizedBox(
                 //   width: 150,

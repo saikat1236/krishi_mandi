@@ -70,6 +70,7 @@ class UserController extends GetxController {
         if (jsonData.containsKey('payload') && jsonData['payload'].containsKey('userProfile')) {
           user.value = jsonData['payload']['userProfile'];
           // update(); // Force update
+          print(user);
         } else {
           print('Error: Invalid JSON structure');
           user.value = {};
@@ -127,6 +128,7 @@ Future<void> rateProduct(String userId, String productId, int rating, {String? r
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
       print('Rating submitted successfully '+body);
+      print(response.body); // 200 still error and status false
       // Update any relevant state if needed
     } else {
       print('Failed to submit rating: ${response.body}');

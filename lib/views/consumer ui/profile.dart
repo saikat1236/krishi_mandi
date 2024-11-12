@@ -77,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
 
   @override
   Widget build(BuildContext context) {
+    bool cart = userProfileController.cartItems.isNotEmpty;
     return GestureDetector(
       onTap: () {
         _hideKeyboard(context); // Hide keyboard when tapped outside
@@ -95,22 +96,47 @@ class _ProfileScreenState extends State<ProfileScreenmain> {
               return IconButton(
                 icon: const Icon(Icons.arrow_back,color: Colors.white),
                 onPressed: () {
-                  Navigator.pop(context); // Navigate back
+                  // Navigator.pop(context); // Navigate back
+                  Get.back();
                 },
               );
             },
           ),
           actions: [
-            IconButton(
-              icon: Icon(Icons.shopping_cart,color: Colors.white,),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartListScreen(),
+                   Stack(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
                   ),
-                );
-              },
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartListScreen(),
+                      ),
+                    );
+                  },
+                ),
+                // Conditionally show the red dot if the cart is not empty
+                if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 10,
+                        minHeight: 10,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             IconButton(
               icon: Icon(Icons.person,color: Colors.white,),

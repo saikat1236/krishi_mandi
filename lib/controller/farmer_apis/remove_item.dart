@@ -2,10 +2,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
+
 class RemoveItemFromFavsController extends GetxController {
   Future<void> removeItemFromFavs(String productId) async {
     final url =
-        Uri.parse('https://backend.krishimandi.in/farmers/remove-item-from-favs');
+        Uri.parse('${AppContants.baseUrl}/farmers/remove-item-from-favs');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

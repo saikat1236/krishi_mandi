@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dropdown_search/dropdown_search.dart';
 
+import '../../constants/AppConstants.dart';
+
 class RateCalc extends StatefulWidget {
   const RateCalc();
 
@@ -20,33 +22,49 @@ class _RateCalcState extends State<RateCalc> {
   List<String> commodities = [];
   List<String> varieties = [];
 
-  bool isLoadingDistricts = true;
-  bool isLoadingCommodities = false;
+  bool isLoadingDistricts = false;
+  bool isLoadingCommodities = true;
   bool isLoadingVarieties = false;
+
+  bool isload = false;
 
   @override
   void initState() {
     super.initState();
-    fetchDistricts(); // Load districts when the screen initializes
+    // fetchDistricts(); // Load districts when the screen initializes
+    fetchCommodities();
   }
 
   // Fetch Districts from API
-  Future<void> fetchDistricts() async {
+  Future<void> fetchDistricts(String commodity, String variety) async {
     setState(() {
       isLoadingDistricts = true;
+      districts = []; // Reset districts list
+      selectedDistrict = null;
     });
-    final response = await http
-        .post(Uri.parse('https://backend.krishimandi.in/common/get-districts'));
+    final body = jsonEncode({
+      'name': commodity,
+      'variety': variety,
+    });
+    final response = await http.post(
+      Uri.parse('${AppContants.baseUrl}/common/get-districts'),
+      headers: {
+        'Content-Type': 'application/json', // Ensure you're sending JSON
+      },
+      body: body, // Pass the encoded body here
+    );
+
     if (response.statusCode == 200) {
       // print("ajkdbwifuer");
       var data = jsonDecode(response.body);
-      print(data);
+      print("District data: $data");
       setState(() {
         districts = List<String>.from(
             data['payload']); // Assuming 'districts' key contains the list
         isLoadingDistricts = false;
       });
     } else {
+      print("district error");
       // Handle error here
       setState(() {
         isLoadingDistricts = false;
@@ -55,16 +73,17 @@ class _RateCalcState extends State<RateCalc> {
   }
 
   // Fetch Commodities from API based on selected district
-  Future<void> fetchCommodities(String district) async {
+  Future<void> fetchCommodities() async {
     setState(() {
       isLoadingCommodities = true;
-      commodities = []; // Reset commodities list
-      selectedCommodity = null;
+      // commodities = []; // Reset commodities list
+      // selectedCommodity = null;
     });
     final response = await http
-        .post(Uri.parse('https://backend.krishimandi.in/common/get-comodities'));
+        .post(Uri.parse('${AppContants.baseUrl}/common/get-comodities'));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      print("commodity data: $data");
       setState(() {
         commodities = List<String>.from(
             data['payload']); // Assuming 'commodities' key contains the list
@@ -78,7 +97,7 @@ class _RateCalcState extends State<RateCalc> {
     }
   }
 
-  Future<void> fetchVarieties(String district, String commodity) async {
+  Future<void> fetchVarieties(String commodity) async {
     setState(() {
       isLoadingVarieties = true;
       varieties = []; // Reset varieties list
@@ -88,11 +107,11 @@ class _RateCalcState extends State<RateCalc> {
     // Create a map for the request body
     final body = jsonEncode({
       'name': commodity,
-      'district': district,
+      // 'district': district,
     });
 
     final response = await http.post(
-      Uri.parse('https://backend.krishimandi.in/common/get-varieties'),
+      Uri.parse('${AppContants.baseUrl}/common/get-varieties'),
       headers: {
         'Content-Type': 'application/json', // Ensure you're sending JSON
       },
@@ -101,9 +120,11 @@ class _RateCalcState extends State<RateCalc> {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+            print("variety data: $data");
       setState(() {
         varieties = List<String>.from(
             data['payload']); // Assuming 'varieties' key contains the list
+          
         isLoadingVarieties = false;
       });
     } else {
@@ -129,7 +150,7 @@ class _RateCalcState extends State<RateCalc> {
 
   Future<void> _showDialog(String dist, String commu, String vari) async {
     // Print for debugging
-    print("here");
+    print("_showDialog");
 
     // Fetch the varieties
     String distt=dist;
@@ -137,8 +158,7 @@ class _RateCalcState extends State<RateCalc> {
     String varii=vari;
     await fetchres(distt, commuu, varii);
 
-    // Show the dialog after fetching data
-    return showDialog(
+  return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -215,6 +235,7 @@ class _RateCalcState extends State<RateCalc> {
         );
       },
     );
+    isload = false;
   }
 
 // Fetch varieties method
@@ -232,32 +253,33 @@ class _RateCalcState extends State<RateCalc> {
     });
 
     final response = await http.post(
-      Uri.parse('https://backend.krishimandi.in/common/get-current-rates'),
+      Uri.parse('${AppContants.baseUrl}/common/get-current-rates'),
           headers: {
         'Content-Type': 'application/json', // Ensure you're sending JSON
       },
       body: body,
     );
 
-    print("res: ${body}");
+    print("request: ${body}");
     if (response.statusCode == 200) {
       var data2 = jsonDecode(response.body);
       // Assuming the payload contains market details
       // You can now assign values to the respective variables
       var data = data2["payload"];
-      print("$data");
+      print("response: $data");
       setState(() {
-        state = data[0]['state'];
-        district = data[0]['district'];
-        market = data[0]['market'];
-        commodity = data[0]['commodity'];
-        grade = data[0]['grade'];
-        variety = data[0]['variety'];
-        arrivalDate = data[0]['arrival_date'];
-        minPrice = data[0]['min_price'];
-        maxPrice = data[0]['max_price'];
-        modalPrice = data[0]['modal_price'];
+        state = data['state'];
+        district = data['district'];
+        market = data['market'];
+        commodity = data['commodity'];
+        grade = data['grade'];
+        variety = data['variety'];
+        arrivalDate = data['arrival_date'];
+        minPrice = data['min_price'];
+        maxPrice = data['max_price'];
+        modalPrice = data['modal_price'];
       });
+      isload = true;
     } else {
       print("Error fetching varieties: ${response.statusCode}");
     }
@@ -322,54 +344,7 @@ class _RateCalcState extends State<RateCalc> {
                 height: 100,
               ),
               // District Dropdown
-              isLoadingDistricts
-                  ? CircularProgressIndicator()
-                  : Container(
-                      height: 60,
-                      width: 350,
-                      decoration: BoxDecoration(
-                        color: Colors.white, // Background color
-                        borderRadius:
-                            BorderRadius.circular(15.0), // Rounded corners
-                        border: Border.all(
-                          color:
-                              Color.fromARGB(200, 131, 221, 93), // Border color
-                          width: 2.0, // Border width
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), // Shadow color
-                            spreadRadius: 1, // Shadow spread
-                            blurRadius: 6, // Shadow blur
-                            offset: Offset(0, 1), // Shadow position
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: selectedDistrict,
-                            hint: Text("Select District"),
-                            isExpanded: true,
-                            items: districts.map((String district) {
-                              return DropdownMenuItem<String>(
-                                value: district,
-                                child: Text(district),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedDistrict = value!;
-                                fetchCommodities(
-                                    selectedDistrict!); // Fetch commodities when district is selected
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-              const SizedBox(height: 20),
+  
 
               // Commodities Dropdown
               isLoadingCommodities
@@ -408,13 +383,10 @@ class _RateCalcState extends State<RateCalc> {
                                 child: Text(commodity),
                               );
                             }).toList(),
-                            onChanged: selectedDistrict == null
-                                ? null // Disable if district is not selected
-                                : (String? value) {
+                            onChanged: (String? value) {
                                     setState(() {
                                       selectedCommodity = value!;
-                                      fetchVarieties(selectedDistrict!,
-                                          selectedCommodity!); // Fetch varieties when commodity is selected
+                                      fetchVarieties(selectedCommodity!); // Fetch varieties when commodity is selected
                                     });
                                   },
                           ),
@@ -463,14 +435,66 @@ class _RateCalcState extends State<RateCalc> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedVariety = value!;
+                                fetchDistricts(selectedCommodity!, selectedVariety!);
                               });
                             },
                           ),
                         ),
                       ),
                     ),
-              const SizedBox(height: 50),
+              
+              const SizedBox(height: 20),
 
+
+            isLoadingDistricts
+                  ? CircularProgressIndicator()
+                  : Container(
+                      height: 60,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Background color
+                        borderRadius:
+                            BorderRadius.circular(15.0), // Rounded corners
+                        border: Border.all(
+                          color:
+                              Color.fromARGB(200, 131, 221, 93), // Border color
+                          width: 2.0, // Border width
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5), // Shadow color
+                            spreadRadius: 1, // Shadow spread
+                            blurRadius: 6, // Shadow blur
+                            offset: Offset(0, 1), // Shadow position
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: selectedDistrict,
+                            hint: Text("Select District"),
+                            isExpanded: true,
+                            items: districts.map((String district) {
+                              return DropdownMenuItem<String>(
+                                value: district,
+                                child: Text(district),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedDistrict = value!;
+                                // fetchCommodities(); // Fetch commodities when district is selected
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+              const SizedBox(height: 20),
+
+              
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(150, 50), // Same size as the Container
@@ -532,6 +556,7 @@ class _RateCalcState extends State<RateCalc> {
                     print('Selected Variety: $selectedVariety');
                         fetchres("$selectedDistrict", "$selectedCommodity",
                         "$selectedVariety");
+                        isload ? CircularProgressIndicator() :
                     _showDialog("$selectedDistrict", "$selectedCommodity",
                         "$selectedVariety");
                   } else {

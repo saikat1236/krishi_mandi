@@ -84,6 +84,7 @@ class ProductController extends GetxController {
         } else {
           categories.value = [];
         }
+        print("categories: " + jsonEncode(categories));
       } else {
         categories.value = [];
       }
@@ -206,28 +207,72 @@ Future<void> getFavoriteProductsOnly(int page) async {
   }
 }
 
+Future<void> filterProductsByCategory(String category) async {
+      final url = Uri.parse('$baseUrl2/filtered');
+
+    try {
+      final token = await _getToken(); // Get token from SharedPreferences
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token // Use token from SharedPreferences
+        },
+        body: jsonEncode({
+          'categories': ["$category"], // Fetch all products without filtering
+          'page': 1,
+          'limit': 100, // Increase limit to fetch more products
+        }),
+      );
+
+      if (response.statusCode == 200 && jsonDecode(response.body)["status"] == true) {
+        var decodedResponse = jsonDecode(response.body)["payload"];
+        if (decodedResponse is List) {
+          products.value = decodedResponse;
+          filteredProducts.value = decodedResponse; // Initialize filteredProducts with all products
+        } else {
+          products.value = [];
+          filteredProducts.value = [];
+        }
+      } else {
+        products.value = [];
+        filteredProducts.value = [];
+        print("${jsonDecode(response.body)["message"]}");
+      }
+    } catch (e) {
+      print('Error: $e');
+      products.value = [];
+      filteredProducts.value = [];
+    } finally {
+      isLoading(false);
+    }
+  
+}
 
   // Filter products by selected categories
-  void filterProductsByCategory(String selectedCategory) {
-  if(selectedCategory=='fruits') selectedCategory='Fruit';
-   if(selectedCategory=='vegetables') selectedCategory='Vegetable';
+  // void filterProductsByCategory(String selectedCategory) {
+  // if(selectedCategory=='fruits') selectedCategory='Fruits';
+  // if(selectedCategory=='vegetables') selectedCategory='Vegetables';
 
-    // selectedCategory="Fruit";
-    if (products.isNotEmpty) {
-      if (selectedCategory.isEmpty) {
-        filteredProducts.value = products; // Show all products if no category is selected
-      } else {
-        filteredProducts.value = products
-            .where((product) => product['category'] == selectedCategory)
-            .toList(); // Filter products based on selected category
-      }
-    }
-            // filteredProducts.value = products
+  //   // selectedCategory="Fruit";
+  //   if (products.isNotEmpty) {
+  //     if (selectedCategory.isEmpty) {
+  //       filteredProducts.value = products; // Show all products if no category is selected
+  //     } else {
+  //       filteredProducts.value = products
+  //           .where((product) => product['category'] == selectedCategory)
+  //           .toList(); // Filter products based on selected category
+  //     }
+  //   }
+  //   else{
+  //     print("no products");
+  //   }
+  //           // filteredProducts.value = products
            
-            // .where((product) => product['category'] == "Vegetable")
-            // .toList(); // Filter products based on selected category
-    print(filteredProducts);
-  }
+  //           // .where((product) => product['category'] == "Vegetable")
+  //           // .toList(); // Filter products based on selected category
+  //   print(filteredProducts);
+  // }
 
   // Add item to favorites
 Future<void> addToFavorites(Map<String, dynamic> favItem) async {
@@ -350,7 +395,7 @@ Future<void> toggleFavorite(String productId) async {
 
   // Optional: You can refresh any UI state if necessary
   favoriteProducts.refresh();
-  print("Updated favorite products: $favoriteProducts");
+  // print("Updated favorite products: $favoriteProducts");
   update();
 }
 

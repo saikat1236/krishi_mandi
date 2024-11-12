@@ -190,7 +190,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    height: 250,
+                    height: 180,
                     // height: 180,
                     width: 550,
                     decoration: BoxDecoration(
@@ -226,14 +226,14 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                                 child: Text(
                                     "${address['addressLine1']}, ${address['addressLine2']}, ${address['city']}, ${address['pin']} "),
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(3.0),
-                                child: Text("${address['email']}"),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(3.0),
-                                child: Text("${address['mobile']}"),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.all(3.0),
+                              //   child: Text("${address['email']}"),
+                              // ),
+                              // Padding(
+                              //   padding: EdgeInsets.all(3.0),
+                              //   child: Text("${address['mobile']}"),
+                              // ),
                               Row(children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -497,7 +497,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                       },
                       child: Center(
                         child: Text(
-                          "Continue",
+                          "Continue to Pay",
                           style: TextStyle(
                               color: Colors.white, fontSize: 16), // Text color
                         ),

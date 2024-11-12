@@ -168,12 +168,13 @@ Future<void> createOrder(Map<String, dynamic> order) async {
       // Extract order details for payment from response
       var orderData = jsonDecode(response.body);
       var razorpayOrderId = orderData['razorpayOrderId'];
+      var key = orderData['razorPayKey'];
       var amount = orderData['amount'];
       print(razorpayOrderId);
-      startPayment(razorpayOrderId, amount);
+      startPayment(razorpayOrderId, amount, key);
     } else {
       errorMessage.value = 'Failed to create order: ${response.statusCode}, ${response.body}';
-      print('Full response: $response');
+      print('Full response: ');
       Get.snackbar('Error', errorMessage.value);
       // onPaymentResult(false); // Trigger failure callback
       paymentSuccess.value = false;
@@ -188,9 +189,9 @@ Future<void> createOrder(Map<String, dynamic> order) async {
   }
 }
 
-void startPayment(String orderId, int amount) {
+void startPayment(String orderId, int amount, String key) {
   var options = {
-    'key': 'rzp_test_B1NKQK3CKqxV4X',
+    'key': '$key',
     'amount': amount * 100,
     'order_id': orderId,
     'name': 'Krishi Mandi',

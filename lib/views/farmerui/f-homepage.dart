@@ -78,7 +78,7 @@ class _FarmHomeState extends State<FarmHome> {
 
   // Replace with your API endpoint
   final String apiUrl =
-      'https://backend.krishimandi.in/common/forecast-weather';
+      '${AppContants.baseUrl}/common/forecast-weather';
 
   Future<void> fetchWeatherData(double lat, double lon) async {
     try {
@@ -225,6 +225,7 @@ class _FarmHomeState extends State<FarmHome> {
       String userName = farmerController.farmer['userName'] ?? '';
       String mobileNumber = farmerController.farmer['mobileNumber'] ?? '';
       String email = farmerController.farmer['email'] ?? '';
+      print(email);
       return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(

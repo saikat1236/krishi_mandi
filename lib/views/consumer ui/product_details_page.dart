@@ -105,6 +105,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 //   );
 // }
 final UserController userController = Get.find<UserController>();
+  final UserProfileController userProfileController =
+      Get.find<UserProfileController>();
+
 void _ratingshow(Map<String, dynamic> product) {
   showDialog(
     context: context,
@@ -250,11 +253,12 @@ void _ratingshow(Map<String, dynamic> product) {
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
+    bool cart = userProfileController.cartItems.isNotEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF2E2E2E),
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -263,7 +267,7 @@ void _ratingshow(Map<String, dynamic> product) {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back,                color: Colors.white,),
               onPressed: () {
                 Navigator.pop(context); // Navigate back
               },
@@ -271,19 +275,43 @@ void _ratingshow(Map<String, dynamic> product) {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartListScreen(),
+                     Stack(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartListScreen(),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
+                // Conditionally show the red dot if the cart is not empty
+                if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 10,
+                        minHeight: 10,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person,                color: Colors.white,),
             onPressed: () {
               Navigator.push(
                 context,
@@ -562,6 +590,7 @@ void _ratingshow(Map<String, dynamic> product) {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width:
@@ -600,7 +629,7 @@ void _ratingshow(Map<String, dynamic> product) {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          SizedBox(width: 20),
                           Container(
                             constraints: BoxConstraints(
                               minHeight:

@@ -2,10 +2,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/AppConstants.dart';
+
 class UpdateCartItemQuantityController extends GetxController {
   Future<void> updateCartItemQuantity(String productId, int quantity) async {
     final url = Uri.parse(
-        'https://backend.krishimandi.in/farmers/update-cart-item-quantity');
+        '${AppContants.baseUrl}/farmers/update-cart-item-quantity');
     final headers = {
       'Authorization': 'your_auth_token',
       'Content-Type': 'application/json'

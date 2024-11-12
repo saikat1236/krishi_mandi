@@ -11,6 +11,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/AppConstants.dart';
+
 const List<String> fertilizerList = <String>[
   'Organic',
   'Chemical',
@@ -131,7 +133,7 @@ class _RateCalcState extends State<CropProfCalc> {
           title: Text(title),
           // content: Text(content),
           content: Container(
-            height: 120,
+            height: 180,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -183,7 +185,7 @@ class _RateCalcState extends State<CropProfCalc> {
     required double irriCost
   }) async {
     final url =
-        Uri.parse('https://backend.krishimandi.in/farmers/calculate-profits');
+        Uri.parse('${AppContants.baseUrl}/farmers/calculate-profits');
 
     // Request body
     final body = jsonEncode({
