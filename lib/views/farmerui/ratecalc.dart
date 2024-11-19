@@ -6,12 +6,16 @@ import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../constants/AppConstants.dart';
 
+
+
+
 class RateCalc extends StatefulWidget {
   const RateCalc();
 
   @override
   State<RateCalc> createState() => _RateCalcState();
 }
+
 
 class _RateCalcState extends State<RateCalc> {
   String? selectedDistrict;
@@ -26,7 +30,7 @@ class _RateCalcState extends State<RateCalc> {
   bool isLoadingCommodities = true;
   bool isLoadingVarieties = false;
 
-  bool isload = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -35,42 +39,7 @@ class _RateCalcState extends State<RateCalc> {
     fetchCommodities();
   }
 
-  // Fetch Districts from API
-  Future<void> fetchDistricts(String commodity, String variety) async {
-    setState(() {
-      isLoadingDistricts = true;
-      districts = []; // Reset districts list
-      selectedDistrict = null;
-    });
-    final body = jsonEncode({
-      'name': commodity,
-      'variety': variety,
-    });
-    final response = await http.post(
-      Uri.parse('${AppContants.baseUrl}/common/get-districts'),
-      headers: {
-        'Content-Type': 'application/json', // Ensure you're sending JSON
-      },
-      body: body, // Pass the encoded body here
-    );
 
-    if (response.statusCode == 200) {
-      // print("ajkdbwifuer");
-      var data = jsonDecode(response.body);
-      print("District data: $data");
-      setState(() {
-        districts = List<String>.from(
-            data['payload']); // Assuming 'districts' key contains the list
-        isLoadingDistricts = false;
-      });
-    } else {
-      print("district error");
-      // Handle error here
-      setState(() {
-        isLoadingDistricts = false;
-      });
-    }
-  }
 
   // Fetch Commodities from API based on selected district
   Future<void> fetchCommodities() async {
@@ -134,6 +103,46 @@ class _RateCalcState extends State<RateCalc> {
       });
     }
   }
+
+
+    // Fetch Districts from API
+  Future<void> fetchDistricts(String commodity, String variety) async {
+    setState(() {
+      isLoadingDistricts = true;
+      districts = []; // Reset districts list
+      selectedDistrict = null;
+    });
+    final body = jsonEncode({
+      'name': commodity,
+      'variety': variety,
+    });
+    final response = await http.post(
+      Uri.parse('${AppContants.baseUrl}/common/get-districts'),
+      headers: {
+        'Content-Type': 'application/json', // Ensure you're sending JSON
+      },
+      body: body, // Pass the encoded body here
+    );
+
+    if (response.statusCode == 200) {
+      // print("ajkdbwifuer");
+      var data = jsonDecode(response.body);
+      print("District data: $data");
+      setState(() {
+        districts = List<String>.from(
+            data['payload']); // Assuming 'districts' key contains the list
+        isLoadingDistricts = false;
+      });
+    } else {
+      print("district error");
+      // Handle error here
+      setState(() {
+        isLoadingDistricts = false;
+      });
+    }
+  }
+
+  
 
   String? state;
   String? district;
@@ -235,7 +244,7 @@ class _RateCalcState extends State<RateCalc> {
         );
       },
     );
-    isload = false;
+    // isload = false;
   }
 
 // Fetch varieties method
@@ -279,7 +288,7 @@ class _RateCalcState extends State<RateCalc> {
         maxPrice = data['max_price'];
         modalPrice = data['modal_price'];
       });
-      isload = true;
+      // isload = true;
     } else {
       print("Error fetching varieties: ${response.statusCode}");
     }
@@ -545,26 +554,33 @@ class _RateCalcState extends State<RateCalc> {
                       ),
                     ),
                   ),
-                ),
-                onPressed: () {
-                  if (selectedDistrict != null &&
-                      selectedCommodity != null &&
-                      selectedVariety != null) {
-                    // Perform action based on selected values
-                    print('Selected District: $selectedDistrict');
-                    print('Selected Commodity: $selectedCommodity');
-                    print('Selected Variety: $selectedVariety');
-                        fetchres("$selectedDistrict", "$selectedCommodity",
-                        "$selectedVariety");
-                        isload ? CircularProgressIndicator() :
-                    _showDialog("$selectedDistrict", "$selectedCommodity",
-                        "$selectedVariety");
-                  } else {
-                    // Show an error message
-                    print('Please select all fields');
-                    // _showDialog("$selectedDistrict","$selectedCommodity","$selectedVariety");
-                  }
-                },
+                ), // Declare a boolean for loading state
+
+onPressed: () async {
+  if (selectedDistrict != null &&
+      selectedCommodity != null &&
+      selectedVariety != null) {
+    // Set loading state to true
+    setState(() {
+      isLoading = true;
+    });
+
+    // Perform the fetch operation
+    await fetchres("$selectedDistrict", "$selectedCommodity", "$selectedVariety");
+
+    // Set loading state to false
+    setState(() {
+      isLoading = false;
+    });
+
+    // Open the dialog after loading completes
+    _showDialog("$selectedDistrict", "$selectedCommodity", "$selectedVariety");
+  } else {
+    // Show an error message
+    print('Please select all fields');
+  }
+},
+
                 // child: const Text('Get Rate'),
               ),
             ],

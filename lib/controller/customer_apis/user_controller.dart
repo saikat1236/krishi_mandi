@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,12 +127,13 @@ Future<void> rateProduct(String userId, String productId, int rating, {String? r
 
   try {
     final response = await http.post(url, headers: headers, body: body);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && json.decode(response.body)['status'] == 'true') {
       print('Rating submitted successfully '+body);
       print(response.body); // 200 still error and status false
       // Update any relevant state if needed
     } else {
-      print('Failed to submit rating: ${response.body}');
+      Get.snackbar("Error", json.decode(response.body)['message'],backgroundColor: Colors.white);
+      // print('Failed to submit rating: ${json.decode(response.body)['message']}');
     }
   } catch (e) {
     print('Exception while submitting rating: $e');

@@ -137,13 +137,17 @@ class _UploadpageState extends State<Uploadpage> {
   }
 
   Future<void> _uploadImage() async {
-    if (_image == null) return;
+    if (_image == null){
+      print("no image");
+      return;
+    }
 
     setState(() {
       _isLoading = true; // Start loading
     });
 
     try {
+      print(_image);
       final uri =
           Uri.parse('${AppContants.baseUrl}/common/predict-product');
       final request = http.MultipartRequest('POST', uri);
@@ -158,6 +162,7 @@ class _UploadpageState extends State<Uploadpage> {
             jsonDecode(responseData); // Decode the JSON response
 
         if (jsonResponse['status'] == true) {
+          print("image upload status true");
           // Extract the payload and parse the inner response
           final payload = jsonResponse['payload'];
           final innerResponse =
@@ -183,11 +188,13 @@ class _UploadpageState extends State<Uploadpage> {
           _response =
               'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
         });
+        print("image upload status false");
       }
     } catch (e) {
       setState(() {
         _response = 'Failed to upload image. Error: $e';
       });
+      print("image upload error");
     }
     finally {
       setState(() {

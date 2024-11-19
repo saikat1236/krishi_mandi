@@ -122,9 +122,10 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
           //   );
           // }
           // ),
+                childAspectRatio: 0.97, // Adjust this ratio as needed
           children: List.generate(controller.products.length, (index) {
             final product = controller.products[index] as Map<String, dynamic>;
-            print(product);
+            // print(product);
 
             return InkWell(
               onTap: () {

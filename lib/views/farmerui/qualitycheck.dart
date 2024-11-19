@@ -58,7 +58,10 @@ class _UploadpageState extends State<Uploadpage2> {
   }
 
   Future<void> _uploadImage() async {
-    if (_image == null) return;
+    if (_image == null){
+      print("no image");
+      return;
+    }
 
     try {
       final uri =

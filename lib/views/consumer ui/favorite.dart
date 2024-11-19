@@ -88,6 +88,7 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
         child: GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
+          childAspectRatio: 0.97, // Adjust this ratio as needed
           physics: NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
           children: List.generate(controller.favprods.length, (index) {
             final product = controller.favprods[index];

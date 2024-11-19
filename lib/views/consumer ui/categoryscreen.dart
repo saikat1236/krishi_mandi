@@ -5,6 +5,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/cartscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/product_details_page.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/profile.dart';
 
+import '../../controller/customer_apis/profile_controller.dart';
 import '../../controller/customer_apis/user_controller.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -17,6 +18,8 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   final ProductController controller = Get.put(ProductController());
   late  String selectedCategory; // Default category
+  final UserProfileController userProfileController =
+      Get.find<UserProfileController>();
 
 
   @override
@@ -33,6 +36,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool cart = userProfileController.cartItems.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -48,17 +52,41 @@ class _CategoryScreenState extends State<CategoryScreen> {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart,color: Colors.white,),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartListScreen(),
+                     Stack(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartListScreen(),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
+                // Conditionally show the red dot if the cart is not empty
+                if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 10,
+                        minHeight: 10,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           IconButton(
             icon: Icon(Icons.person,color: Colors.white,),
             onPressed: () {

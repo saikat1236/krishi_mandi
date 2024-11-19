@@ -109,49 +109,65 @@ final UserController userController = Get.find<UserController>();
       Get.find<UserProfileController>();
 
 void _ratingshow(Map<String, dynamic> product) {
+  int _selectedRating = 0; // Local state to keep track of selected rating
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Center(child: Text("Rating")),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      return StatefulBuilder( // To update the state of the dialog
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Center(child: Text("Rate the Product")),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                for (int i = 1; i <= 5; i++)
-                  GestureDetector(
-                    onTap: () async {
-                      _setRating(i); // Update local rating state
-                      Navigator.of(context).pop(); // Close dialog
-                      
-                      // Submit the rating using product and user data
-                      await userController.rateProduct(
-                        product['_id'],      // Assuming `userId` is in product data
-                        product['productId'],   // Assuming `productId` is in product data
-                        _rating,   // Use the selected rating
-                      );
-                    },
-                    child: Icon(
-                      Icons.star,
-                      color: i <= _rating ? Colors.orange : Colors.grey,
-                    ),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (int i = 1; i <= 5; i++)
+                      GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            _selectedRating = i; // Update local state for selected rating
+                          });
+
+                          // Submit the rating after the selection
+                          await userController.rateProduct(
+                            product['_id'],      // Product's ID
+                            product['productId'],   // Product's unique ID
+                            _selectedRating,   // The selected rating
+                          );
+
+                          // Close dialog after rating
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(
+                          Icons.star,
+                          color: i <= _selectedRating ? Colors.orange : Colors.grey,
+                          size: 30,
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  _selectedRating == 0
+                      ? "Tap a star to rate."
+                      : "You rated: $_selectedRating star${_selectedRating > 1 ? 's' : ''}",
+                  style: TextStyle(fontSize: 16),
+                ),
               ],
             ),
-            SizedBox(height: 20),
-            Text("Thank you for rating us."),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-          ),
-        ],
+            actions: <Widget>[
+              TextButton(
+                child: Text(""),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
       );
     },
   );

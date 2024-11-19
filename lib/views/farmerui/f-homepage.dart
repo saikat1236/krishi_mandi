@@ -641,62 +641,66 @@ class _FarmHomeState extends State<FarmHome> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      CropProfCalc()), // Replace 'TargetScreen' with your screen
+                                      Uploadpage()), // Replace 'TargetScreen' with your screen
                             );
                           },
                           child: Center(
-                              child: Container(
-                            height: 100.0,
-                            width: 400.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white, // Background color
-                              borderRadius: BorderRadius.circular(
-                                  15.0), // Rounded corners
-                              border: Border.all(
-                                color: Color.fromARGB(
-                                    200, 131, 221, 93), // Border color
-                                width: 2.0, // Border width
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey
-                                      .withOpacity(0.5), // Shadow color
-                                  spreadRadius: 1, // Shadow spread
-                                  blurRadius: 6, // Shadow blur
-                                  offset: Offset(0, 1), // Shadow position
+                            child: Container(
+                              height: 100.0,
+                              width: 400.0,
+                              decoration: BoxDecoration(
+                                color: Colors.white, // Background color
+                                borderRadius: BorderRadius.circular(
+                                    15.0), // Rounded corners
+                                border: Border.all(
+                                  color: Color.fromARGB(
+                                      200, 131, 221, 93), // Border color
+                                  width: 2.0, // Border width
                                 ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Calculator',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(
-                                        'Yield Estimate',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                    ],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey
+                                        .withOpacity(0.5), // Shadow color
+                                    spreadRadius: 1, // Shadow spread
+                                    blurRadius: 6, // Shadow blur
+                                    offset: Offset(0, 1), // Shadow position
                                   ),
-                                  Spacer(),
-                                  Image.asset('assets/Vector.png'),
                                 ],
                               ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Free AI Quality Analysis',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          'AI Powered Quality Monitoring',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Image.asset(
+                                        'assets/streamline_ai-generate-landscape-image-spark-solid.png'),
+                                  ],
+                                ),
+                              ),
                             ),
-                          )),
+                          ),
                         ),
                         SizedBox(
                           height: 20,
@@ -776,67 +780,69 @@ class _FarmHomeState extends State<FarmHome> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      Uploadpage()), // Replace 'TargetScreen' with your screen
+                                      CropProfCalc()), // Replace 'TargetScreen' with your screen
                             );
                           },
                           child: Center(
-                            child: Container(
-                              height: 100.0,
-                              width: 400.0,
-                              decoration: BoxDecoration(
-                                color: Colors.white, // Background color
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // Rounded corners
-                                border: Border.all(
-                                  color: Color.fromARGB(
-                                      200, 131, 221, 93), // Border color
-                                  width: 2.0, // Border width
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey
-                                        .withOpacity(0.5), // Shadow color
-                                    spreadRadius: 1, // Shadow spread
-                                    blurRadius: 6, // Shadow blur
-                                    offset: Offset(0, 1), // Shadow position
-                                  ),
-                                ],
+                              child: Container(
+                            height: 100.0,
+                            width: 400.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Background color
+                              borderRadius: BorderRadius.circular(
+                                  15.0), // Rounded corners
+                              border: Border.all(
+                                color: Color.fromARGB(
+                                    200, 131, 221, 93), // Border color
+                                width: 2.0, // Border width
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Row(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Free AI Quality Analysis',
-                                          style: TextStyle(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey
+                                      .withOpacity(0.5), // Shadow color
+                                  spreadRadius: 1, // Shadow spread
+                                  blurRadius: 6, // Shadow blur
+                                  offset: Offset(0, 1), // Shadow position
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Calculator',
+                                        style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          'AI Powered Quality Monitoring',
-                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        'Yield Estimate',
+                                        style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w300,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    Image.asset(
-                                        'assets/streamline_ai-generate-landscape-image-spark-solid.png'),
-                                  ],
-                                ),
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Image.asset('assets/Vector.png'),
+                                ],
                               ),
                             ),
-                          ),
-                        )
+                          )),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        
+                      
+                        
                       ],
                     ),
                     SizedBox(

@@ -33,7 +33,8 @@ class AuthController extends GetxController {
       final response = await http.post(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         isRegistered(true);
-        Get.snackbar('Success', 'User registered successfully');
+        // Get.snackbar('Success', 'User registered success
+        // fully');
       } else {
         isRegistered(false);
         Get.snackbar('Error', response.body);
@@ -97,6 +98,7 @@ class AuthController extends GetxController {
       final response = await http.post(url, headers: headers, body: body);
       if (response.statusCode == 200 && jsonDecode(response.body)["status"].toString() == "true" ) {
         final token = jsonDecode(response.body)["payload"].toString();
+          Get.snackbar('Success', 'User registered successfully');
 
         // Save the token in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
