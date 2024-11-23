@@ -16,6 +16,7 @@ class FavPage extends StatefulWidget {
 class _FavPageState extends State<FavPage> {
   @override
   Widget build(BuildContext context) {
+      final ProductController controller = Get.put(ProductController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -30,7 +31,15 @@ class _FavPageState extends State<FavPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (controller.favoriteProducts.isEmpty) {
+          return Center(child: Text('No favorite products available.'));
+        }
+      // })
+      return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -48,7 +57,8 @@ class _FavPageState extends State<FavPage> {
             ],
           ),
         ),
-      ),
+      );
+        })
     );
   }
 }
@@ -74,7 +84,8 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
+    return 
+    Obx(() {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
@@ -82,7 +93,9 @@ class _FavoriteProductListViewState extends State<FavoriteProductListView> {
       //   return Center(child: Text('No favorite products available.'));
       // }
       if(controller.favprods.isEmpty){
-     return Center(child: Text('No favorite products available.'));
+     return Center(
+      child: Text('No favorite products available.')
+      );
       }
       return SingleChildScrollView(
         child: GridView.count(

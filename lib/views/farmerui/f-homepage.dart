@@ -440,12 +440,12 @@ class _FarmHomeState extends State<FarmHome> {
                       },
                     ),
 
-                    ListTile(
-                      leading: Icon(Icons.contact_page),
-                      title: Text('Contact Us'),
-                      onTap: () =>
-                          _launchURL(context, 'https://krishimandi.in/'),
-                    ),
+                    // ListTile(
+                    //   leading: Icon(Icons.contact_page),
+                    //   title: Text('Contact Us'),
+                    //   onTap: () =>
+                    //       _launchURL(context, 'https://krishimandi.in/'),
+                    // ),
                     ListTile(
                       leading: Icon(Icons.group),
                       title: Text('About Us'),

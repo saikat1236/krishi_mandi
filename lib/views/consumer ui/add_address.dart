@@ -27,8 +27,10 @@ class AddShippingAddressScreen extends StatelessWidget {
             Get.back();
           },
         ),
-        title: const Text('Adding Shipping Address',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Adding Shipping Address',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -38,46 +40,44 @@ class AddShippingAddressScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTextField(label: 'Name', controller: _nameController),
-                _buildMobileField(), // Use the new method for the mobile field
-                _buildTextField(label: 'Email', controller: _emailController),
-                _buildTextField(label: 'Address Line 1', controller: _addressLine1Controller),
-                _buildOptionalTextField(label: 'Address Line 2', controller: _addressLine2Controller),
-                _buildTextField(label: 'City', controller: _cityController),
-                _buildPinField(), // Use the method for the pin field
-                const SizedBox(height: 16),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 20.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        _controller.addAddress(
-                          name: _nameController.text,
-                          mobile: _mobileController.text,
-                          email: _emailController.text,
-                          addressLine1: _addressLine1Controller.text,
-                          addressLine2: _addressLine2Controller.text,
-                          city: _cityController.text,
-                          pin: int.tryParse(_pinController.text) ?? 0,
-                        );
-                        Get.back(); // Move this to inside the validation
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child: const Text(
-                      'SAVE ADDRESS',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
+                // Name Field
+                _buildTextField(
+                  label: 'Name',
+                  controller: _nameController,
+                  isRequired: true,
                 ),
+                // Mobile Field with Real-Time Validation
+                _buildMobileField(),
+                // Email Field
+                _buildEmailField(),
+                // _buildTextField(
+                //   label: 'Email',
+                //   controller: _emailController,
+                //   isRequired: true,
+                // ),
+                // Address Line 1
+                _buildTextField(
+                  label: 'Address Line 1',
+                  controller: _addressLine1Controller,
+                  isRequired: true,
+                ),
+                // Address Line 2 (Optional)
+                _buildTextField(
+                  label: 'Address Line 2',
+                  controller: _addressLine2Controller,
+                  isRequired: false,
+                ),
+                // City Field
+                _buildTextField(
+                  label: 'City',
+                  controller: _cityController,
+                  isRequired: true,
+                ),
+                // Pin Field
+                _buildPinField(),
                 const SizedBox(height: 16),
+                // Save Address Button
+                _buildSaveButton(),
               ],
             ),
           ),
@@ -86,15 +86,17 @@ class AddShippingAddressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(
-      {required String label, required TextEditingController controller}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required bool isRequired,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: controller,
         validator: (value) {
-          // Check if the field is empty, but skip validation for Address Line 2
-          if (label != 'Address Line 2' && (value == null || value.isEmpty)) {
+          if (isRequired && (value == null || value.isEmpty)) {
             return 'Please enter $label';
           }
           return null;
@@ -110,37 +112,26 @@ class AddShippingAddressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionalTextField(
-      {required String label, required TextEditingController controller}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // New method for the mobile field
   Widget _buildMobileField() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: _mobileController,
+        keyboardType: TextInputType.phone,
+        onChanged: (value) {
+          if (value.length == 10) {
+            // Trigger validation
+            _formKey.currentState?.validate();
+          }
+        },
         validator: (value) {
-          // Validate the mobile field
           if (value == null || value.isEmpty) {
             return 'Please enter Mobile Number';
+          } else if (value.length != 10 || !RegExp(r'^\d+$').hasMatch(value)) {
+            return 'Mobile Number must be 10 digits only';
           }
           return null;
         },
-        keyboardType: TextInputType.phone, // Open numeric keypad
         decoration: InputDecoration(
           labelText: 'Mobile',
           labelStyle: const TextStyle(color: Colors.grey),
@@ -152,26 +143,94 @@ class AddShippingAddressScreen extends StatelessWidget {
     );
   }
 
-  // Method for the pin field
+
+  Widget _buildEmailField() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: TextFormField(
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress, // Opens email-specific keyboard
+      onChanged: (value) {
+        // Trigger validation on input change
+        _formKey.currentState?.validate();
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter Email';
+        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return 'Please enter a valid Email address';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: 'Email',
+        labelStyle: const TextStyle(color: Colors.grey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+    ),
+  );
+}
+
+
   Widget _buildPinField() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: _pinController,
+        keyboardType: TextInputType.number,
         validator: (value) {
-          // Validate the pin field
           if (value == null || value.isEmpty) {
             return 'Please enter Pin';
+          } else if (value.length != 6 || !RegExp(r'^\d+$').hasMatch(value)) {
+            return 'Pin must be 6 digits';
           }
           return null;
         },
-        keyboardType: TextInputType.number, // Open numeric keypad
         decoration: InputDecoration(
           labelText: 'Pin',
           labelStyle: const TextStyle(color: Colors.grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 20.0),
+      child: ElevatedButton(
+        onPressed: () {
+          if (_formKey.currentState?.validate() ?? false) {
+            // Save address via controller
+            _controller.addAddress(
+              name: _nameController.text,
+              mobile: _mobileController.text,
+              email: _emailController.text,
+              addressLine1: _addressLine1Controller.text,
+              addressLine2: _addressLine2Controller.text.isNotEmpty
+                  ? _addressLine2Controller.text
+                  : '', // Fallback for optional field
+              city: _cityController.text,
+              pin: int.tryParse(_pinController.text) ?? 0,
+            );
+            Get.back(); // Go back after saving
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: const Text(
+          'SAVE ADDRESS',
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
     );

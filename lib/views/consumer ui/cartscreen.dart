@@ -335,7 +335,7 @@ class _CartListScreenState extends State<CartListScreen> {
                                     top: 10,
                                     right: 10,
                                     child: IconButton(
-                                      icon: Icon(Icons.delete),
+                                      icon: Icon(Icons.close, color: Colors.red, size: 25),
                                       onPressed: () {
                                         print(cartItem['productId']);
                                         _removeItemFromCart(cartItem[
