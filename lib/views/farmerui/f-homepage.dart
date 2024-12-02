@@ -33,8 +33,8 @@ class FarmHome extends StatefulWidget {
 }
 
 class _FarmHomeState extends State<FarmHome> {
-  final FarmProfileController farmProfileController =
-      Get.put(FarmProfileController());
+  // final FarmProfileController farmProfileController = Get.put(FarmProfileController());
+  final FarmController farmerController = Get.put(FarmController());
   int? _temperature;
   String? cond;
   String? loc;
@@ -77,16 +77,14 @@ class _FarmHomeState extends State<FarmHome> {
   }
 
   // Replace with your API endpoint
-  final String apiUrl =
-      '${AppContants.baseUrl}/common/forecast-weather';
+  final String apiUrl = '${AppContants.baseUrl}/common/forecast-weather';
 
   Future<void> fetchWeatherData(double lat, double lon) async {
     try {
       // Fetch the token from SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? token = prefs.getString('token');
-      String token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMmUxZGViMi01YWQyLTRkNDQtYWJjOS1hZTAyMjU0Zjc4ZmYiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzI1ODkzOTcyfQ.YoMldPlLkuWm3OZIHEdvAltMB4dLqVdCNmYiKdY6hxY";
+      String? token = prefs.getString('farmertoken');
+      // String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMmUxZGViMi01YWQyLTRkNDQtYWJjOS1hZTAyMjU0Zjc4ZmYiLCJ1c2VyVHlwZSI6ImNvbnN1bWVyIiwiaWF0IjoxNzI1ODkzOTcyfQ.YoMldPlLkuWm3OZIHEdvAltMB4dLqVdCNmYiKdY6hxY";
 
       if (token == null) {
         // Handle the case where the token is missing
@@ -118,11 +116,14 @@ class _FarmHomeState extends State<FarmHome> {
           var payload = jsonData["payload"];
           var day = payload["days"];
           double? temperature = day[0]["temp"]?.toDouble();
-          _temperature = temperature!.round();
+          _temperature = ((temperature! - 32) * 5 / 9)
+              .round(); // Celsius conversion with rounding
           cond = day[0]["conditions"];
-          // loc = payload["timezone"];
-          htemp = day[0]["tempmax"].round();
-          ltemp = day[0]["tempmin"].round();
+          htemp = ((day[0]["tempmax"]?.toDouble() ?? 0 - 32) * 5 / 9)
+              .round(); // Handle nullable and convert
+          ltemp = ((day[0]["tempmin"]?.toDouble() ?? 0 - 32) * 5 / 9)
+              .round(); // Handle nullable and convert
+
           lati = lat;
           long = lon;
           print(_temperature);
@@ -198,13 +199,6 @@ class _FarmHomeState extends State<FarmHome> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // _loadImageFromAssets();
-  //    _getLocationAndFetchWeather();
-  //   // fetchWeatherData();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +219,7 @@ class _FarmHomeState extends State<FarmHome> {
       String userName = farmerController.farmer['userName'] ?? '';
       String mobileNumber = farmerController.farmer['mobileNumber'] ?? '';
       String email = farmerController.farmer['email'] ?? '';
-      print(email);
+      print("farmer details: $userName $mobileNumber $email");
       return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -840,9 +834,6 @@ class _FarmHomeState extends State<FarmHome> {
                         SizedBox(
                           height: 20,
                         ),
-                        
-                      
-                        
                       ],
                     ),
                     SizedBox(

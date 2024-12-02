@@ -5,8 +5,6 @@ import 'package:krishi_customer_app/views/consumer%20ui/otpdialog.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/otpscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 
-
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -51,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 40,
                   ),
-  
+
                   // Mobile Number TextField
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -87,39 +85,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.symmetric(
                           horizontal: 100, vertical: 15), // Button size
                     ),
-                      // InkWell(
-                      //       onTap: () {
-                      //         Get.to(log.LoginScreen());
-                      //       },
-                      // ),
+                    // InkWell(
+                    //       onTap: () {
+                    //         Get.to(log.LoginScreen());
+                    //       },
+                    // ),
                     // onPressed: () {
-                      
-                      // controller.signIn(_phoneController.text,context);
 
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) => OTPDialog(
-                      //     onClose: () {
-                      //       Navigator.pop(context); // Close the OTP dialog
-                      //     },
-                      //     mobileNumber: _phoneController.text,
-                      //   ),
-                      // );
+                    // controller.signIn(_phoneController.text,context);
+
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (context) => OTPDialog(
+                    //     onClose: () {
+                    //       Navigator.pop(context); // Close the OTP dialog
+                    //     },
+                    //     mobileNumber: _phoneController.text,
+                    //   ),
+                    // );
                     // },
-onPressed: () async {
-  // Call the signIn method and wait for it to complete
-  await controller.signIn(_phoneController.text, context);
+                    onPressed: () async {
+                      // Call the signIn method and wait for it to complete
+                      await controller.signIn(_phoneController.text, context);
 
-  // Check if the user is signed in before navigating
-  if (controller.isSignedIn.value) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OtpScreen2(mobileNumber: _phoneController.text),
-      ),
-    );
-  }
-},
+                      // Check if the user is signed in before navigating
+                      if (controller.isSignedIn.value) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                OtpScreen2(mobileNumber: _phoneController.text),
+                          ),
+                        );
+                      }
+                    },
 
                     child: Container(
                       width: 350,
@@ -131,25 +130,20 @@ onPressed: () async {
                       ),
                     ),
                   ),
-                   TextButton(
-                     onPressed: () async {
-                      // Call the signIn method and wait for it to complete
-                      // await controller.signIn(_phoneController.text, context);
+                  TextButton(
+                      onPressed: () async {
+                        // Call the signIn method and wait for it to complete
+                        // await controller.signIn(_phoneController.text, context);
 
-                      // Check if the user is signed in before navigating
+                        // Check if the user is signed in before navigating
 
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                SignUpScreen()
-                      
-                          ),
+                              builder: (context) => SignUpScreen()),
                         );
-
-                    },
-                  child: Text( "New user? Sign up here")
-                  ),
+                      },
+                      child: Text("New user? Sign up here")),
                   //       GradientButton(
                   //         label: "Create Account",
                   //         onPressed: (){
@@ -204,7 +198,9 @@ onPressed: () async {
                   //     ),
                   //   ),
                   // ),
-                  SizedBox(height: 80,),
+                  SizedBox(
+                    height: 80,
+                  ),
                   Image.asset("assets/pana.png"),
                 ],
               ),

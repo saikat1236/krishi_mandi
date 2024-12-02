@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';  
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/AppConstants.dart';
 
 class Uploadpage extends StatefulWidget {
@@ -22,8 +22,7 @@ class Uploadpage extends StatefulWidget {
 class _UploadpageState extends State<Uploadpage> {
   File? _image;
   String? _response;
-   bool _isLoading = false; // Add loading flag
-
+  bool _isLoading = false; // Add loading flag
 
   final ImagePicker _picker = ImagePicker();
   final DropListModel dropListModel1 = DropListModel([
@@ -55,12 +54,14 @@ class _UploadpageState extends State<Uploadpage> {
 
 // Modify your showResultDialog to accept the parsed response
   void showResultDialog(Map<String, dynamic> innerResponse) {
+    print("sdcerverfvrt");
+    print("Inner Response: $innerResponse");
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: 300,
+            height: 250,
             width: 300,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -70,29 +71,27 @@ class _UploadpageState extends State<Uploadpage> {
                     "Result",
                     style: TextStyle(
                       fontSize: 25,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 _buildResultSection(
                   label: "Quality Grade:",
-                  result: innerResponse['grade'] ??
-                      'N/A', // Extract grade from inner response
+                  result: innerResponse['grade'] ?? 'N/A',
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 _buildResultSection(
                   label: "Type:",
-                  result: innerResponse['type'] ??
-                      'N/A', // Extract type from inner response
+                  result: innerResponse['type'] ?? 'N/A',
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 _buildResultSection(
                   label: "Freshness:",
-                  result: innerResponse['freshness'] ??
-                      'N/A', // Extract freshness from inner response
+                  result: innerResponse['freshness'] ?? 'N/A',
                 ),
+                // const SizedBox(height: 20),
               ],
             ),
           ),
@@ -137,7 +136,7 @@ class _UploadpageState extends State<Uploadpage> {
   }
 
   Future<void> _uploadImage() async {
-    if (_image == null){
+    if (_image == null) {
       print("no image");
       return;
     }
@@ -147,56 +146,55 @@ class _UploadpageState extends State<Uploadpage> {
     });
 
     try {
-      print(_image);
-      final uri =
-          Uri.parse('${AppContants.baseUrl}/common/predict-product');
+      print(_image); // Check the image path
+      final uri = Uri.parse('${AppContants.baseUrl}/common/predict-product');
       final request = http.MultipartRequest('POST', uri);
+
+      // Add the file to the request
       request.files
           .add(await http.MultipartFile.fromPath('files', _image!.path));
+      print("Request: $request");
 
+      // Send the request
       final response = await request.send();
 
-      if (response.statusCode == 200) {
-        final responseData = await response.stream.bytesToString();
-        final Map<String, dynamic> jsonResponse =
-            jsonDecode(responseData); // Decode the JSON response
+      // Convert response stream to String
+      final responseBody = await response.stream.bytesToString();
+      print("Response: $responseBody");
 
-        if (jsonResponse['status'] == true) {
-          print("image upload status true");
-          // Extract the payload and parse the inner response
-          final payload = jsonResponse['payload'];
-          final innerResponse =
-              jsonDecode(payload['response']); // Decode the inner response
+      // Parse the JSON response
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
 
-          // Show the dialog with the result
-          showResultDialog(
-              innerResponse); // Pass the inner response to the dialog
+      if (jsonResponse['status'] == true) {
+        print("Image upload status: true");
 
-          setState(() {
-            _response = innerResponse
-                .toString(); // Store the inner response as a string for state
-            print(_response);
-          });
-        } else {
-          setState(() {
-            _response = 'Failed to upload image. Response: $responseData';
-          });
-        }
-      } else {
-        final responseData = await response.stream.bytesToString();
+        // Extract and parse the payload
+        final payload = jsonResponse['payload'];
+        print("Payload: $payload");
+        // final Map<String, dynamic> innerResponse = jsonDecode(payload['response']);
+        print("Inner response: $payload");
+
+        // Show the dialog with the result
+        showResultDialog(payload);
+
+        // Update the state with the response
         setState(() {
-          _response =
-              'Failed to upload image. Status code: ${response.statusCode}. Response: $responseData';
+          // _response = innerResponse.toString();
+          _response = payload.toString();
+          print(_response);
         });
-        print("image upload status false");
+      } else {
+        setState(() {
+          _response = 'Failed to upload image. Response: $jsonResponse';
+        });
       }
     } catch (e) {
+      // Handle any errors
       setState(() {
         _response = 'Failed to upload image. Error: $e';
       });
-      print("image upload error");
-    }
-    finally {
+      print("Image upload error: $e");
+    } finally {
       setState(() {
         _isLoading = false; // Stop loading
       });
@@ -309,7 +307,7 @@ class _UploadpageState extends State<Uploadpage> {
             const SizedBox(height: 10),
             Center(
               child: ElevatedButton(
-               onPressed: _isLoading ? null : _uploadImage,
+                onPressed: _isLoading ? null : _uploadImage,
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(150, 50), // Same size as the Container
                   padding:
@@ -345,23 +343,23 @@ class _UploadpageState extends State<Uploadpage> {
                     width: 150,
                     height: 50,
                     alignment: Alignment.center,
-                    child:  _isLoading
+                    child: _isLoading
                         ? CircularProgressIndicator(
                             color: Colors.white,
                           )
                         : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Upload Image",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 2,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Upload Image",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -406,36 +404,41 @@ class _UploadpageState extends State<Uploadpage> {
   }
 
   Widget _buildResultSection({required String label, required String result}) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Container(
-          height: 40,
-          width: 150,
-          decoration: BoxDecoration(
-              // border: Border.all(color: Colors.black),
-              ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                result,
-                style: const TextStyle(fontSize: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 2, // Adjust flex value for label column width
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
               ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 10), // Add spacing between columns
+          Container(
+            width: 150, // Fixed width for the result column
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            decoration: BoxDecoration(
+              border:
+                  Border.all(color: Colors.grey.shade400), // Optional border
+              borderRadius:
+                  BorderRadius.circular(4.0), // Optional rounded corners
+            ),
+            child: Text(
+              result,
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+              textAlign:
+                  TextAlign.left, // Align text to the start of the column
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

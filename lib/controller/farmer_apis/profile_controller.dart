@@ -70,6 +70,7 @@ class FarmProfileController extends GetxController {
         var decodedResponse = jsonDecode(response.body);
         if (decodedResponse is Map<String, dynamic>) {
           userProfile.value = decodedResponse['payload']['userProfile'] ?? {};
+          print(userProfile.value);
 
           // Update specific fields
           // cartItems.value = userProfile['cartItems'] ?? [];

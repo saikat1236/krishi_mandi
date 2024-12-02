@@ -216,17 +216,17 @@ class _RateCalcState extends State<RateCalc> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Min Price: ₹$minPrice per Kg",
+                    "Min Price: ₹$minPrice per 50 Kg",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Max Price: ₹$maxPrice per Kg",
+                    "Max Price: ₹$maxPrice per 50 Kg",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Modal Price: ₹$modalPrice per Kg",
+                    "Modal Price: ₹$modalPrice per 50 Kg",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ],

@@ -30,7 +30,8 @@ class FarmAuthController extends GetxController {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
+      final respo = jsonDecode(response.body);
+      if (respo["status"] == true) {
         isRegistered(true);
         // Get.snackbar('Success', 'User registered successfully');
       } else {
@@ -54,21 +55,18 @@ class FarmAuthController extends GetxController {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
         var respo = jsonDecode(response.body);
+      if (respo["status"] == true) {
         // Get.snackbar("Otp has", respo["message"]);
         // print("1");7085959
-        if (respo["status"] ==false
-           ) {
-          Get.snackbar("Error", respo["message"]);
-          print("2");
-        } else {
+
           Get.snackbar("Otp has been sent Successfully", "");
           print("3");
           isSignedIn(true);
-        }
+
       } else {
         print("4");
+        Get.snackbar("Error", respo["message"]);
         isSignedIn(false);
       }
     } catch (e) {

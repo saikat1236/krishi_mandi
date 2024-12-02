@@ -46,6 +46,7 @@ void main() async {
   AppContants.apptoken = farmertoken.toString();
   // Determine the initial route based on the token
 
+  print("farmertoken: $farmertoken and token: $token");
 
   Widget initialScreen;
 

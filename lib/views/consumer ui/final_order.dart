@@ -234,39 +234,45 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                               //   padding: EdgeInsets.all(3.0),
                               //   child: Text("${address['mobile']}"),
                               // ),
-                              Row(children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Colors.green, // Background color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          18.0), // Rounded edges
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 30,
-                                        vertical: 10), // Button size
-                                  ),
-                                  onPressed: () async {
-                                    final updatedAddress = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProfileScreenmain(),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Colors.green, // Background color
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            18.0), // Rounded edges
                                       ),
-                                    );
-
-                                    if (updatedAddress != null) {
-                                      setState(() {
-                                        address =
-                                            updatedAddress; // Update the address
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    "Change/Edit",
-                                    style: TextStyle(
-                                        color: Colors.white), // Text color
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                          vertical: 10), // Button size
+                                    ),
+                                    onPressed: () async {
+                                      final updatedAddress = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileScreenmain(),
+                                        ),
+                                      );
+                                  
+                                      if (updatedAddress != null) {
+                                        setState(() {
+                                          address =
+                                              updatedAddress; // Update the address
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      "Change/Edit",
+                                      style: TextStyle(
+                                          color: Colors.white), // Text color
+                                    ),
                                   ),
                                 ),
                                 // SizedBox(width: 30),

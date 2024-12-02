@@ -100,7 +100,7 @@ class _RateCalcState extends State<CropProfCalc> {
           final cost = otherInputCost+laborCost+pesticideCost+fertilizerCost+seedCost+marketPrice+expectedYield+irriCost;
           final profit = sell-cost;
           // final profitPercentage = response['payload']['profitPercentage'];
-          final profitPercentage = (sell-cost)/cost;
+          final profitPercentage = double.parse(((sell-cost)/cost).toStringAsFixed(2));
           final advice = response['payload']['advice'];
 
           // Show the result in a dialog box
