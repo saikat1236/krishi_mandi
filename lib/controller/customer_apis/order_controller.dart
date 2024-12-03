@@ -146,6 +146,7 @@ class OrderController extends GetxController {
 // Inside OrderController
 Future<void> createOrder(Map<String, dynamic> order) async {
   order2.assignAll(order);
+  print(order);
   final url = '$baseUrl/create-order';
   print('$url');
   isLoading.value = true;
@@ -160,10 +161,11 @@ Future<void> createOrder(Map<String, dynamic> order) async {
       },
       body: jsonEncode(order), // Send the order directly
     );
-
-    if (response.statusCode == 200) {
+      var orderData = jsonDecode(response.body);
+      print(orderData);
+    if (orderData['success'] == true) {
       Get.snackbar('Success', 'Order created successfully');
-      userProfileController.getOrders();
+      // userProfileController.getOrders();
 
       // Extract order details for payment from response
       var orderData = jsonDecode(response.body);
@@ -174,7 +176,7 @@ Future<void> createOrder(Map<String, dynamic> order) async {
       startPayment(razorpayOrderId, amount, key);
     } else {
       errorMessage.value = 'Failed to create order: ${response.statusCode}, ${response.body}';
-      print('Full response: ');
+      print('Error: $errorMessage');
       Get.snackbar('Error', errorMessage.value);
       // onPaymentResult(false); // Trigger failure callback
       paymentSuccess.value = false;
@@ -182,6 +184,7 @@ Future<void> createOrder(Map<String, dynamic> order) async {
   } catch (e) {
     errorMessage.value = 'An error occurred: $e';
     Get.snackbar('Error', errorMessage.value);
+    print('Error: $e');
     // onPaymentResult(false); // Trigger failure callback
     paymentSuccess.value = false;
   } finally {

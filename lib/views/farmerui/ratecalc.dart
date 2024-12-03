@@ -43,6 +43,7 @@ class _RateCalcState extends State<RateCalc> {
 
   // Fetch Commodities from API based on selected district
   Future<void> fetchCommodities() async {
+    print("fetching commodities");
     setState(() {
       isLoadingCommodities = true;
       // commodities = []; // Reset commodities list

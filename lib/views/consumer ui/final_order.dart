@@ -63,55 +63,6 @@ class _CartListScreenState extends State<FinalOrderScreen> {
   Widget build(BuildContext context) {
     final UserProfileController userProfileController =
         Get.find<UserProfileController>();
-    // final address = userProfileController.userProfile['Address'][0];
-    // Fetch the address where default is true
-// final address = userProfileController.userProfile['Address']
-//     .firstWhere((addr) => addr['default'] == true, orElse: () => null);
-
-// // Check if an address was found
-// if (address != null) {
-//   // Address with default: true found
-//   print('Default Address: $address');
-// } else {
-//   // No address with default: true found
-//   print('No default address found.');
-// }
-
-    // Create the order object
-// final order = {
-//   "orderType": 1, // Static value; adjust as needed
-//   "userName": userProfileController.userProfile['userName'] ?? "Unknown User",
-//   "email": userProfileController.userProfile['email'] ?? "example@example.com",
-//   "mobileNumber": userProfileController.userProfile['mobileNumber'] ?? "0000000000",
-//   "address": {
-//     "addressId": address['addressId'] ?? "No Address ID",
-//     "name": address['name'] ?? "No Name",
-//     "mobile": address['mobile'] ?? "0000000000",
-//     "email": address['email'] ?? "example@example.com",
-//     "addressLine1": address['addressLine1'] ?? "No Address Line 1",
-//     "addressLine2": address['addressLine2'] ?? "No Address Line 2",
-//     "city": address['city'] ?? "No City",
-//     "pin": 799155, // Ensure pin is an integer
-//     // "default":address['default']
-//   },
-//   "image": userProfileController.userProfile['images']??"", // Provide a valid image URL if available
-//   "productsOrdered": widget.cartItems.map((item) {
-//     return {
-//       "productName": item['productName'] ?? "No Product Name",
-//       "productId": item['productId'] ?? "No Product ID",
-//       // "quantity": 10,
-//       // "pricePerUnit":3.5,
-//       // "totalAmount": 35
-//       "quantity": int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0,
-//       "pricePerUnit": double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0,
-//       "totalAmount": (double.tryParse(item['pricePerUnit']?.toString() ?? "0.0") ?? 0.0) *
-//                      (int.tryParse(item['ProductQuantityAddedToCart']?.toString() ?? "0") ?? 0),
-//     };
-//   }).toList(),
-//   "totalAmount": double.tryParse(userProfileController.getTotalAmount()?.toString() ?? "0.0") ?? 0.0,
-//   // "totalAmount" : 105.0,
-//   "paymentType": "Cash on Delivery", // Adjust if you need to support other payment types
-// };
 
     final order = {
       "productsOrdered": widget.cartItems.map((item) {
@@ -235,143 +186,56 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                               //   child: Text("${address['mobile']}"),
                               // ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Colors.green, // Background color
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            18.0), // Rounded edges
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 30,
-                                          vertical: 10), // Button size
-                                    ),
-                                    onPressed: () async {
-                                      final updatedAddress = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProfileScreenmain(),
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.green, // Background color
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                18.0), // Rounded edges
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 30,
+                                              vertical: 10), // Button size
                                         ),
-                                      );
-                                  
-                                      if (updatedAddress != null) {
-                                        setState(() {
-                                          address =
-                                              updatedAddress; // Update the address
-                                        });
-                                      }
-                                    },
-                                    child: Text(
-                                      "Change/Edit",
-                                      style: TextStyle(
-                                          color: Colors.white), // Text color
+                                        onPressed: () async {
+                                          final updatedAddress =
+                                              await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileScreenmain(),
+                                            ),
+                                          );
+
+                                          if (updatedAddress != null) {
+                                            setState(() {
+                                              address =
+                                                  updatedAddress; // Update the address
+                                            });
+                                          }
+                                        },
+                                        child: Text(
+                                          "Change/Edit",
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.white), // Text color
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                // SizedBox(width: 30),
-                                // ElevatedButton(
-                                //   style: ElevatedButton.styleFrom(
-                                //     backgroundColor: const Color.fromRGBO(
-                                //         244, 67, 54, 1), // Background color
-                                //     shape: RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.circular(
-                                //           18.0), // Rounded edges
-                                //     ),
-                                //     padding: EdgeInsets.symmetric(
-                                //         horizontal: 30,
-                                //         vertical: 10), // Button size
-                                //   ),
-                                //   onPressed: () {
-                                //     // Get.to(widget.initialScreen);
-                                //     // Add navigation or functionality here for consumer
-                                //   },
-                                //   child: Text(
-                                //     "Delete",
-                                //     style: TextStyle(
-                                //         color: Colors.white), // Text color
-                                //   ),
-                                // ),
-                              ]),
+                                  ]),
                             ],
                           ),
                         )
                       ],
                     )),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Container(
-              //     width: 386,
-              //     height: 45,
-              //     child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Positioned(
-              //             left: 1,
-              //             top: 0,
-              //             child: Container(
-              //               width: 244,
-              //               height: 45,
-              //               child: TextField(
-              //                 // controller: _phoneController,
-              //                 decoration: InputDecoration(
-              //                   border: OutlineInputBorder(
-              //                     borderRadius: BorderRadius.circular(
-              //                         15.0), // Set border radius here
-              //                   ),
-              //                   hintText: 'Promo code',
-              //                 ),
-              //                 keyboardType: TextInputType.phone,
-              //               ),
-              //             ),
-              //           ),
-              //           // ignore: prefer_const_constructors
-              //           //       TextField(
-              //           //   // controller: _phoneController,
-              //           //   decoration: InputDecoration(
-              //           //     border: OutlineInputBorder(),
-              //           //     hintText: 'Promo code',
-              //           //   ),
-              //           //   keyboardType: TextInputType.phone,
-              //           // ),
-              //           ElevatedButton(
-              //             style: ElevatedButton.styleFrom(
-              //               backgroundColor: Color.fromRGBO(74, 230, 50, 0.7),
-              //               // Background color
-              //               shape: RoundedRectangleBorder(
-              //                 borderRadius: BorderRadius.circular(15.0),
-              //                 // side: BorderSide(color: Colors.black, width: 2.0),
-              //                 // Rounded edges
-              //               ),
-              //               padding: EdgeInsets.symmetric(
-              //                   horizontal: 40, vertical: 4), // Button size
-              //             ),
-              //             onPressed: () {
-              //               Navigator.push(
-              //                 context,
-              //                 MaterialPageRoute(
-              //                   builder: (context) => HomePage(),
-              //                 ),
-              //               );
-              //             },
-              //             child: Center(
-              //               child: Text(
-              //                 "Apply",
-              //                 style:
-              //                     TextStyle(color: Colors.white), // Text color
-              //               ),
-              //             ),
-              //           ),
-              //         ]),
-              //   ),
-              // ),
+
               SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -476,46 +340,59 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                   ),
                 ),
               ), //
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        // Background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          // side: BorderSide(color: Colors.black, width: 2.0),
-                          // Rounded edges
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 10), // Button size
-                      ),
-                      onPressed: () {
-                        print(order);
-                        // Example widget code
-                        orderController.createOrder(order);
-                      },
-                      child: Center(
-                        child: Text(
-                          "Continue to Pay",
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 16), // Text color
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Row(
+              //     mainAxisSize: MainAxisSize.min,
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     // ignore: prefer_const_literals_to_create_immutables
+              //     children: [
+              //       ElevatedButton(
+              //         style: ElevatedButton.styleFrom(
+              //           backgroundColor: Colors.black,
+              //           // Background color
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(10.0),
+              //             // side: BorderSide(color: Colors.black, width: 2.0),
+              //             // Rounded edges
+              //           ),
+              //           padding: EdgeInsets.symmetric(
+              //               horizontal: 40, vertical: 10), // Button size
+              //         ),
+              //         onPressed: () {
+              //           print(order);
+              //           // Example widget code
+              //           orderController.createOrder(order);
+              //         },
+              //         child: Center(
+              //           child: Text(
+              //             "Continue to Pay",
+              //             style: TextStyle(
+              //                 color: Colors.white, fontSize: 16), // Text color
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          orderController.createOrder(order);
+          // print(userProfileController.userProfile["Address"]);
+        },
+        label: Text(
+          'Continue to Pay',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+        // icon: Icon(Icons.shopping_cart_checkout),
+        backgroundColor: Colors.black, // Customize button color
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

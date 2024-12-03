@@ -98,7 +98,11 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkTokenAndNavigate() async {
     // Retrieve the token from SharedPreferences
+
+
+
     final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
     final farmertoken = prefs.getString('farmertoken');
 
     // Set the token in AppContants
@@ -117,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       farmerscreen = LoginScreenfarm();
     }
 
-    await prefs.remove('token');
+    // await prefs.remove('token');
 
     // Navigate to SplashScreen with the determined initialScreen
     Get.offAll(() => SplashScreen(

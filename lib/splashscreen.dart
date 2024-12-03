@@ -7,6 +7,7 @@ import 'package:krishi_customer_app/views/consumer%20ui/signupscreen%201.dart';
 import 'package:krishi_customer_app/views/farmerui/f-homepage.dart';
 import 'package:krishi_customer_app/views/farmerui/menubar.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'views/farmerui/loginsreen.dart';
 
@@ -20,6 +21,24 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  @override
+  void initState() {
+    call();
+    // _checkTokenAndNavigate();
+  }
+
+  Future<void> call() async {
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('token');
+
+
+  final farmertoken = prefs.getString('farmertoken');
+
+  // Determine the initial route based on the token
+
+  print("farmertoken: $farmertoken and token: $token");
+  }
 
 
   //  Future<void> _checkTokenAndNavigate() async {
@@ -49,6 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

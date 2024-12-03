@@ -31,14 +31,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool _isInCart = false;
   int activeIndex = 0; // Tracks the active image index for the dots indicator
 
-  late int _rating ; // Initial rating
+  late int _rating; // Initial rating
+
 
 
   @override
   void initState() {
     super.initState();
     // Initialize qty with product['minQuantity']
-    _rating = widget.product['ratings']['averageRating'] ?? 0;
+    _rating = widget.product['ratings']['averageRating'] ?? 1;
+    // _rating=1;
+    print(widget.product);
     qty = widget.product['minQuantity'] ?? 1;
     _checkIfInCart(); // Check if the product is already in the cart
   }
@@ -49,132 +52,79 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     });
   }
 
-// int _rating = 3; // Default rating
-// void _setRating(int rating) {
-//   setState(() {
-//     _rating = rating.toDouble();
-//   });
-//   _ratingshow();
-// }
 
-// void _ratingshow() {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: Center(child: Text("Rating")),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 // Generate star icons based on _rating value
-//                 for (int i = 1; i <= 5; i++)
-//                   GestureDetector(
-//                     onTap: () {
-//                       _setRating(i);
-//                       Navigator.of(context).pop(); // Close dialog after rating
-//                     },
-//                     child: Icon(
-//                       Icons.star,
-//                       color: i <= _rating ? Colors.orange : Colors.grey,
-//                     ),
-//                   ),
-//                 // SizedBox(width: 10),
-//                 // Text(
-//                 //   _rating.toStringAsFixed(1),
-//                 //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-//                 // ),
-//               ],
-//             ),
-//             SizedBox(height: 20),
-//             Text("Thank you for rating us."),
-//           ],
-//         ),
-//         actions: <Widget>[
-//           TextButton(
-//             child: Text("OK"),
-//             onPressed: () {
-//               Navigator.of(context).pop(); // Close the dialog
-//             },
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }
-final UserController userController = Get.find<UserController>();
+  final UserController userController = Get.find<UserController>();
   final UserProfileController userProfileController =
       Get.find<UserProfileController>();
 
-void _ratingshow(Map<String, dynamic> product) {
-  int _selectedRating = 0; // Local state to keep track of selected rating
+  void _ratingshow(Map<String, dynamic> product) {
+    int _selectedRating = 1; // Local state to keep track of selected rating
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder( // To update the state of the dialog
-        builder: (context, setState) {
-          return AlertDialog(
-            title: Center(child: Text("Rate the Product")),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (int i = 1; i <= 5; i++)
-                      GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            _selectedRating = i; // Update local state for selected rating
-                          });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // To update the state of the dialog
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Center(child: Text("Rate the Product")),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 1; i <= 5; i++)
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              _selectedRating =
+                                  i; // Update local state for selected rating
+                            });
 
-                          // Submit the rating after the selection
-                          await userController.rateProduct(
-                            product['_id'],      // Product's ID
-                            product['productId'],   // Product's unique ID
-                            _selectedRating,   // The selected rating
-                          );
+                            // Submit the rating after the selection
+                            await userController.rateProduct(
+                              product['_id'], // Product's ID
+                              product['productId'], // Product's unique ID
+                              _selectedRating, // The selected rating
+                            );
 
-                          // Close dialog after rating
-                          Navigator.of(context).pop();
-                        },
-                        child: Icon(
-                          Icons.star,
-                          color: i <= _selectedRating ? Colors.orange : Colors.grey,
-                          size: 30,
+                            // Close dialog after rating
+                            Navigator.of(context).pop();
+                          },
+                          child: Icon(
+                            Icons.star,
+                            color: i <= _selectedRating
+                                ? Colors.orange
+                                : Colors.grey,
+                            size: 30,
+                          ),
                         ),
-                      ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Text(
-                  _selectedRating == 0
-                      ? "Tap a star to rate."
-                      : "You rated: $_selectedRating star${_selectedRating > 1 ? 's' : ''}",
-                  style: TextStyle(fontSize: 16),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    _selectedRating == 0
+                        ? "Tap a star to rate."
+                        : "You rated: $_selectedRating star${_selectedRating > 1 ? 's' : ''}",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(""),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
                 ),
               ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text(""),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
-
-
-
+            );
+          },
+        );
+      },
+    );
+  }
 
   final cartController = Get.find<UserProfileController>();
 
@@ -283,7 +233,10 @@ void _ratingshow(Map<String, dynamic> product) {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back,                color: Colors.white,),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Navigator.pop(context); // Navigate back
               },
@@ -291,43 +244,46 @@ void _ratingshow(Map<String, dynamic> product) {
           },
         ),
         actions: [
-                     Stack(
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CartListScreen(),
-                      ),
-                    );
-                  },
+          Stack(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
                 ),
-                // Conditionally show the red dot if the cart is not empty
-                if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
-                  Positioned(
-                    right: 10,
-                    top: 10,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 10,
-                        minHeight: 10,
-                      ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CartListScreen(),
+                    ),
+                  );
+                },
+              ),
+              // Conditionally show the red dot if the cart is not empty
+              if (cart) // Replace `cartItems.isNotEmpty` with your cart-check logic
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 10,
+                      minHeight: 10,
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
+          ),
           IconButton(
-            icon: Icon(Icons.person,                color: Colors.white,),
+            icon: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -396,8 +352,7 @@ void _ratingshow(Map<String, dynamic> product) {
                 //       },)
                 //     ),
                 SizedBox(height: 20),
-                Row(
-                  children: [
+                Row(children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -405,12 +360,12 @@ void _ratingshow(Map<String, dynamic> product) {
                         // Generate star icons based on _rating value
                         for (int i = 1; i <= 5; i++)
                           // GestureDetector(
-                            // onTap: () => _setRating(i),
-                            Icon(
-                              Icons.star,
-                              color: i <= _rating ? Colors.orange : Colors.grey,
-                            ),
-                          // ),
+                          // onTap: () => _setRating(i),
+                          Icon(
+                            Icons.star,
+                            color: i <= _rating ? Colors.orange : Colors.grey,
+                          ),
+                        // ),
                         SizedBox(width: 10),
                         Text(
                           _rating.toStringAsFixed(1),
@@ -425,7 +380,7 @@ void _ratingshow(Map<String, dynamic> product) {
                       ],
                     ),
                   ),
-                    Spacer(),
+                  Spacer(),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(74, 230, 50, 0.961),

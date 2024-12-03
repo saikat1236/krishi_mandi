@@ -17,7 +17,7 @@ class OrderDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xFF2E2E2E),
         elevation: 0,
-                centerTitle: true,
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -39,7 +39,8 @@ class OrderDetailsScreen extends StatelessWidget {
               children: [
                 Text(
                   'Order No: ${order['orderId']} ',
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 // Text(
                 //   formatDate(order['dateAndTimeOrderPlaced']['\$date']),
@@ -48,23 +49,24 @@ class OrderDetailsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8.0),
-            Text(
-              'Tracking number: ${order['currentOrderStatus']['status']}',
-              style: const TextStyle(color: Colors.grey),
-            ),
+            // Text(
+            //   'Tracking number: Success}',
+            //   style: const TextStyle(color: Colors.grey),
+            // ),
             const SizedBox(height: 8.0),
             Text(
               '${productsOrdered.length} items',
               // "3 items",
               style: const TextStyle(color: Colors.black),
             ),
-            const SizedBox(height: 16.0),
-            ...productsOrdered.map((product) => _buildOrderItem(
-              product['productName'],
-              '₹${product['pricePerUnit']}',
-              // 'assets/potato.png',
-              product['image']??""
-            )).toList(),
+            const SizedBox(height: 20.0),
+            ...productsOrdered
+                .map((product) => _buildOrderItem(
+                    product['productName'],
+                    '₹${product['pricePerUnit']}',
+                    // 'assets/potato.png',
+                    product['images'][0] ?? ""))
+                .toList(),
             const SizedBox(height: 16.0),
             const Text(
               'Order information',
@@ -75,9 +77,10 @@ class OrderDetailsScreen extends StatelessWidget {
               'Shipping Address:',
               '${address['name']}, ${address['addressLine1']}, ${address['addressLine2']}, ${address['city']}, ${address['pin']}',
             ),
-            _buildOrderInfoRow('Payment method:', paymentDetails['paymentType']),
+            _buildOrderInfoRow('Payment method:', 'Online'),
             _buildOrderInfoRow('Discount:', '10%, Personal promo code'),
-            _buildOrderInfoRow('Total Amount:', '₹${order['totalAmount']}', isBold: true),
+            _buildOrderInfoRow('Total Amount:', '₹${order['totalAmount']}',
+                isBold: true),
             const SizedBox(height: 16.0),
             Center(
               child: ElevatedButton(
@@ -89,17 +92,18 @@ class OrderDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 50, vertical: 15), // Button size
                 ),
-                    onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage(),
-                              ),
-                            );
-                          },
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(),
+                    ),
+                  );
+                },
                 child: const Text(
                   "Shop Now",
-                  style: TextStyle(color: Colors.white, fontSize: 20), // Text color
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 20), // Text color
                 ),
               ),
             ),
@@ -121,27 +125,31 @@ class OrderDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-                       Image.network(
-  imageUrl,
-  width: 50,
-  height: 50, // Adjust image height ratio as needed
-  fit: BoxFit.cover,
-  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-    return Image.asset(
-      'assets/no_image.jpg', // Path to your asset image
-      width: 50,
-      height: 50, // Adjust image height ratio as needed
-      fit: BoxFit.cover,
-    );
-  },
-),
-            const SizedBox(width: 16.0),
-            Expanded(
-              child: Text(name, style: const TextStyle(fontSize: 16)),
+            Image.network(
+              imageUrl,
+              width: 100,
+              height: 100, // Adjust image height ratio as needed
+              fit: BoxFit.cover,
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/no_image.jpg', // Path to your asset image
+                  width: 50,
+                  height: 50, // Adjust image height ratio as needed
+                  fit: BoxFit.cover,
+                );
+              },
             ),
-            Text(price,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(width: 16.0),
+            // Expanded(
+            //   child: Text(name, style: const TextStyle(fontSize: 16)),
+            // ),
+            Text(name, style: const TextStyle(fontSize: 25)),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Text(price, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
           ],
         ),
       ),

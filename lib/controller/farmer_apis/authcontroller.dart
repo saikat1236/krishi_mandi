@@ -92,7 +92,7 @@ class FarmAuthController extends GetxController {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200 && jsonDecode(response.body)["status"].toString() == "true" ) {
+      if (response.statusCode == 200 && jsonDecode(response.body)["status"].toString() == true ) {
         final farmertoken = jsonDecode(response.body)["payload"].toString();
           Get.snackbar('Success', 'User registered successfully');
 

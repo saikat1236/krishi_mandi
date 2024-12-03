@@ -113,8 +113,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
               ],
             ),
             const SizedBox(height: 8.0),
-            Text('Tracking number: ${order['currentOrderStatus']['status']}',
-                style: const TextStyle(color: Colors.grey)),
+            // Text('Tracking number: Success',
+            //     style: const TextStyle(color: Colors.grey)
+            //     ),
             const SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
