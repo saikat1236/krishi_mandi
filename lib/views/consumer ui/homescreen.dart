@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Krishi Mandi',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -98,8 +98,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkTokenAndNavigate() async {
     // Retrieve the token from SharedPreferences
-
-
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
@@ -551,7 +549,9 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       var product = controller.searchResults[index];
                       return ListTile(
-                        title: Text(product['name']),
+                        title: Text(product != null && product['name'] != null
+                            ? product['name']
+                            : "No Products"), // Fallback text),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -781,8 +781,7 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
                     product['images'][0],
                     // "https://img.freepik.com/free-vector/fruits-frame-realistic-background_1284-29853.jpg?t=st=1725091437~exp=1725095037~hmac=ea80e3414d604a39789ff08a09bea8f3151a0a283f2449352f1bf0609391ee6d&w=1060",
                     product['productId'],
-                    product['discount'] ?? 0
-                    ),
+                    product['discount'] ?? 0),
               ),
             );
           }),
@@ -791,8 +790,8 @@ class _ProductListViewdemoState extends State<ProductListViewdemo> {
     });
   }
 
-  Widget _offerItemdemo(
-      String name, int newPrice, int oldPrice, String imageUrl, String Pid, int discount) {
+  Widget _offerItemdemo(String name, int newPrice, int oldPrice,
+      String imageUrl, String Pid, int discount) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
@@ -1022,18 +1021,26 @@ class CategoriesList extends StatelessWidget {
         children: <Widget>[
           CircleAvatar(
             radius: 30,
-            backgroundImage: AssetImage(imageUrl),
+            backgroundImage: imageUrl.startsWith('http') // Check if it's a URL
+                ? NetworkImage(imageUrl)
+                : AssetImage(imageUrl) as ImageProvider,
           ),
           Container(
             width: 100,
             margin: const EdgeInsets.only(top: 8),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: Color(0xFF7ED856),
+              color: const Color(0xFF7ED856),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.white),
             ),
-            child: Center(child: Text(title)),
+            child: Center(
+              child: Text(
+                title,
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w500),
+              ),
+            ),
           ),
         ],
       ),

@@ -21,7 +21,7 @@ class FinalOrderScreen extends StatefulWidget {
 
 class _CartListScreenState extends State<FinalOrderScreen> {
   // Address should not be final if you need to update it
-  late Map<String, dynamic> address;
+  late Map<dynamic, dynamic> address;
 
   @override
   void initState() {
@@ -137,7 +137,7 @@ class _CartListScreenState extends State<FinalOrderScreen> {
                   Text("Select a delivery address")
                 ]),
               ),
-              SizedBox(height: 50),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -238,87 +238,110 @@ class _CartListScreenState extends State<FinalOrderScreen> {
 
               SizedBox(height: 30),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  "Bill Details",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+              ),
+              
+              Padding(
+                padding: const EdgeInsets.all(10.0),
                 child: Container(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Sub-total",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
-                            Text('Rs $subtot')
-                          ],
-                        ),
+                    decoration: BoxDecoration(
+                      // color: Colors.grey[200],
+                      border: Border.all(
+                        color: Colors.grey, // Border color
+                        width: 2.0, // Border width
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(10.0),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [Text("Voucher", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),), Text("Rs 245")],
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Delivery Fee",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
-                            Text("Rs $delhivery")
-                          ],
-                        ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0), // Radius for all corners
                       ),
-                      // Container(
-                      //   margin: const EdgeInsets.symmetric(vertical: 10.0),
-                      //   height: 1.0,
-                      //   width: double.infinity,
-                      //   color: Colors.black,
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Total",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                height: 0,
+                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Sub-total",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
                               ),
-                            ),
-                            Text(
-                              "Rs $tot",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                height: 0,
-                              ),
-                            )
-                          ],
+                              Text('Rs $subtot')
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                        // Padding(
+                        //   padding: const EdgeInsets.all(10.0),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [Text("Voucher", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),), Text("Rs 245")],
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Delivery Fee",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                              Text("Rs $delhivery")
+                            ],
+                          ),
+                        ),
+                        // Container(
+                        //   margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        //   height: 1.0,
+                        //   width: double.infinity,
+                        //   color: Colors.black,
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  height: 0,
+                                ),
+                              ),
+                              Text(
+                                "Rs $tot",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  height: 0,
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
+              // Spacer(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   // alignment: Alignment.centerLeft,
+                  
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

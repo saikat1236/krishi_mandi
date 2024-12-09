@@ -33,8 +33,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   late int _rating; // Initial rating
 
-
-
   @override
   void initState() {
     super.initState();
@@ -51,7 +49,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       _rating = rating;
     });
   }
-
 
   final UserController userController = Get.find<UserController>();
   final UserProfileController userProfileController =
@@ -558,23 +555,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width:
-                                250, // Ensures it takes the full width of the parent
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex:
+                              7, // First container should take 70% of available space
+                          child: Container(
                             constraints: BoxConstraints(
                               minHeight:
                                   50, // Ensures a minimum height for the box
                             ),
+                            
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(5),
-                              border:
-                                  Border.all(color: Colors.grey), // Grey border
+                              border: Border.all(
+                                color: Colors.grey, // Grey border
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey
@@ -586,7 +584,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ],
                             ),
                             child: TextField(
-                              // keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 hintText: 'GST Number', // Hint text
                                 border: InputBorder
@@ -600,8 +597,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 20),
-                          Container(
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          flex:
+                              3, // Second container should take 30% of available space
+                          child: Container(
                             constraints: BoxConstraints(
                               minHeight:
                                   50, // Ensures a minimum height for the box
@@ -609,8 +610,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(30),
-                              border:
-                                  Border.all(color: Colors.grey), // Grey border
+                              border: Border.all(
+                                color: Colors.grey, // Grey border
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey
@@ -622,30 +624,19 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ],
                             ),
                             child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  // shape: RoundedRectangleBorder(
-                                  //   // borderRadius: BorderRadius.circular(20.0),
-                                  //   // side: BorderSide(
-                                  //   //   // color: Colors.white,
-                                  //   //   width: 2.0,
-                                  //   // ),
-                                  // ),
-                                  // padding: EdgeInsets.symmetric(
-
-                                  //   vertical: 15,
-                                  // ),
-                                ),
-                                onPressed: () {
-                                  print("gst submit");
-                                },
-                                child: Container(
-                                  child: Text("Submit"),
-                                )),
-                          )
-                          // Spacer(),
-                        ],
-                      ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                print("GST submit");
+                              },
+                              child: Container(
+                                child: Text("Submit"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),

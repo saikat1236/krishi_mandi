@@ -76,9 +76,9 @@ class UserProfileController extends GetxController {
           orders.value = userProfile['orders'] ?? [];
           favorites.value = userProfile['favorites'] ?? [];
         // cartItems.clear();
-          print("cart: " + jsonEncode(cartItems));
-          print("orders: " + jsonEncode(orders));
-          print("favorites: " + jsonEncode(favorites));
+          // print("cart: " + jsonEncode(cartItems));
+          // print("orders: " + jsonEncode(orders));
+          // print("favorites: " + jsonEncode(favorites));
 
         } else {
           userProfile.value = {};

@@ -4,9 +4,11 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 import 'package:krishi_customer_app/controller/customer_apis/user_controller.dart';
+import 'package:krishi_customer_app/views/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/AppConstants.dart';
+import '../../views/consumer ui/profile.dart';
 
 class ShippingAddressController extends GetxController {
   final String apiUrl = '${AppContants.baseUrl}/users';
@@ -73,6 +75,7 @@ class ShippingAddressController extends GetxController {
   }) async {
     // _showLoadingDialog(); // Show loading dialog
     try {
+      print(name);
       final token = await _getToken();
       var response = await http.post(
         Uri.parse('$apiUrl/add-address'),
@@ -91,6 +94,7 @@ class ShippingAddressController extends GetxController {
             "pin": pin.toString(),
           }
         }),
+        
       );
 
       if (response.statusCode == 200) {
@@ -149,6 +153,8 @@ class ShippingAddressController extends GetxController {
       if (Get.isDialogOpen!) {
         Get.back(); // Close the loading dialog
       }
+      // Get.back();
+      Get.off(() => ProfileScreenmain());
       } else {
         print("Failed to update address: ${response.body}");
         Get.snackbar("Error", "Failed to update address. Please try again.");

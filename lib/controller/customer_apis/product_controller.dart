@@ -209,7 +209,7 @@ Future<void> getFavoriteProductsOnly(int page) async {
 
 Future<void> filterProductsByCategory(String category) async {
       final url = Uri.parse('$baseUrl2/filtered');
-
+    print("url $url , category $category");
     try {
       final token = await _getToken(); // Get token from SharedPreferences
       final response = await http.post(
@@ -248,31 +248,6 @@ Future<void> filterProductsByCategory(String category) async {
     }
   
 }
-
-  // Filter products by selected categories
-  // void filterProductsByCategory(String selectedCategory) {
-  // if(selectedCategory=='fruits') selectedCategory='Fruits';
-  // if(selectedCategory=='vegetables') selectedCategory='Vegetables';
-
-  //   // selectedCategory="Fruit";
-  //   if (products.isNotEmpty) {
-  //     if (selectedCategory.isEmpty) {
-  //       filteredProducts.value = products; // Show all products if no category is selected
-  //     } else {
-  //       filteredProducts.value = products
-  //           .where((product) => product['category'] == selectedCategory)
-  //           .toList(); // Filter products based on selected category
-  //     }
-  //   }
-  //   else{
-  //     print("no products");
-  //   }
-  //           // filteredProducts.value = products
-           
-  //           // .where((product) => product['category'] == "Vegetable")
-  //           // .toList(); // Filter products based on selected category
-  //   print(filteredProducts);
-  // }
 
   // Add item to favorites
 Future<void> addToFavorites(Map<String, dynamic> favItem) async {
@@ -323,7 +298,6 @@ Future<void> addToFavorites(Map<String, dynamic> favItem) async {
   }
 }
 
-
   // Remove item from favorites
   Future<void> removeFromFavorites(String productId) async {
     final url = Uri.parse('$baseUrl2/remove-item-from-favs');
@@ -357,23 +331,6 @@ Future<void> addToFavorites(Map<String, dynamic> favItem) async {
     return favoriteProducts.contains(productId);
   }
 
-  // // Fetch favorite products
-  // Future<void> getFavoriteProducts() async {
-  //   // isLoading(true);
-  //       // selectedCategory="Fruit";
-
-  //       favoriteProducts.value = products
-  //           .where((product) => product['isAvailableInFav'] == true)
-  //           .toList(); // Filter products based on selected category
-  //           // filteredProducts.value = products
-           
-  //           // .where((product) => product['category'] == "Vegetable")
-  //           // .toList(); // Filter products based on selected category
-  //   print("fav products: $favoriteProducts");
-  //   // isLoading(false);
-  //   // Implement fetching favorite products if needed
-  // }
-
 Future<void> toggleFavorite(String productId) async {
   // Check if the productId is already in favoriteProducts
   if (favoriteProducts.contains(productId)) {
@@ -398,9 +355,6 @@ Future<void> toggleFavorite(String productId) async {
   // print("Updated favorite products: $favoriteProducts");
   update();
 }
-
-
-
   // Add item to cart
   Future<bool> addToCart(Map<String, dynamic> cartItem) async {
     final url = Uri.parse('$baseUrl2/add-item-in-cart');

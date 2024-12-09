@@ -159,30 +159,37 @@ class CategoriesList extends StatelessWidget {
     });
   }
 
-  Widget _categoryItem(String title, String imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: AssetImage(imageUrl),
+Widget _categoryItem(String title, String imageUrl) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      children: <Widget>[
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: imageUrl.startsWith('http') // Check if it's a URL
+              ? NetworkImage(imageUrl)
+              : AssetImage(imageUrl) as ImageProvider,
+        ),
+        Container(
+          width: 100,
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: const Color(0xFF7ED856),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white),
           ),
-          Container(
-            width: 100,
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Color(0xFF7ED856),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white),
+          child: Center(
+            child: Text(
+              title,
+              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
             ),
-            child: Center(child: Text(title)),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }
 
 class ProductListView extends StatefulWidget {

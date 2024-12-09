@@ -7,40 +7,43 @@ import 'package:krishi_customer_app/models/address.dart';
 class UpdShippingAddressScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final ShippingAddressController _controller = Get.put(ShippingAddressController());
-final Address address;
- final TextEditingController _nameController;
+  final Address address;
+  final TextEditingController _nameController;
   final TextEditingController _mobileController;
   final TextEditingController _emailController;
   final TextEditingController _addressLine1Controller;
   final TextEditingController _addressLine2Controller;
   final TextEditingController _cityController;
   final TextEditingController _pinController;
-    // final TextEditingController _idController;
-final String addressId;
-  UpdShippingAddressScreen({super.key, required this.address, required this.addressId, })
-      : _nameController = TextEditingController(text: address.name),
+  final String addressId;
+
+  UpdShippingAddressScreen({
+    super.key,
+    required this.address,
+    required this.addressId,
+  })  : _nameController = TextEditingController(text: address.name),
         _mobileController = TextEditingController(text: address.mobile),
         _emailController = TextEditingController(text: address.email),
         _addressLine1Controller = TextEditingController(text: address.addressLine1),
         _addressLine2Controller = TextEditingController(text: address.addressLine2),
         _cityController = TextEditingController(text: address.city),
         _pinController = TextEditingController(text: address.pin?.toString() ?? '');
-        // _idController = TextEditingController(text: address.addressId);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.green,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-         onPressed: () {
-    Navigator.pop(context);
-  },
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title: const Text('Updating Shipping Address',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Updating Shipping Address',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -57,13 +60,13 @@ final String addressId;
                 _buildTextField(label: 'City', controller: _cityController),
                 _buildTextField(label: 'Pin', controller: _pinController),
                 const SizedBox(height: 16),
-                // Container with a fixed height and width
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 20.0),
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
+                        // Update Address Call
                         _controller.updateAddress(
                           name: _nameController.text,
                           mobile: _mobileController.text,
@@ -71,12 +74,13 @@ final String addressId;
                           addressLine1: _addressLine1Controller.text,
                           addressLine2: _addressLine2Controller.text,
                           city: _cityController.text,
-                          pin: int.parse(_pinController.text),
-                          addressId: addressId
-                          // pin: 799155
+                          pin: int.tryParse(_pinController.text) ?? 0, // Safeguard against invalid input
+                          addressId: addressId,
                         );
+
+                        // Go back after successful update
+                        Get.back();
                       }
-                      Get.back();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -100,9 +104,10 @@ final String addressId;
     );
   }
 
-
-  Widget _buildTextField(
-      {required String label, required TextEditingController controller}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
@@ -110,6 +115,21 @@ final String addressId;
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter $label';
+          }
+          if (label == 'Mobile') {
+            if (value.length != 10 || !RegExp(r'^\d+$').hasMatch(value)) {
+              return 'Mobile number must be exactly 10 digits';
+            }
+          }
+          if (label == 'Email') {
+            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              return 'Please enter a valid email address';
+            }
+          }
+          if (label == 'Pin') {
+            if (value.length != 6 || !RegExp(r'^\d+$').hasMatch(value)) {
+              return 'Pin must be exactly 6 digits';
+            }
           }
           return null;
         },
@@ -120,8 +140,17 @@ final String addressId;
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
-         keyboardType: label == 'Pin' ? TextInputType.number : TextInputType.text,
+        keyboardType: _getKeyboardType(label),
       ),
     );
+  }
+
+  TextInputType _getKeyboardType(String label) {
+    if (label == 'Mobile' || label == 'Pin') {
+      return TextInputType.number;
+    } else if (label == 'Email') {
+      return TextInputType.emailAddress;
+    }
+    return TextInputType.text;
   }
 }
