@@ -59,9 +59,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final int _currentIndex = 0;
   final TextEditingController _searchController = TextEditingController();
+  final UserProfileController userProfileController = Get.find<UserProfileController>();
   final ProductController controller = Get.put(ProductController());
-  final UserProfileController userProfileController =
-      Get.find<UserProfileController>();
   bool _hasFocus = false;
 
   @override
@@ -217,6 +216,22 @@ class _HomePageState extends State<HomePage> {
     final token = _getToken();
     print(token);
     // // controller.getAllcategories();
+
+      // if (userProfileController.isLoading.value) {
+      //   // Show loading screen
+      //   return Scaffold(
+      //     body: Center(
+      //       child: Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           CircularProgressIndicator(),
+      //           SizedBox(height: 20),
+      //           Text("Loading your profile, please wait..."),
+      //         ],
+      //       ),
+      //     ),
+      //   );
+      // } else {
     return Obx(() {
       //  final user = userController.user; // Assuming `user` is an RxMap
       // final categories = controller.categories; // Assuming `categories` is an RxList
@@ -226,6 +241,8 @@ class _HomePageState extends State<HomePage> {
       String email = userController.user['email'] ?? '';
 
       bool cart = userProfileController.cartItems.isNotEmpty;
+
+
 
       return Scaffold(
         backgroundColor: Colors.white,
@@ -657,6 +674,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     });
+      // }
   }
 
   // Widget _categoryItem(String title, String imageUrl) {

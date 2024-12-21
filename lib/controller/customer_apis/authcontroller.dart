@@ -65,14 +65,14 @@ class AuthController extends GetxController {
         if (respo["status"] ==false
            ) {
           Get.snackbar("Error", respo["message"]);
-          print("2");
+          print("if if");
         } else {
           Get.snackbar("Otp has been sent Successfully", "");
-          print("3");
+          print("if else");
           isSignedIn(true);
         }
       } else {
-        print("4");
+        print("else");
         isSignedIn(false);
       }
     } catch (e) {
@@ -80,7 +80,7 @@ class AuthController extends GetxController {
       print('Error: $e');
       isSignedIn(false);
     } finally {
-      print("1");
+      print("finally");
       isLoading(false);
     }
   }

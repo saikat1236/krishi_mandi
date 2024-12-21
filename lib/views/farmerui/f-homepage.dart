@@ -10,8 +10,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:krishi_customer_app/splashscreen.dart';
 import 'package:krishi_customer_app/views/consumer%20ui/loginsreen.dart';
 import 'package:krishi_customer_app/views/farmerui/crop_prof_calc.dart';
+import 'package:krishi_customer_app/views/farmerui/farmerorders.dart';
 import 'package:krishi_customer_app/views/farmerui/loginsreen.dart';
 import 'package:krishi_customer_app/views/farmerui/ratecalc.dart';
+import 'package:krishi_customer_app/views/farmerui/sellproducts.dart';
 import 'package:krishi_customer_app/views/farmerui/upload.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -433,13 +435,35 @@ class _FarmHomeState extends State<FarmHome> {
                         );
                       },
                     ),
-
-                    // ListTile(
-                    //   leading: Icon(Icons.contact_page),
-                    //   title: Text('Contact Us'),
-                    //   onTap: () =>
-                    //       _launchURL(context, 'https://krishimandi.in/'),
-                    // ),
+                    ListTile(
+                      leading: Icon(Icons.sell),
+                      title: Text('Sell Products'),
+                      onTap: () {
+                       Navigator.push(context, 
+                       MaterialPageRoute(
+                              builder: (context) =>
+                                  SellProducts()),
+                       );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.favorite_border),
+                      title: Text('Orders'),
+                      onTap: () {
+                        /// Close Navigation drawer before
+                        // Navigator.pop(context);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => FavPage()),
+                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FarmerOrders()), // Replace 'TargetScreen' with your screen
+                        );
+                      },
+                      ),
                     ListTile(
                       leading: Icon(Icons.group),
                       title: Text('About Us'),

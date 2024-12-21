@@ -66,8 +66,9 @@ class UserProfileController extends GetxController {
     try {
       final response = await http.post(url, headers: headers);
 
-      if (response.statusCode == 200) {
         var decodedResponse = jsonDecode(response.body);
+      if ( decodedResponse['status'] == true) {
+        Get.snackbar('Success', 'User profile fetched successfully');
         if (decodedResponse is Map<String, dynamic>) {
           userProfile.value = decodedResponse['payload']['userProfile'] ?? {};
 
@@ -86,6 +87,7 @@ class UserProfileController extends GetxController {
           orders.clear();
           favorites.clear();
         }
+        isLoading(false);
       } else {
         userProfile.value = {};
         cartItems.clear();

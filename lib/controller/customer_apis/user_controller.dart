@@ -131,8 +131,10 @@ Future<void> rateProduct(String userId, String productId, int rating, {String? r
     print(response.statusCode);
     if (response.statusCode == 200 && json.decode(response.body)['status'] == true) {
       print('Rating submitted successfully '+body);
+
       print(response.body); // 200 still error and status false
       // Update any relevant state if needed
+      
       Get.snackbar("Success", json.decode(response.body)['message'],backgroundColor: Colors.white);
     } else {
       Get.snackbar("Error", json.decode(response.body)['message'],backgroundColor: Colors.white);
